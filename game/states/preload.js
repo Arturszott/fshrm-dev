@@ -8,11 +8,6 @@ function Preload() {
 Preload.prototype = {
   preload: function() {
 
-    // this.game.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    // this.game.scale.setScreenSize(true);
-    // this.game.scale.refresh();        // Scale the game to fit the screen
-    // this.game.stage.scale.startFullScreen();
-
     this.asset = this.add.sprite(this.game.width / 2, this.game.height / 2, 'preloader');
     this.asset.anchor.setTo(0.5, 0.5);
     this.load.setPreloadSprite(this.asset);
@@ -22,8 +17,9 @@ Preload.prototype = {
 
     this.load.image('background', 'assets/water.png');
     this.load.image('mine', 'assets/mine.png');
-    // this.load.image('fish', 'assets/fish.png');
-    // this.load.image('fisherman', 'assets/fisherman.png');
+    this.load.image('timer', 'assets/timer.png');
+    this.load.image('timebar', 'assets/redwater.png');
+
     this.load.image('title', 'assets/logo.png');
     this.load.image('startButton', 'assets/start-button.png');
     this.load.image('instructions', 'assets/instructiondarks.png');

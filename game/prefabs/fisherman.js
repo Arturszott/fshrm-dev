@@ -31,11 +31,13 @@ Fisherman.prototype.catch = function(side) {
 		console.log('catchin, side: ' + side);
 
 		if(side === 'right'){
+			this.x = this.game.width / 2 + 30;
 			this.loadTexture('catchright', 0);
 		    this.animations.add('catchright');
 		    this.animations.play('catchright', 2, true);
 		}
 		if(side === 'left'){
+			this.x = this.game.width / 2 - 30;
 			this.loadTexture('catchleft', 0);
 		    this.animations.add('catchleft');
 		    this.animations.play('catchleft', 2, true);

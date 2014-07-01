@@ -3,17 +3,23 @@
 var Fisherman = require('../prefabs/fisherman');
 var Fish = require('../prefabs/fish');
 var Mine = require('../prefabs/mine');
+var Timer = require('../prefabs/timer');
 var PipeGroup = require('../prefabs/pipeGroup');
 var Scoreboard = require('../prefabs/scoreboard');
+
 var CELL_SIZE = 0;
 var CELL_NUMBER = 6;
 var LEFT_POSITION = 0;
 var RIGHT_POSITION = 0;
 
+var GAME_TIME = 4000; //ms
+var level = 0;
 
-function Play() {}
+function Play() {};
+
 Play.prototype = {
     create: function() {
+
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y = 100;
 
@@ -26,6 +32,8 @@ Play.prototype = {
 
         this.background = this.game.add.tileSprite(0, 0, this.game.width, 555, 'background');
         this.background.autoScroll(0, -40);
+
+        this.timer = new Timer(this.game, GAME_TIME, this.deathHandler.bind(this));
 
         this.hero = new Fisherman(this.game, this.game.width / 2, CELL_SIZE / 2, 1);
         this.game.add.existing(this.hero);
@@ -44,10 +52,7 @@ Play.prototype = {
         this.instructionGroup.setAll('anchor.x', 0.5);
         this.instructionGroup.setAll('anchor.y', 0.5);
 
-        // this.pipeGenerator = null;
         this.gameover = false;
-
-
     },
     elemArrays: {
         left: [],
@@ -55,11 +60,13 @@ Play.prototype = {
     },
     sideAction: function(pointer, e) {
         if (!this.hero.alive || this.gameover) return;
+
         var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
         var sideArr = this.elemArrays[side];
         var nextElem = sideArr[0];
+
         this.hero.catch(side);
-        console.log(nextElem)
+        this.timer.increase();
 
         this.accelerateAll();
 
@@ -91,7 +98,6 @@ Play.prototype = {
     },
     placeStartElements: function() {
         var element;
-        console.log('placin')
 
         for (var i = 0; i < 6; i++) {
             this.elemArrays.left.forEach(function(elem) {
@@ -175,7 +181,9 @@ Play.prototype = {
         }, 400, Phaser.Easing.Linear.None, true);
     },
     update: function() {
+
         var fishes = this.getAllElements();
+        this.timer.decrease();
         fishes.forEach(function(elem) {
             if (this.game.isAccelerated && elem.y - 60 < this.hero.y) {
                 this.slowDownAll();
@@ -188,7 +196,9 @@ Play.prototype = {
         this.scoreboard.destroy();
     },
     startGame: function() {
+
         if (!this.hero.alive && !this.gameover) {
+            this.timer.start();
             this.placeStartElements();
 
             // this.hero.body.allowGravity = true;
@@ -207,6 +217,8 @@ Play.prototype = {
     deathHandler: function(elem) {
 
         if (!this.gameover) {
+            this.timer.stop();
+            this.timer.destroyAll();
             this.hero.loadTexture('explosion', 0);
             this.hero.animations.add('explosion');
             this.hero.animations.play('explosion', 16, 1);
@@ -214,7 +226,9 @@ Play.prototype = {
             this.gameover = true;
             this.hero.alive = false;
 
-            elem.destroy();
+            if(elem){
+                elem.destroy();
+            }
 
             this.getAllElements().forEach(function(elem){
                 elem.body.velocity.y = 0;

@@ -16,7 +16,6 @@ Preload.prototype = {
     this.add.sprite((this.game.width - 288) / 2, 0, 'splash');
 
     this.load.image('background', 'assets/water.png');
-    this.load.image('mine', 'assets/mine.png');
     this.load.image('timer', 'assets/timer.png');
     this.load.image('timebar', 'assets/redwater.png');
 
@@ -27,11 +26,18 @@ Preload.prototype = {
 
     this.load.image('scoreboard', 'assets/bonescore.png');
     this.load.image('gameover', 'assets/gameover.png');
-    this.load.spritesheet('medals', 'assets/medals.png', 44, 46, 2);
-    this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
     this.load.image('particle', 'assets/particle.png');
 
     this.load.bitmapFont('flappyfont', 'assets/fonts/flappyfont/flappyfont.png', 'assets/fonts/flappyfont/flappyfont.fnt');
+
+    // @key, @src, @frame x, @frame y, @number of frames
+    this.load.spritesheet('fish', 'assets/fish.png', 40, 64, 2);
+    this.load.spritesheet('nocatch', 'assets/nofish.png', 279, 130, 1);
+    this.load.spritesheet('catchright', 'assets/fishight.png', 279, 130, 1);
+    this.load.spritesheet('catchleft', 'assets/fishlef.png', 279, 130, 1);
+    this.load.spritesheet('mine', 'assets/mine.png', 40, 38, 1);
+    this.load.spritesheet('medals', 'assets/medals.png', 44, 46, 2);
+    this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
 
     if (!!PGLowLatencyAudio) {
       PGLowLatencyAudio.preloadFX('flap', 'assets/flap.wav');
@@ -39,14 +45,6 @@ Preload.prototype = {
       PGLowLatencyAudio.preloadFX('pipe-hit', 'assets/pipe-hit.wav');
       PGLowLatencyAudio.preloadFX('ground-hit', 'assets/ground-hit.wav');
     }
-
-    // this.load.spritesheet('pipe', 'assets/bonepipes.png', 54, 320, 2);
-    this.load.spritesheet('fisherman', 'assets/fisherman.png', 98, 154, 1);
-    this.load.spritesheet('fish', 'assets/fish.png', 40, 64, 2);
-    this.load.spritesheet('nocatch', 'assets/nofish.png', 279, 130, 1);
-    this.load.spritesheet('catchright', 'assets/fishight.png', 279, 130, 1);
-    this.load.spritesheet('catchleft', 'assets/fishlef.png', 279, 130, 1);
-    this.load.spritesheet('mine', 'assets/mine.png', 40, 38, 1);
   },
   create: function() {
 

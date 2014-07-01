@@ -5,7 +5,7 @@ function Menu() {}
 Menu.prototype = {
   preload: function() {
     // add the background sprite
-    this.background = this.game.add.tileSprite(0, 0, this.game.width, 555, 'background');
+    this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
   },
   create: function() {
     this.titleGroup = this.game.add.group();

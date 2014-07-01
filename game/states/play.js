@@ -1,10 +1,11 @@
 'use strict';
 
+var config = require('../config');
+
 var Fisherman = require('../prefabs/fisherman');
 var Fish = require('../prefabs/fish');
 var Mine = require('../prefabs/mine');
 var Timer = require('../prefabs/timer');
-var PipeGroup = require('../prefabs/pipeGroup');
 var Scoreboard = require('../prefabs/scoreboard');
 
 var CELL_SIZE = 0;
@@ -12,7 +13,6 @@ var CELL_NUMBER = 6;
 var LEFT_POSITION = 0;
 var RIGHT_POSITION = 0;
 
-var GAME_TIME = 4000; //ms
 var level = 0;
 
 function Play() {};
@@ -21,19 +21,19 @@ Play.prototype = {
     create: function() {
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.physics.arcade.gravity.y = 100;
+        this.game.physics.arcade.gravity.y = 0;
 
-        CELL_SIZE = this.game.height / 5;
+        CELL_SIZE = this.game.height * config.verticalCellSize;
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
 
         this.elemArrays.left = [];
         this.elemArrays.right = [];
 
-        this.background = this.game.add.tileSprite(0, 0, this.game.width, 555, 'background');
-        this.background.autoScroll(0, -40);
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+        this.background.autoScroll(0, config.baseWaterSpeed);
 
-        this.timer = new Timer(this.game, GAME_TIME, this.deathHandler.bind(this));
+        this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
 
         this.hero = new Fisherman(this.game, this.game.width / 2, CELL_SIZE / 2, 1);
         this.game.add.existing(this.hero);
@@ -67,7 +67,6 @@ Play.prototype = {
 
         this.hero.catch(side);
         this.timer.increase();
-
         this.accelerateAll();
 
         if (!nextElem) throw 'element is not defined, do something';
@@ -84,7 +83,7 @@ Play.prototype = {
     },
     accelerateAll: function() {
         this.getAllElements().forEach(function(elem) {
-            elem.body.acceleration.y = -3600;
+            elem.body.acceleration.y = config.accelerationSpeed;
             elem.acceleratedAt = elem.y;
         });
         this.game.isAccelerated = true;
@@ -92,7 +91,7 @@ Play.prototype = {
     slowDownAll: function() {
         this.getAllElements().forEach(function(elem) {
             elem.body.acceleration.y = 0;
-            elem.body.velocity.y = -40;
+            elem.body.velocity.y = config.baseElementSpeed;
         });
         this.game.isAccelerated = false;
     },
@@ -157,7 +156,7 @@ Play.prototype = {
 
         this.game.add.existing(obj);
 
-        if(lastElem){
+        if (lastElem) {
             obj.y = lastElem.y + CELL_SIZE;
             obj.body.velocity.y = lastElem.body.velocity.y;
             obj.body.acceleration.y = lastElem.body.acceleration.y;
@@ -210,9 +209,9 @@ Play.prototype = {
     },
     checkScore: function(pipeGroup) {
 
-       this.score++;
-       this.scoreText.setText(this.score.toString());
-       PGLowLatencyAudio && PGLowLatencyAudio.play('score');
+        this.score++;
+        this.scoreText.setText(this.score.toString());
+        PGLowLatencyAudio && PGLowLatencyAudio.play('score');
     },
     deathHandler: function(elem) {
 
@@ -226,16 +225,16 @@ Play.prototype = {
             this.gameover = true;
             this.hero.alive = false;
 
-            if(elem){
+            if (elem) {
                 elem.destroy();
             }
 
-            this.getAllElements().forEach(function(elem){
+            this.getAllElements().forEach(function(elem) {
                 elem.body.velocity.y = 0;
                 elem.body.acceleration.y = 0;
             }, this);
 
-            this.background.autoScroll(0,0);
+            this.background.autoScroll(0, 0);
 
             this.scoreboard = new Scoreboard(this.game);
             this.game.add.existing(this.scoreboard);

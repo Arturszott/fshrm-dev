@@ -16,26 +16,29 @@ Preload.prototype = {
     this.add.sprite((this.game.width - 288) / 2, 0, 'splash');
 
     this.load.image('background', 'assets/water.png');
+    this.load.image('bottom', 'assets/bottom.png');
+    this.load.image('waterlayer', 'assets/water2.png');
     this.load.image('timer', 'assets/timer.png');
-    this.load.image('timebar', 'assets/redwater.png');
+    this.load.image('timebar', 'assets/time.png');
 
     this.load.image('title', 'assets/logo.png');
     this.load.image('startButton', 'assets/start-button.png');
     this.load.image('instructions', 'assets/instructiondarks.png');
     this.load.image('getReady', 'assets/get-ready.png');
 
-    this.load.image('scoreboard', 'assets/bonescore.png');
+    // this.load.image('scoreboard', 'assets/bonescore.png');
+    this.load.image('board', 'assets/menu.png');
     this.load.image('gameover', 'assets/gameover.png');
     this.load.image('particle', 'assets/particle.png');
 
     this.load.bitmapFont('flappyfont', 'assets/fonts/flappyfont/flappyfont.png', 'assets/fonts/flappyfont/flappyfont.fnt');
 
     // @key, @src, @frame x, @frame y, @number of frames
-    this.load.spritesheet('fish', 'assets/fish.png', 40, 64, 2);
-    this.load.spritesheet('nocatch', 'assets/nofish.png', 279, 130, 1);
-    this.load.spritesheet('catchright', 'assets/fishight.png', 279, 130, 1);
-    this.load.spritesheet('catchleft', 'assets/fishlef.png', 279, 130, 1);
-    this.load.spritesheet('mine', 'assets/mine.png', 40, 38, 1);
+    this.load.spritesheet('fish', 'assets/fish2.png', 64, 104, 1);
+    this.load.spritesheet('fisherman', 'assets/fisherman.png', 108, 136, 1);
+    // this.load.spritesheet('catchright', 'assets/fishight.png', 279, 130, 1);
+    // this.load.spritesheet('catchleft', 'assets/fishlef.png', 279, 130, 1);
+    this.load.spritesheet('mine', 'assets/mine.png', 84, 80, 1);
     this.load.spritesheet('medals', 'assets/medals.png', 44, 46, 2);
     this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
 

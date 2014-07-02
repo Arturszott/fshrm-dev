@@ -5,11 +5,13 @@ var Scoreboard = function(game) {
 	var gameover;
 
 	Phaser.Group.call(this, game);
+
+
+	this.scoreboard = this.create(this.game.width / 2, 200, 'board');
+	this.scoreboard.anchor.setTo(0.5, 0.5);
+
 	gameover = this.create(this.game.width / 2, 100, 'gameover');
 	gameover.anchor.setTo(0.5, 0.5);
-
-	this.scoreboard = this.create(this.game.width / 2, 200, 'scoreboard');
-	this.scoreboard.anchor.setTo(0.5, 0.5);
 
 	var scoreX = this.scoreboard.width/2 - 50;
 

@@ -9,7 +9,6 @@ var Timer = require('../prefabs/timer');
 var Scoreboard = require('../prefabs/scoreboard');
 
 var CELL_SIZE = 0;
-var CELL_NUMBER = 6;
 var LEFT_POSITION = 0;
 var RIGHT_POSITION = 0;
 
@@ -30,12 +29,15 @@ Play.prototype = {
         this.elemArrays.left = [];
         this.elemArrays.right = [];
 
-        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
-        this.background.autoScroll(0, config.baseWaterSpeed);
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'bottom');
+        this.background.autoScroll(0, config.baseBottomSpeed);
+
+        this.water = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'waterlayer');
+        this.water.autoScroll(0, config.baseWaterSpeed);
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
 
-        this.hero = new Fisherman(this.game, this.game.width / 2, CELL_SIZE / 2, 1);
+        this.hero = new Fisherman(this.game, this.game.width / 2, CELL_SIZE / 3 *2, 1);
         this.game.add.existing(this.hero);
 
         this.score = 0;
@@ -62,26 +64,25 @@ Play.prototype = {
         if (!this.hero.alive || this.gameover) return;
 
         var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
-        var sideArr = this.elemArrays[side];
-        var nextElem = sideArr[0];
+        var nextElem = this.elemArrays[side][0];
 
         this.hero.catch(side);
         this.timer.increase();
         this.accelerateAll();
 
-        if (!nextElem) throw 'element is not defined, do something';
-
         if (nextElem.key === 'mine') {
             this.deathHandler(nextElem);
         } else {
             this.checkScore();
-            this.throwAway(nextElem, side);
+            nextElem.throwAway(side);
         }
 
         this.dispose();
         this.refill()
     },
     accelerateAll: function() {
+        this.background.autoScroll(0, config.bottomAccelerationSpeed);
+        this.water.autoScroll(0, config.waterAccelerationSpeed);
         this.getAllElements().forEach(function(elem) {
             elem.body.acceleration.y = config.accelerationSpeed;
             elem.acceleratedAt = elem.y;
@@ -89,6 +90,8 @@ Play.prototype = {
         this.game.isAccelerated = true;
     },
     slowDownAll: function() {
+        this.background.autoScroll(0, config.baseBottomSpeed);
+        this.water.autoScroll(0, config.baseBottomSpeed);
         this.getAllElements().forEach(function(elem) {
             elem.body.acceleration.y = 0;
             elem.body.velocity.y = config.baseElementSpeed;
@@ -98,7 +101,7 @@ Play.prototype = {
     placeStartElements: function() {
         var element;
 
-        for (var i = 0; i < 6; i++) {
+        for (var i = 0; i <= 1 / config.verticalCellSize; i++) {
             this.elemArrays.left.forEach(function(elem) {
                 elem.y -= CELL_SIZE;
             });
@@ -106,7 +109,7 @@ Play.prototype = {
             element = this.pickElement();
             this.placeElement(element, 'left');
         }
-        for (var i = 0; i < 6; i++) {
+        for (var i = 0; i <= 1 / config.verticalCellSize; i++) {
             this.elemArrays.right.forEach(function(elem) {
                 elem.y -= CELL_SIZE;
             });
@@ -122,6 +125,14 @@ Play.prototype = {
     },
     getAllElements: function() {
         return this.elemArrays.left.concat(this.elemArrays.right);
+    },
+    stopAllElements: function(){
+        this.getAllElements().forEach(function(elem) {
+            elem.body.velocity.y = 0;
+            elem.body.acceleration.y = 0;
+        }, this);
+
+        this.background.autoScroll(0, 0);
     },
     dispose: function() {
         this.elemArrays.left.shift();
@@ -151,7 +162,7 @@ Play.prototype = {
         if (side === 'left') x = LEFT_POSITION;
         if (side === 'right') x = RIGHT_POSITION;
 
-        var y = this.game.height + 20;
+        var y = this.game.height;
         var obj = new elem(this.game, x, y + CELL_SIZE);
 
         this.game.add.existing(obj);
@@ -161,6 +172,7 @@ Play.prototype = {
             obj.body.velocity.y = lastElem.body.velocity.y;
             obj.body.acceleration.y = lastElem.body.acceleration.y;
         }
+
         sideArr.push(obj);
     },
     pickElement: function() {
@@ -168,22 +180,12 @@ Play.prototype = {
         var n = Math.floor(Math.random() * 2);
         return elements[n];
     },
-    throwAway: function(elem, side) {
-        var x;
-
-        if (side === 'left') x = -60;
-        if (side === 'right') x = this.game.width + 60;
-
-        return this.game.add.tween(elem).to({
-            x: x,
-            angle: 720
-        }, 400, Phaser.Easing.Linear.None, true);
-    },
     update: function() {
 
         var fishes = this.getAllElements();
         this.timer.decrease();
         fishes.forEach(function(elem) {
+            // TODO remove magic number
             if (this.game.isAccelerated && elem.y - 60 < this.hero.y) {
                 this.slowDownAll();
             }
@@ -208,37 +210,33 @@ Play.prototype = {
         }
     },
     checkScore: function(pipeGroup) {
-
         this.score++;
         this.scoreText.setText(this.score.toString());
         PGLowLatencyAudio && PGLowLatencyAudio.play('score');
     },
+    showScoreboard: function(){
+        this.scoreboard = new Scoreboard(this.game);
+        this.game.add.existing(this.scoreboard);
+        this.scoreboard.show(this.score);
+    },
     deathHandler: function(elem) {
 
         if (!this.gameover) {
+
             this.timer.stop();
             this.timer.destroyAll();
-            this.hero.loadTexture('explosion', 0);
-            this.hero.animations.add('explosion');
-            this.hero.animations.play('explosion', 16, 1);
+
+            this.hero.applyDeath();
 
             this.gameover = true;
-            this.hero.alive = false;
 
             if (elem) {
                 elem.destroy();
             }
 
-            this.getAllElements().forEach(function(elem) {
-                elem.body.velocity.y = 0;
-                elem.body.acceleration.y = 0;
-            }, this);
+            this.stopAllElements();
+            this.showScoreboard();
 
-            this.background.autoScroll(0, 0);
-
-            this.scoreboard = new Scoreboard(this.game);
-            this.game.add.existing(this.scoreboard);
-            this.scoreboard.show(this.score);
         }
     }
 };

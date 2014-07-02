@@ -9,12 +9,12 @@ var Timer = function(game, time, deathHandler) {
 
 	this.started = false;
 	this.deathHandler = deathHandler;
-	
+
 
 	this.game.add.existing(this);
-	this.timebarWidth = this.width - 8;
+	this.timebarWidth = this.width - 50;
 
-	this.bar = this.game.add.tileSprite(this.x - this.width / 2 + 4, this.y - this.height / 2 + 4, this.timebarWidth, 18, 'timebar');
+	this.bar = this.game.add.tileSprite(this.x - this.width / 2 + 25, this.y - this.height / 2 + 16, this.timebarWidth, 28, 'timebar');
 };
 Timer.prototype = Object.create(Phaser.Sprite.prototype);
 Timer.prototype.constructor = Timer;
@@ -35,11 +35,11 @@ Timer.prototype.stop = function() {
 	console.log(this);
 };
 Timer.prototype.decrease = function() {
-	if(!this.started) return false;
+	if (!this.started) return false;
 
 	var decreaseValue = 16;
 
-	if(this.currentTime - decreaseValue <= 0){
+	if (this.currentTime - decreaseValue <= 0) {
 		this.currentTime = 0;
 		this.deathHandler();
 	} else {
@@ -47,15 +47,13 @@ Timer.prototype.decrease = function() {
 	}
 
 	this.setBar();
-
-
 };
 Timer.prototype.increase = function() {
-	if(!this.started) return false;
+	if (!this.started) return false;
 
 	var increaseValue = 300;
 
-	if(this.currentTime + increaseValue >= this.maxDuration){
+	if (this.currentTime + increaseValue >= this.maxDuration) {
 		this.currentTime = this.maxDuration;
 	} else {
 		this.currentTime += increaseValue;
@@ -63,7 +61,7 @@ Timer.prototype.increase = function() {
 
 	this.setBar();
 
-	
+
 };
 // Timer.prototype.update = function() {
 // 	this.decrease();

@@ -40,7 +40,7 @@ Play.prototype = {
         this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
 
         this.crew = new Crew(this.game, this.game.width / 2, CELL_SIZE / 3 * 2, 1);
-        this.game.add.existing(this.crew);
+        this.game.world.addAt(this.crew, 2);
 
         this.score = 0;
         this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height / 2, 'flappyfont', this.score.toString(), 24);
@@ -67,10 +67,8 @@ Play.prototype = {
 
         var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
         var nextElem = this.elemArrays[side][0];
-        console.log(nextElem);
         nextElem.bringToTop();
-
-        this.crew.catch(side);
+        this.crew.catch(side, nextElem);
         this.timer.increase();
         this.accelerateAll();
 
@@ -182,7 +180,7 @@ Play.prototype = {
         sideArr.push(obj);
     },
     pickElement: function() {
-        var elements = [Mine, Fish];
+        var elements = [Fish, Fish];
         var n = Math.floor(Math.random() * 2);
         return elements[n];
     },
@@ -216,6 +214,10 @@ Play.prototype = {
     },
     checkScore: function(pipeGroup) {
         this.score++;
+
+        if (Math.floor(this.score / 20) == this.game.level) {
+            this.game.level++;
+        }
         this.scoreText.setText(this.score.toString());
         PGLowLatencyAudio && PGLowLatencyAudio.play('score');
     },
@@ -226,7 +228,7 @@ Play.prototype = {
             that.game.add.existing(that.scoreboard);
             that.scoreboard.show(that.score);
         }, 500);
-        
+
     },
     deathHandler: function(elem) {
 

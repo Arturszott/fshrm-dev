@@ -25,6 +25,8 @@ window.onDeviceReady = function() {
 
 	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.AUTO, 'flappy-hell');
 
+	game.widthRatio = 505 * screenRatio / 288;
+
 	// Game States
 	 game.state.add('boot', require('./states/boot'));  game.state.add('menu', require('./states/menu'));  game.state.add('play', require('./states/play'));  game.state.add('preload', require('./states/preload')); 
 

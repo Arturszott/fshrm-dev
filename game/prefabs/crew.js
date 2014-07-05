@@ -6,16 +6,20 @@ var Tool = require('./tool');
 
 var Crew = function(game, x, y) {
 	Phaser.Group.call(this, game, x, y, 'crew');
-	console.log(this);
 
 	var type = null;
+
+
+	if (!!localStorage) {
+		this.toolType = localStorage.getItem('tool') || 'pole';
+	}
 
 	this.mount = new Mount(game, x, y, type);
 	this.hero = new Hero(game, x, y, type);
 
-	this.tool = new Tool(game, x, y, type, {
+	this.tool = new Tool(game, x, y, this.toolType, {
 		// offset
-		x: -46,
+		x: -46 * this.game.widthRatio,
 		y: 10
 	});
 
@@ -30,10 +34,14 @@ var Crew = function(game, x, y) {
 
 Crew.prototype = Object.create(Phaser.Group.prototype);
 Crew.prototype.constructor = Crew;
-Crew.prototype.catch = function(side) {
-	this.hero.catch(side);
-	this.tool.catch(side);
-	this.mount.catch(side);
+Crew.prototype.catch = function(side, element) {
+	this.parent.bringToTop(this);
+
+	var swimDistance = 40 * this.game.widthRatio;
+
+	this.hero.catch(side, swimDistance);
+	this.tool.catch(side, swimDistance);
+	this.mount.catch(side, swimDistance);
 }
 Crew.prototype.applyDeath = function(side) {
 	this.hero.applyDeath();

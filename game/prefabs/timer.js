@@ -10,7 +10,6 @@ var Timer = function(game, time, deathHandler) {
 	this.started = false;
 	this.deathHandler = deathHandler;
 
-
 	this.game.add.existing(this);
 	this.timebarWidth = this.width - 50;
 
@@ -24,7 +23,7 @@ Timer.prototype.setBar = function() {
 };
 Timer.prototype.start = function() {
 	this.started = true;
-	console.log(this);
+	this.currentTime = this.currentTime / 2;
 };
 Timer.prototype.destroyAll = function() {
 	this.bar.destroy();
@@ -32,12 +31,11 @@ Timer.prototype.destroyAll = function() {
 };
 Timer.prototype.stop = function() {
 	this.started = false;
-	console.log(this);
 };
 Timer.prototype.decrease = function() {
 	if (!this.started) return false;
-
-	var decreaseValue = 16;
+	var magicNumber = 60;
+	var decreaseValue = Math.tan(Math.sqrt(this.game.level) / 10) * magicNumber;
 
 	if (this.currentTime - decreaseValue <= 0) {
 		this.currentTime = 0;
@@ -51,7 +49,7 @@ Timer.prototype.decrease = function() {
 Timer.prototype.increase = function() {
 	if (!this.started) return false;
 
-	var increaseValue = 300;
+	var increaseValue = 450;
 
 	if (this.currentTime + increaseValue >= this.maxDuration) {
 		this.currentTime = this.maxDuration;

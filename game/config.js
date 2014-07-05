@@ -7,7 +7,7 @@ var config = {
 	baseWaterSpeed: -120,
 	baseBottomSpeed: -60,
 	// miliseconds
-	GAME_TIME: 40000,
+	GAME_TIME: 4000,
 	accelerationSpeed: -3600,
 	bottomAccelerationSpeed: -200,
 	waterAccelerationSpeed: -300,

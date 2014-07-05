@@ -25,6 +25,8 @@ window.onDeviceReady = function() {
 
 	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.AUTO, '<%= _.slugify(projectName) %>');
 
+	game.widthRatio = 505 * screenRatio / 288;
+
 	// Game States
 	<% _.forEach(gameStates, function(gameState) { %> game.state.add('<%= gameState.shortName %>', require('./states/<%= gameState.shortName %>')); <%
 	}); %>

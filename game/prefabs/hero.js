@@ -22,19 +22,19 @@ var Hero = function(game, x, y, type) {
 Hero.prototype = Object.create(Phaser.Sprite.prototype);
 Hero.prototype.constructor = Hero;
 
-Hero.prototype.catch = function(side) {
+Hero.prototype.catch = function(side, swimDistance) {
 	var that = this;
 
 	PGLowLatencyAudio && PGLowLatencyAudio.play('catch');
 
 	if (side === 'right') {
 		this.game.add.tween(this).to({
-			x: this.game.width / 2 + 30,
+			x: this.game.width / 2 + swimDistance,
 		}, 80, Phaser.Easing.Linear.None, true);
 	}
 	if (side === 'left') {
 		this.game.add.tween(this).to({
-			x: this.game.width / 2 - 30,
+			x: this.game.width / 2 - swimDistance,
 		}, 100, Phaser.Easing.Linear.None, true);
 	}
 };

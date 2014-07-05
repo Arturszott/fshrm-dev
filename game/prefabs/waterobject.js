@@ -16,7 +16,14 @@ Waterobject.prototype.constructor = Waterobject;
 Waterobject.prototype.checkOnScreen = function() {
 	if (!this.inWorld && this.y < 0) {
 		this.exists = false;
-		// this.destroy();
+		this.destroy();
+	}
+};
+Waterobject.prototype.addToWorld = function() {
+	if(this.underwater) {
+		this.game.world.addAt(this, 1)
+	} else {
+		this.game.add.existing(this);
 	}
 };
 

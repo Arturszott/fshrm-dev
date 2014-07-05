@@ -17,7 +17,7 @@ Preload.prototype = {
 
     this.load.image('background', 'assets/water.png');
     this.load.image('bottom', 'assets/bottom.png');
-    this.load.image('waterlayer', 'assets/water2.png');
+    this.load.image('waterlayer', 'assets/sea.png');
     this.load.image('timer', 'assets/timer.png');
     this.load.image('timebar', 'assets/time.png');
 
@@ -34,11 +34,13 @@ Preload.prototype = {
     this.load.bitmapFont('flappyfont', 'assets/fonts/flappyfont/flappyfont.png', 'assets/fonts/flappyfont/flappyfont.fnt');
 
     // @key, @src, @frame x, @frame y, @number of frames
-    this.load.spritesheet('fish', 'assets/fish2.png', 64, 104, 1);
-    this.load.spritesheet('fisherman', 'assets/fisherman.png', 108, 136, 1);
-    // this.load.spritesheet('catchright', 'assets/fishight.png', 279, 130, 1);
-    // this.load.spritesheet('catchleft', 'assets/fishlef.png', 279, 130, 1);
-    this.load.spritesheet('mine', 'assets/mine.png', 84, 80, 1);
+    this.load.spritesheet('fish', 'assets/fish1.png', 100, 144, 4);
+    this.load.spritesheet('mount', 'assets/ponton1.png', 144, 372, 4);
+    this.load.spritesheet('fisherman', 'assets/Fm.png', 144, 152, 4);
+    this.load.spritesheet('pole', 'assets/pole.png', 76, 128, 4);
+
+    // this.load.spritesheet('mine', 'assets/mine.png', 108, 108, 6);
+    this.load.spritesheet('mine', 'assets/bomba2.png', 104, 104, 1);
     this.load.spritesheet('medals', 'assets/medals.png', 44, 46, 2);
     this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
 

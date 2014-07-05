@@ -2,17 +2,17 @@
 
 var config = {
 	// 20% of the screen height
-	verticalCellSize: 0.25,
+	verticalCellSize: 1/6,
 	// negative value mean background is scrolling top
-	baseWaterSpeed: -30,
+	baseWaterSpeed: -120,
 	baseBottomSpeed: -60,
 	// miliseconds
-	GAME_TIME: 4000,
+	GAME_TIME: 40000,
 	accelerationSpeed: -3600,
 	bottomAccelerationSpeed: -200,
 	waterAccelerationSpeed: -300,
 	baseElementSpeed: -20,
-	fishRotationAngle: 320,
+	fishRotationAngle: 270,
 	throwAnimationTime: 400
 }
 

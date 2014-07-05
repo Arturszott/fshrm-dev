@@ -2,7 +2,7 @@
 
 var config = require('../config');
 
-var Fisherman = require('../prefabs/fisherman');
+var Crew = require('../prefabs/crew');
 var Fish = require('../prefabs/fish');
 var Mine = require('../prefabs/mine');
 var Timer = require('../prefabs/timer');
@@ -12,20 +12,21 @@ var CELL_SIZE = 0;
 var LEFT_POSITION = 0;
 var RIGHT_POSITION = 0;
 
-var level = 0;
-
 function Play() {};
 
 Play.prototype = {
     create: function() {
+        this.game.level = 1;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y = 0;
 
+        // almost constant, aye?
         CELL_SIZE = this.game.height * config.verticalCellSize;
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
 
+        // we will hold there fish & mines
         this.elemArrays.left = [];
         this.elemArrays.right = [];
 
@@ -33,12 +34,13 @@ Play.prototype = {
         this.background.autoScroll(0, config.baseBottomSpeed);
 
         this.water = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'waterlayer');
+        this.game.water = this.water;
         this.water.autoScroll(0, config.baseWaterSpeed);
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
 
-        this.hero = new Fisherman(this.game, this.game.width / 2, CELL_SIZE / 3 *2, 1);
-        this.game.add.existing(this.hero);
+        this.crew = new Crew(this.game, this.game.width / 2, CELL_SIZE / 3 * 2, 1);
+        this.game.add.existing(this.crew);
 
         this.score = 0;
         this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height / 2, 'flappyfont', this.score.toString(), 24);
@@ -61,12 +63,14 @@ Play.prototype = {
         right: []
     },
     sideAction: function(pointer, e) {
-        if (!this.hero.alive || this.gameover) return;
+        if (!this.crew.alive || this.gameover) return;
 
         var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
         var nextElem = this.elemArrays[side][0];
+        console.log(nextElem);
+        nextElem.bringToTop();
 
-        this.hero.catch(side);
+        this.crew.catch(side);
         this.timer.increase();
         this.accelerateAll();
 
@@ -81,19 +85,22 @@ Play.prototype = {
         this.refill()
     },
     accelerateAll: function() {
+        if (this.game.isAccelerated) return;
+
         this.background.autoScroll(0, config.bottomAccelerationSpeed);
         this.water.autoScroll(0, config.waterAccelerationSpeed);
+
         this.getAllElements().forEach(function(elem) {
-            elem.body.acceleration.y = config.accelerationSpeed;
-            elem.acceleratedAt = elem.y;
+            elem.body.velocity.y = -600;
         });
+
         this.game.isAccelerated = true;
     },
     slowDownAll: function() {
         this.background.autoScroll(0, config.baseBottomSpeed);
         this.water.autoScroll(0, config.baseBottomSpeed);
         this.getAllElements().forEach(function(elem) {
-            elem.body.acceleration.y = 0;
+            // elem.body.acceleration.y = 0;
             elem.body.velocity.y = config.baseElementSpeed;
         });
         this.game.isAccelerated = false;
@@ -101,7 +108,7 @@ Play.prototype = {
     placeStartElements: function() {
         var element;
 
-        for (var i = 0; i <= 1 / config.verticalCellSize; i++) {
+        for (var i = 0; i <= 1 / config.verticalCellSize - 1; i++) {
             this.elemArrays.left.forEach(function(elem) {
                 elem.y -= CELL_SIZE;
             });
@@ -109,7 +116,7 @@ Play.prototype = {
             element = this.pickElement();
             this.placeElement(element, 'left');
         }
-        for (var i = 0; i <= 1 / config.verticalCellSize; i++) {
+        for (var i = 0; i <= 1 / config.verticalCellSize - 1; i++) {
             this.elemArrays.right.forEach(function(elem) {
                 elem.y -= CELL_SIZE;
             });
@@ -126,7 +133,7 @@ Play.prototype = {
     getAllElements: function() {
         return this.elemArrays.left.concat(this.elemArrays.right);
     },
-    stopAllElements: function(){
+    stopAllElements: function() {
         this.getAllElements().forEach(function(elem) {
             elem.body.velocity.y = 0;
             elem.body.acceleration.y = 0;
@@ -164,8 +171,7 @@ Play.prototype = {
 
         var y = this.game.height;
         var obj = new elem(this.game, x, y + CELL_SIZE);
-
-        this.game.add.existing(obj);
+        obj.addToWorld();
 
         if (lastElem) {
             obj.y = lastElem.y + CELL_SIZE;
@@ -181,29 +187,28 @@ Play.prototype = {
         return elements[n];
     },
     update: function() {
-
         var fishes = this.getAllElements();
         this.timer.decrease();
+
         fishes.forEach(function(elem) {
-            // TODO remove magic number
-            if (this.game.isAccelerated && elem.y - 60 < this.hero.y) {
+            if (this.game.isAccelerated && elem.y - 120 < this.crew.y) {
                 this.slowDownAll();
             }
+
         }, this);
     },
     shutdown: function() {
         this.game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
-        this.hero.destroy();
+        this.crew.destroy();
         this.scoreboard.destroy();
     },
     startGame: function() {
-
-        if (!this.hero.alive && !this.gameover) {
+        if (!this.crew.alive && !this.gameover) {
             this.timer.start();
             this.placeStartElements();
 
-            // this.hero.body.allowGravity = true;
-            this.hero.alive = true;
+            // this.crew.body.allowGravity = true;
+            this.crew.alive = true;
             this.scoreText.visible = true;
 
             this.instructionGroup.destroy();
@@ -214,10 +219,14 @@ Play.prototype = {
         this.scoreText.setText(this.score.toString());
         PGLowLatencyAudio && PGLowLatencyAudio.play('score');
     },
-    showScoreboard: function(){
-        this.scoreboard = new Scoreboard(this.game);
-        this.game.add.existing(this.scoreboard);
-        this.scoreboard.show(this.score);
+    showScoreboard: function() {
+        var that = this;
+        setTimeout(function() {
+            that.scoreboard = new Scoreboard(that.game);
+            that.game.add.existing(that.scoreboard);
+            that.scoreboard.show(that.score);
+        }, 500);
+        
     },
     deathHandler: function(elem) {
 
@@ -226,14 +235,14 @@ Play.prototype = {
             this.timer.stop();
             this.timer.destroyAll();
 
-            this.hero.applyDeath();
+            this.crew.applyDeath();
 
             this.gameover = true;
 
             if (elem) {
                 elem.destroy();
             }
-
+            this.slowDownAll();
             this.stopAllElements();
             this.showScoreboard();
 

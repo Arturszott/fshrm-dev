@@ -24,19 +24,20 @@ Fish.prototype = Object.create(WaterObject.prototype);
 Fish.prototype.constructor = Fish;
 
 Fish.prototype.throwAway = function(side) {
+	this.visible = false;
 	this.body.velocity.y = -200;
 
-	var x = side === 'left' ? -80 : this.game.width + 80;
+	// var x = side === 'left' ? -80 : this.game.width + 80;
 
-	this.game.add.tween(this.scale).to({
-		x: 1,
-		y: 1
-	}, config.throwAnimationTime, Phaser.Easing.Linear.None, true);
+	// this.game.add.tween(this.scale).to({
+	// 	x: 1,
+	// 	y: 1
+	// }, config.throwAnimationTime, Phaser.Easing.Linear.None, true);
 
-	return this.game.add.tween(this).to({
-		x: x,
-		angle: side === 'left' ? -config.fishRotationAngle : config.fishRotationAngle
-	}, config.throwAnimationTime, Phaser.Easing.Linear.None, true);
+	// return this.game.add.tween(this).to({
+	// 	x: x,
+	// 	angle: side === 'left' ? -config.fishRotationAngle : config.fishRotationAngle
+	// }, config.throwAnimationTime, Phaser.Easing.Linear.None, true);
 },
 
 module.exports = Fish;

@@ -40,9 +40,15 @@ Hero.prototype.catch = function(side, swimDistance) {
 };
 Hero.prototype.update = function() {};
 Hero.prototype.applyDeath = function() {
+	var hero = this;
+
 	this.loadTexture('explosion', 0);
-	this.animations.add('explosion');
-	this.animations.play('explosion', 16, 1);
+
+	this.animations.add('explosion').onComplete.add(function(){
+		hero.loadTexture('skull', 0);
+	});
+
+	this.animations.play('explosion', 32, 1);
 	this.alive = false;
 };
 Hero.prototype.onKilled = function() {

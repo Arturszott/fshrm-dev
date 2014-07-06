@@ -6,6 +6,7 @@ var Crew = require('../prefabs/crew');
 var Fish = require('../prefabs/fish');
 var Mine = require('../prefabs/mine');
 var Timer = require('../prefabs/timer');
+var storage = require('../storage');
 var Scoreboard = require('../prefabs/scoreboard');
 
 var CELL_SIZE = 0;
@@ -15,8 +16,14 @@ var RIGHT_POSITION = 0;
 function Play() {};
 
 Play.prototype = {
+    elemArrays: {
+        left: [],
+        right: []
+    },
     create: function() {
         this.game.level = 1;
+
+
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y = 0;
@@ -42,39 +49,39 @@ Play.prototype = {
         this.crew = new Crew(this.game, this.game.width / 2, CELL_SIZE / 3 * 1, 1);
         this.game.world.addAt(this.crew, 2);
 
-        this.score = 0;
-        this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height / 2, 'flappyfont', this.score.toString(), 24);
-        this.scoreText.visible = false;
+        this.createScoreBox();
+        this.setInput();
+        this.showInstructions();
 
+        this.gameover = false;
+    },
+    setInput: function() {
         this.game.input.onDown.add(this.sideAction, this);
         this.game.input.onDown.addOnce(this.startGame, this);
         this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
-
+    },
+    createScoreBox: function() {
+        this.score = 0;
+        this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height / 2, 'fisherman', this.score.toString(), 24);
+        // this.scoreText.anchor.setTo(0.5, 0.5);
+        this.scoreText.updateTransform();
+        this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
+        this.scoreText.visible = false;
+    },
+    showInstructions: function() {
         this.instructionGroup = this.game.add.group();
         this.instructionGroup.add(this.game.add.sprite(this.game.width / 2, 100, 'getReady'));
         // this.instructionGroup.add(this.game.add.sprite(this.game.width / 2, 325, 'instructions'));
         this.instructionGroup.setAll('anchor.x', 0.5);
         this.instructionGroup.setAll('anchor.y', 0.5);
-
-        this.gameover = false;
     },
-    elemArrays: {
-        left: [],
-        right: []
-    },
-    sideAction: function(pointer, e) {
-        if (!this.crew.alive || this.gameover) return;
-
-        var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
-        var nextElem = this.elemArrays[side][0];
-
-
-        this.splash = this.game.add.sprite(nextElem.x, nextElem.y, 'water-splash', 0);
+    addSplash: function(x, y, side) {
+        this.splash = this.game.add.sprite(x, y, 'water-splash', 0);
         this.splash.anchor.setTo(0.5, 0.5);
         this.game.physics.arcade.enableBody(this.splash);
         // this.splash.body.velocity.y =  -300;
         var splashAnim = this.splash.animations.add('splashing');
-        this.splash.animations.play('splashing', 18, 1);
+        this.splash.animations.play('splashing', 12, 1);
 
         if (this.elemArrays[side][1].key === 'mine') this.game.world.bringToTop(this.elemArrays[side][1]);
 
@@ -85,6 +92,16 @@ Play.prototype = {
                 that.destroy();
             }, 10);
         }, this.splash);
+    },
+    sideAction: function(pointer, e) {
+        if (!this.crew.alive || this.gameover) return;
+
+        var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
+        var nextElem = this.elemArrays[side][0];
+
+        if (nextElem.key === 'fish') {
+            this.addSplash(nextElem.x, nextElem.y, side);
+        }
 
         nextElem.bringToTop();
 
@@ -96,11 +113,12 @@ Play.prototype = {
             this.deathHandler(nextElem);
         } else {
             this.checkScore();
+            this.dispose();
+            this.refill()
             nextElem.throwAway(side);
         }
 
-        this.dispose();
-        this.refill()
+
     },
     accelerateAll: function() {
         if (this.game.isAccelerated) return;
@@ -111,7 +129,10 @@ Play.prototype = {
         this.getAllElements().forEach(function(elem) {
             elem.body.velocity.y = -600;
         });
-        this.splash.body.velocity.y = -200;
+
+        if (this.splash) {
+            this.splash.body.velocity.y = -250;
+        }
 
         this.game.isAccelerated = true;
     },
@@ -153,10 +174,34 @@ Play.prototype = {
         return this.elemArrays.left.concat(this.elemArrays.right);
     },
     stopAllElements: function() {
-        this.getAllElements().forEach(function(elem) {
+        var that = this;
+
+        this.elemArrays.right.forEach(function(elem) {
             elem.body.velocity.y = 0;
             elem.body.acceleration.y = 0;
-        }, this);
+
+            // that.game.add.tween(elem).to({
+            //     x: that.game.width + 100,
+            // }, 1000, Phaser.Easing.Sinusoidal.Out, true, 500, false).onComplete.add(function() {
+            //     setTimeout(function() {
+            //         elem.destroy();
+            //     }, 10);
+            // });
+        });
+
+        this.elemArrays.left.forEach(function(elem) {
+            elem.body.velocity.y = 0;
+            elem.body.acceleration.y = 0;
+
+            that.game.add.tween(elem).to({
+                x: -100,
+            }, 1000, Phaser.Easing.Sinusoidal.Out, true, 500, false).onComplete.add(function() {
+                setTimeout(function() {
+                    elem.destroy();
+                }, 10);
+            });
+        });
+
 
         this.background.autoScroll(0, 0);
     },
@@ -244,30 +289,46 @@ Play.prototype = {
     },
     showScoreboard: function() {
         var that = this;
-        setTimeout(function() {
-            that.scoreboard = new Scoreboard(that.game);
+        that.scoreboard = new Scoreboard(that.game);
             that.game.add.existing(that.scoreboard);
             that.scoreboard.show(that.score);
-        }, 500);
 
     },
     deathHandler: function(elem) {
 
         if (!this.gameover) {
+            this.slowDownAll();
+            // this.stopAllElements();
 
             this.timer.stop();
             this.timer.destroyAll();
 
             this.crew.applyDeath();
 
-            this.gameover = true;
+            var boomSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
+            boomSprite.anchor.setTo(0.5, 0.5);
 
-            if (elem) {
-                elem.destroy();
-            }
-            this.slowDownAll();
-            this.stopAllElements();
+            boomSprite.scale.x = this.game.width / 288;
+            boomSprite.scale.y = this.game.width / 288;
+            this.game.physics.arcade.enableBody(boomSprite);
+
+
+            var boomAnim = boomSprite.animations.add('splashing');
+
+            boomSprite.animations.play('splashing', 16, 0);
+
+            this.getAllElements().forEach(function(elem){
+                elem.visible = false;
+            });
+
+            boomAnim.onComplete.add(function(){
+                
+            }, this);
+
             this.showScoreboard();
+
+            this.gameover = true;
+            
 
         }
     }

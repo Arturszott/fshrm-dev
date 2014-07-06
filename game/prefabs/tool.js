@@ -56,14 +56,9 @@ Tool.prototype.catch = function(side, swimDistance) {
 	}
 
 	anim = this.animations.add('swing');
-	this.animations.play('swing', 32, 1);
+	this.animations.play('swing', 24, 1);
 
 	anim.onComplete.add(function() {
-		if (anim.reverted) return;
-
-		anim._frames.reverse();
-		anim.restart();
-		anim.reverted = true;
 		this.waveTween.resume();
 
 		this.loadTexture(this.type, 0);

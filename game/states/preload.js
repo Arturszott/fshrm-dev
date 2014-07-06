@@ -39,11 +39,13 @@ Preload.prototype = {
     this.load.spritesheet('fisherman', 'assets/Fm.png', 144, 152, 4);
 
     this.load.spritesheet('pole', 'assets/pole.png', 76, 128, 4);
-    this.load.spritesheet('pole-left', 'assets/pole_left.png', 128, 160, 4);
-    this.load.spritesheet('pole-right', 'assets/pole_right.png', 128, 160, 4);
+    this.load.spritesheet('pole-left', 'assets/poleLeft.png', 128, 160, 4);
+    this.load.spritesheet('pole-right', 'assets/poleRight.png', 128, 160, 4);
+
+    this.load.spritesheet('water-splash', 'assets/water-splash.png', 72, 100, 6);
 
     // this.load.spritesheet('mine', 'assets/mine.png', 108, 108, 6);
-    this.load.spritesheet('mine', 'assets/bomba2.png', 104, 104, 1);
+    this.load.spritesheet('mine', 'assets/BOMB.png', 112, 132, 5);
     this.load.spritesheet('medals', 'assets/medals.png', 44, 46, 2);
     this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
 

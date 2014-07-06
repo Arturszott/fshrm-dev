@@ -8,7 +8,7 @@ var config = {
 	baseBottomSpeed: -60,
 	// miliseconds
 	GAME_TIME: 4000,
-	accelerationSpeed: -3600,
+	accelerationSpeed: -2400,
 	bottomAccelerationSpeed: -200,
 	waterAccelerationSpeed: -300,
 	baseElementSpeed: -20,

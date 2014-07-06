@@ -39,7 +39,7 @@ Play.prototype = {
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
 
-        this.crew = new Crew(this.game, this.game.width / 2, CELL_SIZE / 3 * 2, 1);
+        this.crew = new Crew(this.game, this.game.width / 2, CELL_SIZE / 3 * 1, 1);
         this.game.world.addAt(this.crew, 2);
 
         this.score = 0;
@@ -67,7 +67,27 @@ Play.prototype = {
 
         var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
         var nextElem = this.elemArrays[side][0];
+
+
+        this.splash = this.game.add.sprite(nextElem.x, nextElem.y, 'water-splash', 0);
+        this.splash.anchor.setTo(0.5, 0.5);
+        this.game.physics.arcade.enableBody(this.splash);
+        // this.splash.body.velocity.y =  -300;
+        var splashAnim = this.splash.animations.add('splashing');
+        this.splash.animations.play('splashing', 18, 1);
+
+        if (this.elemArrays[side][1].key === 'mine') this.game.world.bringToTop(this.elemArrays[side][1]);
+
+        splashAnim.onComplete.add(function() {
+            var that = this;
+            this.visibile = false;
+            setTimeout(function() {
+                that.destroy();
+            }, 10);
+        }, this.splash);
+
         nextElem.bringToTop();
+
         this.crew.catch(side, nextElem);
         this.timer.increase();
         this.accelerateAll();
@@ -91,6 +111,7 @@ Play.prototype = {
         this.getAllElements().forEach(function(elem) {
             elem.body.velocity.y = -600;
         });
+        this.splash.body.velocity.y = -200;
 
         this.game.isAccelerated = true;
     },
@@ -180,7 +201,7 @@ Play.prototype = {
         sideArr.push(obj);
     },
     pickElement: function() {
-        var elements = [Fish, Fish];
+        var elements = [Mine, Fish];
         var n = Math.floor(Math.random() * 2);
         return elements[n];
     },
@@ -189,7 +210,7 @@ Play.prototype = {
         this.timer.decrease();
 
         fishes.forEach(function(elem) {
-            if (this.game.isAccelerated && elem.y - 120 < this.crew.y) {
+            if (this.game.isAccelerated && elem.y - 140 < this.crew.y) {
                 this.slowDownAll();
             }
 

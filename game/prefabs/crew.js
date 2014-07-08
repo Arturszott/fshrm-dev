@@ -55,6 +55,18 @@ Crew.prototype.applyDeath = function(side) {
 	// this.mount.applyDeath();
 	// this.tool.destroy();
 }
+Crew.prototype.rest = function() {
+	this.wave.visible = false;
+	this.hero.swimAnim.stop();
+	this.mount.swimAnim.stop();
+	this.tool.waveTween._duration = 1000;
+}
+Crew.prototype.awake = function() {
+	this.wave.visible = true;
+	this.hero.swimAnim.play();
+	this.mount.swimAnim.play();
+	this.tool.waveTween._duration = 300;
+}
 Crew.prototype.update = function() {
 
 	// write your prefab's specific update code here

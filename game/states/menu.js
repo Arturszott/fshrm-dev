@@ -21,7 +21,7 @@ Menu.prototype = {
       y: 115
     }, 350, Phaser.Easing.Linear.NONE, true, 0, 1000, true);
 
-    this.startButton = this.game.add.button(this.game.width / 2, 300, 'startButton', this.startClick, this);
+    this.startButton = this.game.add.button(this.game.width / 2, 300, 'playBtn', this.startClick, this);
     this.startButton.anchor.setTo(0.5, 0.5);
 
 

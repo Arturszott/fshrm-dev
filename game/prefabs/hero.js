@@ -5,8 +5,8 @@ var Hero = function(game, x, y, type) {
 	Phaser.Sprite.call(this, game, x, y, type || 'fisherman', 0);
 
 	this.anchor.setTo(0.5, 0.5);
-	this.animations.add('flap');
-	this.animations.play('flap', 7, true);
+	this.swimAnim = this.animations.add('swim');
+	this.animations.play('swim', 7, true);
 
 	this.scale.x = 0.75;
 	this.scale.y = 0.75;

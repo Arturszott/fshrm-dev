@@ -2,6 +2,8 @@
 
 var config = require('../config');
 
+var Bay = require('../bay');
+
 var Crew = require('../prefabs/crew');
 var Fish = require('../prefabs/fish');
 var Mine = require('../prefabs/mine');
@@ -30,6 +32,8 @@ Play.prototype = {
 
         // almost constant, aye?
         CELL_SIZE = this.game.height * config.verticalCellSize;
+        this.game.CELL_SIZE = CELL_SIZE;
+
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
 
@@ -39,10 +43,11 @@ Play.prototype = {
 
         this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'bottom');
         this.background.autoScroll(0, config.baseBottomSpeed);
+        this.game.background = this.background;
 
-        this.water = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'waterlayer');
-        this.game.water = this.water;
+        this.water = this.game.add.tileSprite(0, 0, this.game.width + 100, this.game.height, 'waterlayer');
         this.water.autoScroll(0, config.baseWaterSpeed);
+        this.game.water = this.water;
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
 
@@ -54,11 +59,11 @@ Play.prototype = {
         this.showInstructions();
 
         this.gameover = false;
+
     },
     setInput: function() {
         this.game.input.onDown.add(this.sideAction, this);
         this.game.input.onDown.addOnce(this.startGame, this);
-        this.game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
     },
     createScoreBox: function() {
         this.score = 0;
@@ -281,7 +286,7 @@ Play.prototype = {
     checkScore: function(pipeGroup) {
         this.score++;
 
-        if (Math.floor(this.score / 20) == this.game.level) {
+        if (Math.floor(this.score / 15) == this.game.level) {
             this.game.level++;
         }
         this.scoreText.setText(this.score.toString());
@@ -289,10 +294,12 @@ Play.prototype = {
     },
     showScoreboard: function() {
         var that = this;
-        that.scoreboard = new Scoreboard(that.game);
-            that.game.add.existing(that.scoreboard);
-            that.scoreboard.show(that.score);
 
+        this.game.bay = new Bay(this.game);
+
+        that.scoreboard = new Scoreboard(that.game);
+        that.game.add.existing(that.scoreboard);
+        that.scoreboard.show(that.score);
     },
     deathHandler: function(elem) {
 
@@ -302,6 +309,7 @@ Play.prototype = {
 
             this.timer.stop();
             this.timer.destroyAll();
+            this.scoreText.destroy();
 
             this.crew.applyDeath();
 
@@ -317,18 +325,18 @@ Play.prototype = {
 
             boomSprite.animations.play('splashing', 16, 0);
 
-            this.getAllElements().forEach(function(elem){
+            this.getAllElements().forEach(function(elem) {
                 elem.visible = false;
             });
 
-            boomAnim.onComplete.add(function(){
-                
+            boomAnim.onComplete.add(function() {
+
             }, this);
 
             this.showScoreboard();
 
             this.gameover = true;
-            
+
 
         }
     }

@@ -49,7 +49,7 @@ Timer.prototype.decrease = function() {
 Timer.prototype.increase = function() {
 	if (!this.started) return false;
 
-	var increaseValue = 450;
+	var increaseValue = 150;
 
 	if (this.currentTime + increaseValue >= this.maxDuration) {
 		this.currentTime = this.maxDuration;

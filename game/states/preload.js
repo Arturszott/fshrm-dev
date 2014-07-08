@@ -33,16 +33,27 @@ Preload.prototype = {
         this.load.image('timebar', 'assets/time.png');
 
         this.load.image('title', 'assets/logo.png');
-        this.load.image('startButton', 'assets/startbtn.png');
+
+        // BUTTONS
+        this.load.image('playBtn', 'assets/btn_play.png');
+        this.load.image('homeBtn', 'assets/btn_home.png');
+        this.load.image('rankBtn', 'assets/btn_rank.png');
+
+        // others
         this.load.image('compassButton', 'assets/compassbtn.png');
         this.load.image('instructions', 'assets/instructiondarks.png');
         this.load.image('getReady', 'assets/get-ready.png');
 
-        this.load.image('board', 'assets/menu.png');
+        // bay
+        this.load.spritesheet('building_shop', 'assets/shop2.png', 100, 100, 1);
+        this.load.spritesheet('building_parts', 'assets/parts.png', 100, 100, 1);
+        this.load.spritesheet('building_house', 'assets/house.png', 100, 100, 1);
+
+        this.load.image('board', 'assets/menu-shorter.png');
         this.load.image('gameover', 'assets/gameover.png');
+        // this.load.image('gameover', 'assets/gameover2.png');
 
         this.load.bitmapFont('fisherman', 'assets/fonts/fisherman.png', 'assets/fonts/fisherman.fnt');
-        this.load.bitmapFont('fisherman-regular', 'assets/fonts/fisherman-regular.png', 'assets/fonts/fisherman-regular.fnt');
 
         // @key, @src, @frame x, @frame y, @number of frames
         this.load.spritesheet('fish', 'assets/fish1.png', 100, 144, 4);

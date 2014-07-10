@@ -1,5 +1,7 @@
 'use strict';
 
+var storage = require('../storage');
+
 var Scoreboard = function(game) {
 
 	var gameover;
@@ -44,6 +46,8 @@ Scoreboard.prototype = Object.create(Phaser.Group.prototype);
 Scoreboard.prototype.constructor = Scoreboard;
 Scoreboard.prototype.show = function(score) {
 	var bestScore;
+
+	storage.addFish(score);
 
 	this.isShown = true;
 	this.scoreboard.addChild(this.scoreText);

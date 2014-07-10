@@ -14,7 +14,7 @@ Waterobject.prototype = Object.create(Phaser.Sprite.prototype);
 Waterobject.prototype.constructor = Waterobject;
 
 Waterobject.prototype.checkOnScreen = function() {
-	if (!this.inWorld && this.y < 0) {
+	if (this.inWorld && this.y < 0) {
 		this.exists = false;
 		this.destroy();
 	}

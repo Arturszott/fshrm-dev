@@ -15,7 +15,6 @@ var Hero = function(game, x, y, type) {
 
 	this.name = type || 'fisherman';
 
-
 	this.events.onKilled.add(this.onKilled, this);
 };
 

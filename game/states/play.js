@@ -23,9 +23,6 @@ Play.prototype = {
         right: []
     },
     create: function() {
-        this.game.level = 1;
-
-
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y = 0;
@@ -37,29 +34,58 @@ Play.prototype = {
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
 
+        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'bottom');
+
+        this.game.background = this.background;
+
+        this.water = this.game.add.tileSprite(0, 0, this.game.width + 100, this.game.height, 'waterlayer');
+
+        this.game.water = this.water;
+
+        this.setInput();
+        this.showInstructions();
+
+        // FUCKING IMPORTANT FUNCTION
+        this.refreshGame();
+
+        this.game.bayReturn = this.bayReturn;
+
+    },
+    refreshGame: function(isFromBay) {
+
+        this.game.level = 1;
+
         // we will hold there fish & mines
         this.elemArrays.left = [];
         this.elemArrays.right = [];
 
-        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'bottom');
-        this.background.autoScroll(0, config.baseBottomSpeed);
-        this.game.background = this.background;
+        this.createScoreBox();
 
-        this.water = this.game.add.tileSprite(0, 0, this.game.width + 100, this.game.height, 'waterlayer');
         this.water.autoScroll(0, config.baseWaterSpeed);
-        this.game.water = this.water;
+        this.background.autoScroll(0, config.baseBottomSpeed);
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
 
-        this.crew = new Crew(this.game, this.game.width / 2, CELL_SIZE / 3 * 1, 1);
-        this.game.world.addAt(this.crew, 2);
+        this.crew = new Crew(this.game, this.game.width / 2, -CELL_SIZE * 2, 1);
+        this.game.add.existing(this.crew);
 
-        this.createScoreBox();
-        this.setInput();
-        this.showInstructions();
+        this.game.add.tween(this.crew).to({
+            y: this.game.height / 2 - CELL_SIZE / 3 * 2
+        }, 500, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
+            this.startGame();
+            console.log(this.crew)
+        }.bind(this));
 
+        // other functions eq. update depend on this
         this.gameover = false;
 
+        if (isFromBay) {
+            console.log('welcome again!')
+        }
+
+    },
+    bayReturn: function() {
+        this.refreshGame(true);
     },
     setInput: function() {
         this.game.input.onDown.add(this.sideAction, this);
@@ -105,7 +131,7 @@ Play.prototype = {
         var nextElem = this.elemArrays[side][0];
 
         if (nextElem.key === 'fish') {
-            this.addSplash(nextElem.x, nextElem.y, side);
+            this.addSplash(nextElem.x, CELL_SIZE * 1.6, side);
         }
 
         nextElem.bringToTop();
@@ -123,6 +149,7 @@ Play.prototype = {
             nextElem.throwAway(side);
         }
 
+        console.log(this.game.world.children.length);
 
     },
     accelerateAll: function() {
@@ -184,14 +211,6 @@ Play.prototype = {
         this.elemArrays.right.forEach(function(elem) {
             elem.body.velocity.y = 0;
             elem.body.acceleration.y = 0;
-
-            // that.game.add.tween(elem).to({
-            //     x: that.game.width + 100,
-            // }, 1000, Phaser.Easing.Sinusoidal.Out, true, 500, false).onComplete.add(function() {
-            //     setTimeout(function() {
-            //         elem.destroy();
-            //     }, 10);
-            // });
         });
 
         this.elemArrays.left.forEach(function(elem) {
@@ -256,15 +275,17 @@ Play.prototype = {
         return elements[n];
     },
     update: function() {
-        var fishes = this.getAllElements();
-        this.timer.decrease();
+        if (!this.gameover) {
+            this.timer.decrease();
 
-        fishes.forEach(function(elem) {
-            if (this.game.isAccelerated && elem.y - 140 < this.crew.y) {
-                this.slowDownAll();
-            }
+            this.getAllElements().forEach(function(elem) {
+                if (this.game.isAccelerated && elem.y < CELL_SIZE * 2) {
+                    this.slowDownAll();
+                }
+            }, this);
+        }
 
-        }, this);
+
     },
     shutdown: function() {
         this.game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
@@ -296,6 +317,7 @@ Play.prototype = {
         var that = this;
 
         this.game.bay = new Bay(this.game);
+        this.game.bay.baseState = this;
 
         that.scoreboard = new Scoreboard(that.game);
         that.game.add.existing(that.scoreboard);
@@ -311,7 +333,7 @@ Play.prototype = {
             this.timer.destroyAll();
             this.scoreText.destroy();
 
-            this.crew.applyDeath();
+            this.crew.destroy();
 
             var boomSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
             boomSprite.anchor.setTo(0.5, 0.5);

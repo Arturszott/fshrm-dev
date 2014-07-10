@@ -45,12 +45,32 @@ Preload.prototype = {
         this.load.image('getReady', 'assets/get-ready.png');
 
         // bay
-        this.load.spritesheet('building_shop', 'assets/shop2.png', 100, 100, 1);
-        this.load.spritesheet('building_parts', 'assets/parts.png', 100, 100, 1);
-        this.load.spritesheet('building_house', 'assets/house.png', 100, 100, 1);
+        this.load.spritesheet('building_shop', 'assets/bay/bayshop.png', 192, 192, 1);
+        this.load.spritesheet('building_garage', 'assets/bay/bayGARAGE.png', 126, 192, 1);
+        this.load.spritesheet('building_house', 'assets/bay/bayHOME.png', 192, 192, 1);
+
+        this.load.spritesheet('building_label_house', 'assets/bay/homehome.png', 108, 64, 1);
+        this.load.spritesheet('building_label_garage', 'assets/bay/garage.png', 136, 72, 1);
+        this.load.spritesheet('building_label_shop', 'assets/bay/shop.png', 92, 64, 1);
+
+        this.load.spritesheet('buy-btn', 'assets/icons/buy.png', 76, 60, 2);
+        this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg.png', 120, 168, 8);
 
         this.load.image('board', 'assets/menu-shorter.png');
+        this.load.image('long-board', 'assets/menu.png');
+        this.load.image('money-board', 'assets/icons/SHOPboard.png');
+
+        this.load.image('category-label-clothes', 'assets/icons/SHOPcharacter.png');
+        this.load.image('category-label-tools', 'assets/icons/SHOPtool.png');
+        this.load.image('category-label-mounts', 'assets/icons/SHOPboat.png');
+        this.load.image('category-label-postcards', 'assets/icons/SHOPpostcard.png');
+
+        this.load.image('arr-left', 'assets/icons/L.png');
+        this.load.image('arr-right', 'assets/icons/R.png');
+
+
         this.load.image('gameover', 'assets/gameover.png');
+        this.load.image('shop-sign', 'assets/shop.png');
         // this.load.image('gameover', 'assets/gameover2.png');
 
         this.load.bitmapFont('fisherman', 'assets/fonts/fisherman.png', 'assets/fonts/fisherman.fnt');

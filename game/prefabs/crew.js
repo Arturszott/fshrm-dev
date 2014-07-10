@@ -8,14 +8,13 @@ var Tool = require('./tool');
 var storage = require('../storage');
 
 var Crew = function(game, x, y) {
-	Phaser.Group.call(this, game, x, y, 'crew');
+	Phaser.Group.call(this, game, game.world, 'crew');
 
 	this.eqp = storage.getEquipment();
 
 	if (!!localStorage) {
 		this.toolType = localStorage.getItem('tool') || 'pole';
 	}
-
 	this.wave = new Wave(game, x, y, null);
 	this.mount = new Mount(game, x, y, this.eqp.mount);
 	this.hero = new Hero(game, x, y, this.eqp.hero);
@@ -56,13 +55,18 @@ Crew.prototype.applyDeath = function(side) {
 	// this.tool.destroy();
 }
 Crew.prototype.rest = function() {
-	this.wave.visible = false;
+	this.game.add.tween(this.wave).to({
+		alpha: 0
+	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+	// this.wave.visible = false;
 	this.hero.swimAnim.stop();
 	this.mount.swimAnim.stop();
 	this.tool.waveTween._duration = 1000;
 }
 Crew.prototype.awake = function() {
-	this.wave.visible = true;
+	this.game.add.tween(this.wave).to({
+		alpha: 1
+	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false);
 	this.hero.swimAnim.play();
 	this.mount.swimAnim.play();
 	this.tool.waveTween._duration = 300;

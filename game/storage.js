@@ -16,6 +16,9 @@ var storageHandler = {
 
 		localStorage.setItem('fishCount', fishCount);
 	},
+	getFishCount: function(){
+		return  Number(localStorage.getItem('fishCount'));
+	},
 	getEquipment: function(){
 		var eqp = JSON.parse(localStorage.getItem('equipment'));
 		if(!eqp){

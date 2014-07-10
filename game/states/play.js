@@ -73,7 +73,6 @@ Play.prototype = {
             y: this.game.height / 2 - CELL_SIZE / 3 * 2
         }, 500, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
             this.startGame();
-            console.log(this.crew)
         }.bind(this));
 
         // other functions eq. update depend on this

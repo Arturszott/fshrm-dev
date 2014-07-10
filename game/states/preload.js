@@ -26,7 +26,6 @@ Preload.prototype = {
 
         preloadRegistry(this);
 
-        this.load.image('background', 'assets/water.png');
         this.load.image('bottom', 'assets/bottom.png');
         this.load.image('waterlayer', 'assets/sea.png');
         this.load.image('timer', 'assets/timer.png');
@@ -41,17 +40,16 @@ Preload.prototype = {
 
         // others
         this.load.image('compassButton', 'assets/compassbtn.png');
-        this.load.image('instructions', 'assets/instructiondarks.png');
         this.load.image('getReady', 'assets/get-ready.png');
 
         // bay
-        this.load.spritesheet('building_shop', 'assets/bay/BAYshop.png', 156, 156, 4);
-        this.load.spritesheet('building_garage', 'assets/bay/BAYgarage.png', 128, 164, 4);
-        this.load.spritesheet('building_house', 'assets/bay/BAYhome.png', 164, 164, 4);
+        this.load.spritesheet('building_house', 'assets/bay/b_home.png', 164, 164, 4);
+        this.load.spritesheet('building_garage', 'assets/bay/b_garage.png', 128, 164, 4);
+        this.load.spritesheet('building_shop', 'assets/bay/b_shop.png', 156, 156, 4);
 
-        this.load.spritesheet('building_label_house', 'assets/bay/homehome.png', 108, 64, 1);
-        this.load.spritesheet('building_label_garage', 'assets/bay/garage.png', 136, 72, 1);
-        this.load.spritesheet('building_label_shop', 'assets/bay/shop.png', 92, 64, 1);
+        this.load.spritesheet('building_label_house', 'assets/bay/l_home.png', 108, 64, 1);
+        this.load.spritesheet('building_label_garage', 'assets/bay/l_garage.png', 136, 72, 1);
+        this.load.spritesheet('building_label_shop', 'assets/bay/l_shop.png', 92, 64, 1);
 
         this.load.spritesheet('buy-btn', 'assets/icons/buy.png', 76, 60, 2);
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg.png', 120, 168, 8);
@@ -78,8 +76,6 @@ Preload.prototype = {
         // @key, @src, @frame x, @frame y, @number of frames
         this.load.spritesheet('fish', 'assets/fish1.png', 100, 144, 4);
 
-        this.load.spritesheet('skull', 'assets/skull.png', 56, 68, 1);
-
         this.load.spritesheet('water-wave', 'assets/water-wave.png', 144, 380, 4);
         this.load.spritesheet('water-splash', 'assets/water-splash.png', 72, 100, 6);
 
@@ -103,7 +99,7 @@ Preload.prototype = {
         if (!!this.ready) {
             this.ready = false;
             setTimeout(function() {
-                that.game.state.start('menu');
+                that.game.state.start('play');
             }, 10);
         }
     },

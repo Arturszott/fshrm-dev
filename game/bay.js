@@ -196,13 +196,15 @@ Bay.prototype = {
 
 		this.buildings.forEach(function(building) {
 			this.game.add.tween(building).to({
-				y: -building.y - this.game.height
+				y: building.y - this.game.height
 			}, 2400 * 1, Phaser.Easing.Linear.None, true, 2000, false);
+
 			setTimeout(function() {
 				building.label.waveTween.stop();
 			}.bind(this), duration * 4);
+
 			this.game.add.tween(building.label).to({
-				y: -building.label.y - this.game.height
+				y: building.label.y - this.game.height
 			}, 2400 * 1, Phaser.Easing.Linear.None, true, 2000, false);
 		}.bind(this));
 

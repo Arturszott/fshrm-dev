@@ -110,7 +110,6 @@ Play.prototype = {
         this.splash = this.game.add.sprite(x, y, 'water-splash', 0);
         this.splash.anchor.setTo(0.5, 0.5);
         this.game.physics.arcade.enableBody(this.splash);
-        // this.splash.body.velocity.y =  -300;
         var splashAnim = this.splash.animations.add('splashing');
         this.splash.animations.play('splashing', 12, 1);
 
@@ -148,8 +147,6 @@ Play.prototype = {
             this.refill()
             nextElem.throwAway(side);
         }
-
-        console.log(this.game.world.children.length);
 
     },
     accelerateAll: function() {

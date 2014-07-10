@@ -2,12 +2,20 @@
 
 var utils = require('../utils');
 var storage = require('../storage');
+var itemsRegistry = require('../itemsRegistry');
 
 function createFishAmount() {
 	var amount = storage.getFishCount();
 
-	this.totalText = this.game.add.bitmapText(0, 40 - this.board.height / 2, 'fisherman', (amount || 0) + '', 18);
+
+	this.moneyBoard = this.create(0, 45 - this.board.height / 2, 'money-board');
+	this.moneyBoard.anchor.setTo(0.5, 0.5);
+
+	this.totalText = this.game.add.bitmapText(0, 30 - this.board.height / 2, 'fisherman', (amount || 0) + '', 22);
 	this.totalText.position.x = this.totalText.position.x - this.totalText.textWidth / 2;
+
+	this.board.addChild(this.moneyBoard);
+	this.board.addChild(this.totalText);
 }
 
 var Shop = function(game, x, y) {
@@ -78,12 +86,34 @@ Shop.prototype.switchCategory = function(label, name) {
 		y: label.baseY + 13
 	}, 250, Phaser.Easing.Linear.None, true, 0, 1000, true);
 }
+Shop.prototype.createItemSlider = function(category) {
+	this.leftArrow = this.create(-this.board.width / 2 +5, 0, 'arr-left');
+	this.leftArrow.anchor.set(0.5, 0.5);
+	this.rightArrow = this.create(this.board.width / 2 -5, 0, 'arr-right');
+	this.rightArrow.anchor.set(0.5, 0.5);
 
+	this.board.addChild(this.leftArrow);
+	this.board.addChild(this.rightArrow);
+
+	this.itemBg = this.game.add.sprite(0, 0, 'shop-item-bg', 0);
+	this.itemBg.anchor.setTo(0.5, 0.5);
+	this.itemBg.scale.x = 0.8;
+	this.itemBg.scale.y = 0.8;
+	this.board.addChild(this.itemBg);
+
+	this.buyButton = this.game.add.button(0, this.board.height/2, 'buy-btn', this.buyItem, this, 1, 0);
+	this.buyButton.anchor.set(0.5, 1);
+	this.board.addChild(this.buyButton);
+
+
+	var scrollAnim = this.itemBg.animations.add('scrollin');
+	this.itemBg.animations.play('scrollin', 24, true);
+}
 Shop.prototype.show = function(score) {
 	if (this.isShown) return false;
 
 	this.isShown = true;
-	this.board.addChild(this.totalText);
+
 
 	this.game.add.tween(this).to({
 		y: 0
@@ -93,15 +123,19 @@ Shop.prototype.show = function(score) {
 		this.game.add.tween(label).to({
 			y: label.y - 300
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(function() {
-			this.switchCategory(this.clothesLabel);
+			this.categoryShow('clothes');
 		}.bind(this));
 	}, this);
 
 };
+Shop.prototype.buyItem = function() {
+	console.log('buyin')
+}
 Shop.prototype.categoryShow = function(category) {
 	var label = this[category + 'Label'];
 
-	this.switchCategory(label)
+	this.switchCategory(label);
+	this.createItemSlider(category);
 }
 Shop.prototype.hide = function() {
 	var y = -this.game.height;
@@ -125,8 +159,6 @@ Shop.prototype.hide = function() {
 				that.destroy();
 			}, 10);
 		});
-
-
 }
 
 Shop.prototype.startClick = function() {

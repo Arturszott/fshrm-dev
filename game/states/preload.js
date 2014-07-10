@@ -45,9 +45,9 @@ Preload.prototype = {
         this.load.image('getReady', 'assets/get-ready.png');
 
         // bay
-        this.load.spritesheet('building_shop', 'assets/bay/bayshop.png', 192, 192, 1);
-        this.load.spritesheet('building_garage', 'assets/bay/bayGARAGE.png', 126, 192, 1);
-        this.load.spritesheet('building_house', 'assets/bay/bayHOME.png', 192, 192, 1);
+        this.load.spritesheet('building_shop', 'assets/bay/BAYshop.png', 156, 156, 4);
+        this.load.spritesheet('building_garage', 'assets/bay/BAYgarage.png', 128, 164, 4);
+        this.load.spritesheet('building_house', 'assets/bay/BAYhome.png', 164, 164, 4);
 
         this.load.spritesheet('building_label_house', 'assets/bay/homehome.png', 108, 64, 1);
         this.load.spritesheet('building_label_garage', 'assets/bay/garage.png', 136, 72, 1);

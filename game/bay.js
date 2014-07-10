@@ -5,6 +5,10 @@ var Shop = require('./prefabs/shop');
 
 var createBuilding = function(name, x, y) {
 	var building = this.game.add.sprite(x, y, 'building_' + name);
+
+	var scrollAnim = building.animations.add('living');
+	building.animations.play('living', 2, true);
+
 	building.label = this.game.add.sprite(x, y - 80, 'building_label_' + name);
 	building.label.anchor.set(0.5);
 
@@ -17,8 +21,8 @@ var createBuilding = function(name, x, y) {
 
 	building.anchor.set(0.5);
 	building.inputEnabled = true;
-	building.scale.x = 0.85;
-	building.scale.y = 0.85;
+	building.scale.x = 0.8;
+	building.scale.y = 0.8;
 
 	building.events.onInputDown.add(this['visit' + name].bind(this), this);
 
@@ -84,7 +88,7 @@ Bay.prototype = {
 		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false);
 
 		this.game.add.tween(this.crew).to({
-			y: this.game.height * 1.1,
+			y: this.game.height * 1,
 		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false).onComplete.add(this.crew.rest.bind(this.crew));
 
 
@@ -121,8 +125,8 @@ Bay.prototype = {
 		this.bayButton = this.game.add.button(this.game.width - 10, this.game.height + 100, 'homeBtn', this.hideShop, this);
 		this.bayButton.anchor.setTo(1, 1);
 
-		this.bayButton.scale.y = 0.75;
-		this.bayButton.scale.x = 0.75;
+		this.bayButton.scale.y = 0.8;
+		this.bayButton.scale.x = 0.8;
 
 		this.game.add.tween(this.bayButton).to({
 			y: this.game.height - 10,

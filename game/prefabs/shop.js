@@ -32,26 +32,26 @@ var Shop = function(game, x, y) {
 
 	var y = y + 300;
 
-	this.clothesLabel = this.game.add.button(x + 30, y - 50, 'category-label-clothes', this.categoryShow.bind(this, 'clothes'), this);
-	this.clothesLabel.anchor.setTo(0.5, 0.5);
-	this.clothesLabel.baseY = y - 50 - 300;
+	this.heroLabel = this.game.add.button(x + 30, y - 50, 'category-label-hero', this.categoryShow.bind(this, 'hero'), this);
+	this.heroLabel.anchor.setTo(0.5, 0.5);
+	this.heroLabel.baseY = y - 50 - 300;
 
-	this.mountsLabel = this.game.add.button(x - 20, y + 50, 'category-label-mounts', this.categoryShow.bind(this, 'mounts'), this);
-	this.mountsLabel.anchor.setTo(0.5, 0.5);
-	this.mountsLabel.baseY = y + 50 - 300;
+	this.mountLabel = this.game.add.button(x - 20, y + 50, 'category-label-mount', this.categoryShow.bind(this, 'mount'), this);
+	this.mountLabel.anchor.setTo(0.5, 0.5);
+	this.mountLabel.baseY = y + 50 - 300;
 
-	this.toolsLabel = this.game.add.button(x - 40, y - 40, 'category-label-tools', this.categoryShow.bind(this, 'tools'), this);
-	this.toolsLabel.anchor.setTo(0.5, 0.5);
-	this.toolsLabel.baseY = y - 40 - 300;
+	this.toolLabel = this.game.add.button(x - 40, y - 40, 'category-label-tool', this.categoryShow.bind(this, 'tool'), this);
+	this.toolLabel.anchor.setTo(0.5, 0.5);
+	this.toolLabel.baseY = y - 40 - 300;
 
-	this.postcardsLabel = this.game.add.button(x + 70, y - 0, 'category-label-postcards', this.categoryShow.bind(this, 'postcards'), this);
-	this.postcardsLabel.anchor.setTo(0.5, 0.5);
-	this.postcardsLabel.baseY = y - 0 - 300;
+	this.postcardLabel = this.game.add.button(x + 70, y - 0, 'category-label-postcard', this.categoryShow.bind(this, 'postcard'), this);
+	this.postcardLabel.anchor.setTo(0.5, 0.5);
+	this.postcardLabel.baseY = y - 0 - 300;
 
-	this.categoryLabels.push(this.clothesLabel);
-	this.categoryLabels.push(this.mountsLabel);
-	this.categoryLabels.push(this.toolsLabel);
-	this.categoryLabels.push(this.postcardsLabel);
+	this.categoryLabels.push(this.heroLabel);
+	this.categoryLabels.push(this.mountLabel);
+	this.categoryLabels.push(this.toolLabel);
+	this.categoryLabels.push(this.postcardLabel);
 
 	this.categoryLabels.forEach(function(label) {
 		label.scale.x = 0.75;
@@ -87,27 +87,62 @@ Shop.prototype.switchCategory = function(label, name) {
 	}, 250, Phaser.Easing.Linear.None, true, 0, 1000, true);
 }
 Shop.prototype.createItemSlider = function(category) {
-	this.leftArrow = this.create(-this.board.width / 2 +5, 0, 'arr-left');
+	// TODO REMOVE PREVIOUS SLIDER
+	this.leftArrow && this.leftArrow.destroy();
+	this.rightArrow && this.rightArrow.destroy();
+	this.itemBg && this.itemBg.destroy();
+	this.currentItem && this.currentItem.destroy();
+
+	this.leftArrow = this.create(-this.board.width / 2 + 5, 0, 'arr-left');
 	this.leftArrow.anchor.set(0.5, 0.5);
-	this.rightArrow = this.create(this.board.width / 2 -5, 0, 'arr-right');
+	this.leftArrow.visible = false;
+
+	this.rightArrow = this.create(this.board.width / 2 - 5, 0, 'arr-right');
 	this.rightArrow.anchor.set(0.5, 0.5);
+	this.rightArrow.visible = false;
 
 	this.board.addChild(this.leftArrow);
 	this.board.addChild(this.rightArrow);
 
-	this.itemBg = this.game.add.sprite(0, 0, 'shop-item-bg', 0);
+	var items = this.getAvailableItems(category);
+
+	if(items.length > 0) {
+		this.itemBg = this.game.add.sprite(0, 0, 'shop-item-bg', 0);
+		this.itemBg.animations.add('scrollin');
+		this.itemBg.animations.play('scrollin', 24, true);
+		console.log();
+		
+	} else {
+		this.itemBg = this.game.add.sprite(0, 0, 'shop-all-sold', 0);
+		this.itemBg.animations.add('wavin');
+		this.itemBg.animations.play('wavin', 1, true);
+	}
+
 	this.itemBg.anchor.setTo(0.5, 0.5);
 	this.itemBg.scale.x = 0.8;
 	this.itemBg.scale.y = 0.8;
 	this.board.addChild(this.itemBg);
 
-	this.buyButton = this.game.add.button(0, this.board.height/2, 'buy-btn', this.buyItem, this, 1, 0);
+	if(items.length){
+		this.currentItem = this.create(0, 0, items[0].name);
+		this.currentItem.anchor.setTo(0.5, 0.5);
+		var scale = this.itemBg.height/this.currentItem.height;
+		scale = scale > 0.8 ? 0.8 : scale;
+		this.currentItem.scale.x = scale;
+		this.currentItem.scale.y = scale;
+
+		this.board.addChild(this.currentItem);
+	}
+	
+
+
+	this.buyButton = this.game.add.button(0, this.board.height / 2, 'buy-btn', this.buyItem, this, 1, 0);
 	this.buyButton.anchor.set(0.5, 1);
 	this.board.addChild(this.buyButton);
 
 
-	var scrollAnim = this.itemBg.animations.add('scrollin');
-	this.itemBg.animations.play('scrollin', 24, true);
+	// var scrollAnim = this.itemBg.animations.add('scrollin');
+	// this.itemBg.animations.play('scrollin', 24, true);
 }
 Shop.prototype.show = function(score) {
 	if (this.isShown) return false;
@@ -123,7 +158,7 @@ Shop.prototype.show = function(score) {
 		this.game.add.tween(label).to({
 			y: label.y - 300
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(function() {
-			this.categoryShow('clothes');
+			this.categoryShow('hero');
 		}.bind(this));
 	}, this);
 
@@ -131,10 +166,28 @@ Shop.prototype.show = function(score) {
 Shop.prototype.buyItem = function() {
 	console.log('buyin')
 }
-Shop.prototype.categoryShow = function(category) {
-	var label = this[category + 'Label'];
+Shop.prototype.getAvailableItems = function(category) {
+	var all, unlocked, availableItems;
 
+	all = itemsRegistry.findByType(category);
+	unlocked = storage.getUnlockedItems();
+
+	availableItems = all.filter(function(item) {
+		return unlocked.indexOf(item.id) === -1;
+	});
+
+	return availableItems;
+}
+Shop.prototype.categoryShow = function(category) {
+
+	if (this.currentCategory === category) return;
+
+	this.currentCategory = category;
+
+
+	var label = this[category + 'Label'];
 	this.switchCategory(label);
+
 	this.createItemSlider(category);
 }
 Shop.prototype.hide = function() {

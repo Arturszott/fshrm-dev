@@ -111,6 +111,8 @@ Bay.prototype = {
 	showShop: function() {
 		var that = this;
 
+		if(this.leaving) return;
+
 		if (this.shopBoard && this.shopBoard.game) {
 			// the worst function I have ever made. TODOFIX
 		} else {
@@ -197,7 +199,7 @@ Bay.prototype = {
 		this.buildings.forEach(function(building) {
 			this.game.add.tween(building).to({
 				y: building.y - this.game.height
-			}, 2400 * 1, Phaser.Easing.Linear.None, true, 2000, false);
+			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
 
 			setTimeout(function() {
 				building.label.waveTween.stop();
@@ -205,7 +207,7 @@ Bay.prototype = {
 
 			this.game.add.tween(building.label).to({
 				y: building.label.y - this.game.height
-			}, 2400 * 1, Phaser.Easing.Linear.None, true, 2000, false);
+			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
 		}.bind(this));
 
 		setTimeout(function() {

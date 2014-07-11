@@ -53,15 +53,16 @@ Preload.prototype = {
 
         this.load.spritesheet('buy-btn', 'assets/icons/buy.png', 76, 60, 2);
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg.png', 120, 168, 8);
+        this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 120, 168, 2);
 
         this.load.image('board', 'assets/menu-shorter.png');
         this.load.image('long-board', 'assets/menu.png');
         this.load.image('money-board', 'assets/icons/SHOPboard.png');
 
-        this.load.image('category-label-clothes', 'assets/icons/SHOPcharacter.png');
-        this.load.image('category-label-tools', 'assets/icons/SHOPtool.png');
-        this.load.image('category-label-mounts', 'assets/icons/SHOPboat.png');
-        this.load.image('category-label-postcards', 'assets/icons/SHOPpostcard.png');
+        this.load.image('category-label-hero', 'assets/icons/SHOPcharacter.png');
+        this.load.image('category-label-tool', 'assets/icons/SHOPtool.png');
+        this.load.image('category-label-mount', 'assets/icons/SHOPboat.png');
+        this.load.image('category-label-postcard', 'assets/icons/SHOPpostcard.png');
 
         this.load.image('arr-left', 'assets/icons/L.png');
         this.load.image('arr-right', 'assets/icons/R.png');

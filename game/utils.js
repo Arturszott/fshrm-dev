@@ -7,6 +7,13 @@ var utils = {
 		if (i !== -1) {
 			game.tweens._tweens.splice(i, 1);
 		}
+	},
+	anchorC: function(obj){
+		obj.anchor.set(0.5);
+	},
+	scale: function(obj, scale){
+		obj.scale.x = scale;
+		obj.scale.y = scale;
 	}
 }
 

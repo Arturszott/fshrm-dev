@@ -47,12 +47,14 @@ Preload.prototype = {
         this.load.spritesheet('building_garage', 'assets/bay/b_garage.png', 128, 164, 4);
         this.load.spritesheet('building_shop', 'assets/bay/b_shop.png', 156, 156, 4);
 
+        this.load.spritesheet('fishcoin', 'assets/icons/fishcoin.png', 38, 18, 1);
+
         this.load.spritesheet('building_label_house', 'assets/bay/l_home.png', 108, 64, 1);
         this.load.spritesheet('building_label_garage', 'assets/bay/l_garage.png', 136, 72, 1);
         this.load.spritesheet('building_label_shop', 'assets/bay/l_shop.png', 92, 64, 1);
 
         this.load.spritesheet('buy-btn', 'assets/icons/buy.png', 76, 60, 2);
-        this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg.png', 120, 168, 8);
+        this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg2.png', 120, 168, 8);
         this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 120, 168, 2);
 
         this.load.image('board', 'assets/menu-shorter.png');
@@ -73,6 +75,7 @@ Preload.prototype = {
         // this.load.image('gameover', 'assets/gameover2.png');
 
         this.load.bitmapFont('fisherman', 'assets/fonts/fisherman.png', 'assets/fonts/fisherman.fnt');
+        this.load.bitmapFont('brown', 'assets/fonts/brown/brown.png', 'assets/fonts/brown/brown.fnt');
 
         // @key, @src, @frame x, @frame y, @number of frames
         this.load.spritesheet('fish', 'assets/fish1.png', 100, 144, 4);

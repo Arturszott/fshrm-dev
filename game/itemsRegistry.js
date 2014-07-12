@@ -57,6 +57,7 @@ var itemsRegistry = {
 		},
 		{
 			name: 'spear',
+			title: 'sharp spear',
 			id: 1,
 			type: 'tool',
 			x: 76,
@@ -85,10 +86,30 @@ var itemsRegistry = {
 		},
 		{
 			name: 'blackboat',
-			id: 1001,
+			title: 'black boat',
+			id: 1002,
 			type: 'mount',
 			x: 144,
-			y: 184
+			y: 184,
+			price: 100000
+		},
+		{
+			name: 'blackboat',
+			title: 'RED boat',
+			id: 1003,
+			type: 'mount',
+			x: 144,
+			y: 184,
+			price: 100000
+		},
+		{
+			name: 'blackboat',
+			title: 'YELLOW boat',
+			id: 1004,
+			type: 'mount',
+			x: 144,
+			y: 184,
+			price: 100000
 		},
 		// {name: 'raft', id: 1001, type: 'mount'},
 	]

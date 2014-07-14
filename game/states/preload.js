@@ -27,6 +27,7 @@ Preload.prototype = {
         preloadRegistry(this);
 
         this.load.image('bottom', 'assets/bottom.png');
+        this.load.image('introlayer', 'assets/introtile.png');
         this.load.image('waterlayer', 'assets/sea.png');
         this.load.image('timer', 'assets/timer.png');
         this.load.image('timebar', 'assets/time.png');
@@ -40,7 +41,7 @@ Preload.prototype = {
 
         // others
         this.load.image('compassButton', 'assets/compassbtn.png');
-        this.load.image('getReady', 'assets/get-ready.png');
+        this.load.image('getReady', 'assets/icons/getready.png');
 
         // bay
         this.load.spritesheet('building_house', 'assets/bay/b_home.png', 164, 164, 4);
@@ -54,6 +55,9 @@ Preload.prototype = {
         this.load.spritesheet('building_label_shop', 'assets/bay/l_shop.png', 92, 64, 1);
 
         this.load.spritesheet('buy-btn', 'assets/icons/buy.png', 76, 60, 2);
+        this.load.spritesheet('buy-btn-bought', 'assets/icons/bought.png', 76, 60, 1);
+        this.load.spritesheet('buy-btn-nomoney', 'assets/icons/notenough.png', 76, 60, 1);
+
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg2.png', 120, 168, 8);
         this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 120, 168, 2);
 

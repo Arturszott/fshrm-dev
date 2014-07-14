@@ -5,7 +5,7 @@ var storage = require('../storage');
 var itemsRegistry = require('../itemsRegistry');
 
 function createFishAmount() {
-	var amount = storage.getFishCount();
+	this.totalFish = storage.getFishCount();
 
 	this.moneyBoard = this.create(-16, -this.board.height / 2 + 10, 'money-board');
 	_.scale(this.moneyBoard, 0.9)
@@ -15,7 +15,7 @@ function createFishAmount() {
 	this.fishcoin = this.create(this.moneyBoard.width + this.moneyBoard.x + 12, this.moneyBoard.y, 'fishcoin');
 	this.fishcoin.anchor.set(1, 0.5);
 
-	this.totalText = this.game.add.bitmapText(-2, this.moneyBoard.y - 12, 'fisherman', (amount || 0) + '', 18);
+	this.totalText = this.game.add.bitmapText(-2, this.moneyBoard.y - 12, 'fisherman', (this.totalFish || 0) + '', 18);
 	// this.totalText.position.x = this.totalText.position.x - this.totalText.textWidth / 2;
 
 	this.board.addChild(this.moneyBoard);
@@ -99,14 +99,10 @@ Shop.prototype.switchCategory = function(label, name) {
 
 var showItem = function() {
 
-	this.currentItem && this.currentItem.destroy();
-	this.buyButton && this.buyButton.destroy();
-	this.priceLabel && this.priceLabel.destroy();
-	this.priceText && this.priceText.destroy();
-	this.fishcoinPrice && this.fishcoinPrice.destroy();
-	this.itemTitle && this.itemTitle.destroy();
+	this.itemGroup && this.itemGroup.destroy();
 
 	this.currentItem = this.create(0, 0, this.sliderItems[this.currentItemIndex].name);
+	this.currentItem.data = this.sliderItems[this.currentItemIndex];
 	_.anchorC(this.currentItem);
 
 	var scale = this.itemBg.height / this.currentItem.height * 0.75;
@@ -123,11 +119,11 @@ var showItem = function() {
 	this.fishcoinPrice = this.create(this.priceLabel.width + this.priceLabel.x - 88, this.priceLabel.y - 10, 'fishcoin');
 	this.fishcoinPrice.anchor.set(0.5, 0);
 
-	this.priceText = this.game.add.bitmapText(this.priceLabel.x, this.priceLabel.y, 'fisherman', (this.sliderItems[this.currentItemIndex].price || 69) + '', 22);
+	this.priceText = this.game.add.bitmapText(this.priceLabel.x, this.priceLabel.y, 'fisherman', (this.currentItem.data.price || 69) + '', 22);
 	this.priceText.position.x = this.priceText.position.x - this.priceLabel.width / 2 + 15;
 	this.priceText.position.y = this.priceText.position.y - this.priceText.textHeight / 2 + 2;
 
-	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 -16, 'brown', this.sliderItems[this.currentItemIndex].title.toUpperCase() || '', 22);
+	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 -16, 'brown', this.currentItem.data.title.toUpperCase() || '', 22);
 	this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
 	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
 
@@ -135,28 +131,36 @@ var showItem = function() {
 	_.anchorC(this.buyButton);
 	_.scale(this.buyButton, 0.85);
 
-	this.board.addChild(this.priceLabel);
-	this.board.addChild(this.buyButton);
-	this.board.addChild(this.fishcoinPrice);
-	this.board.addChild(this.currentItem);
-	this.board.addChild(this.priceText);
-	this.board.addChild(this.itemTitle);
+	if (this.currentItem.data.price > this.totalFish) {
+		this.buyButton.loadTexture('buy-btn-nomoney', 0);
+	}
+
+	this.itemGroup = this.game.add.group();
+
+	this.itemGroup.add(this.priceLabel);
+	this.itemGroup.add(this.buyButton);
+	this.itemGroup.add(this.fishcoinPrice);
+	this.itemGroup.add(this.currentItem);
+	this.itemGroup.add(this.priceText);
+	this.itemGroup.add(this.itemTitle);
+
+	this.board.addChild(this.itemGroup);
 }
 var previousItem = function() {
 	this.currentItemIndex--;
-	this.rightArrow.visible = true;	
+	this.rightArrow.visible = true;
 	showItem.call(this);
 
-	if(this.currentItemIndex - 1 < 0){
+	if (this.currentItemIndex - 1 < 0) {
 		this.leftArrow.visible = false;
 	}
 }
 var nextItem = function() {
 	this.currentItemIndex++;
-	this.leftArrow.visible = true;		
+	this.leftArrow.visible = true;
 	showItem.call(this);
 
-	if(this.currentItemIndex + 1 >= this.itemsLength){
+	if (this.currentItemIndex + 1 >= this.itemsLength) {
 		this.rightArrow.visible = false;
 	}
 }
@@ -167,6 +171,7 @@ Shop.prototype.createItemSlider = function(category) {
 	this.rightArrow && this.rightArrow.destroy();
 	this.itemBg && this.itemBg.destroy();
 
+	this.itemGroup && this.itemGroup.destroy();
 
 
 	this.leftArrow = this.game.add.button(-this.board.width / 2 + 5, 0, 'arr-left', previousItem, this, 0, 0, 1, 0);
@@ -236,7 +241,35 @@ Shop.prototype.show = function(score) {
 
 };
 Shop.prototype.buyItem = function() {
-	console.log('buyin')
+
+	function tweenOut(el, onComplete) {
+		var onComplete = onComplete || function() {};
+
+		this.game.add.tween(el).to({
+			x: el.x - this.game.width
+		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(onComplete.bind(this));
+	}
+
+	if (this.totalFish > this.currentItem.data.price) {
+		// handle buying animations
+		tweenOut.call(this, this.buyButton, function() {
+			this.buyButton.loadTexture('buy-btn-bought', 0);
+			this.game.add.tween(this.buyButton).to({
+				x: 0
+			}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
+		}.bind(this));
+
+
+		// handle fish amount change
+		tweenOut.call(this, this.priceText, function() {
+			storage.removeFish(this.currentItem.data.price);
+			storage.unlockItem(this.currentItem.data.id);
+
+			this.totalText.setText((this.totalFish - this.currentItem.data.price) + '');
+		});
+		tweenOut.call(this, this.priceLabel);
+		tweenOut.call(this, this.fishcoinPrice);
+	}
 }
 Shop.prototype.getAvailableItems = function(category) {
 	var all, unlocked, availableItems;

@@ -11,6 +11,8 @@ var Timer = require('../prefabs/timer');
 var storage = require('../storage');
 var Scoreboard = require('../prefabs/scoreboard');
 
+var _ = require('../utils');
+
 var CELL_SIZE = 0;
 var LEFT_POSITION = 0;
 var RIGHT_POSITION = 0;
@@ -29,18 +31,16 @@ Play.prototype = {
 
         // almost constant, aye?
         CELL_SIZE = this.game.height * config.verticalCellSize;
-        this.game.CELL_SIZE = CELL_SIZE;
-
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
 
         this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'bottom');
-
-        this.game.background = this.background;
-
         this.water = this.game.add.tileSprite(0, 0, this.game.width + 100, this.game.height, 'waterlayer');
 
+        this.game.background = this.background;
         this.game.water = this.water;
+        this.game.CELL_SIZE = CELL_SIZE;
+        this.game.bayReturn = this.bayReturn;
 
         this.setInput();
         this.showInstructions();
@@ -48,8 +48,15 @@ Play.prototype = {
         // FUCKING IMPORTANT FUNCTION
         this.refreshGame();
 
-        this.game.bayReturn = this.bayReturn;
+        if (!storage.isIntroPlayed()) {
+            setTimeout(function() {}.bind(this), 600);
+            this.playIntro()
+            // this.startGame();
+        } else {
+            this.game.input.onDown.addOnce(this.startGame, this);
+        }
 
+        // this.startGame();
     },
     refreshGame: function(isFromBay) {
 
@@ -65,22 +72,35 @@ Play.prototype = {
         this.background.autoScroll(0, config.baseBottomSpeed);
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
-
         this.crew = new Crew(this.game, this.game.width / 2, -CELL_SIZE * 2, 1);
         this.game.add.existing(this.crew);
 
-        this.game.add.tween(this.crew).to({
-            y: this.game.height / 2 - CELL_SIZE / 3 * 2
-        }, 500, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
-            this.startGame();
-        }.bind(this));
-
         // other functions eq. update depend on this
         this.gameover = false;
+        this.starting = true
+
+        this.slideDownCrew();
 
         if (isFromBay) {
-            console.log('welcome again!')
+            setTimeout(this.startGame.bind(this), 600);
         }
+    },
+    playIntro: function() {
+        console.log('playing intro!')
+        var leftSide = this.game.add.tileSprite(0, 0, this.game.width/2, this.game.height, 'introlayer');
+        var rightSide = this.game.add.tileSprite(this.game.width/2, 0, this.game.width/2, this.game.height, 'introlayer');
+
+        this.introGroup = this.game.add.group();
+
+        this.game.world.bringToTop(this.crew);
+
+
+
+        this.crew.rest();
+        this.water.autoScroll(0, 0);
+        this.background.autoScroll(0, 0);
+
+        // this.introGroup.add(this.readySign);
 
     },
     bayReturn: function() {
@@ -88,22 +108,24 @@ Play.prototype = {
     },
     setInput: function() {
         this.game.input.onDown.add(this.sideAction, this);
-        this.game.input.onDown.addOnce(this.startGame, this);
+
     },
     createScoreBox: function() {
         this.score = 0;
-        this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height / 2, 'fisherman', this.score.toString(), 24);
+        this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height + 100, 'fisherman', this.score.toString(), 24);
         // this.scoreText.anchor.setTo(0.5, 0.5);
         this.scoreText.updateTransform();
         this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
         this.scoreText.visible = false;
     },
     showInstructions: function() {
+        // this.readySign = this.game.add.sprite(RIGHT_POSITION, 60, 'getReady');
+        // _.scale(this.readySign, 0.8);
         this.instructionGroup = this.game.add.group();
-        this.instructionGroup.add(this.game.add.sprite(this.game.width / 2, 100, 'getReady'));
-        // this.instructionGroup.add(this.game.add.sprite(this.game.width / 2, 325, 'instructions'));
-        this.instructionGroup.setAll('anchor.x', 0.5);
-        this.instructionGroup.setAll('anchor.y', 0.5);
+        // this.instructionGroup.add(this.readySign);
+        // // this.instructionGroup.add(this.game.add.sprite(this.game.width / 2, 325, 'instructions'));
+        // this.instructionGroup.setAll('anchor.x', 0.5);
+        // this.instructionGroup.setAll('anchor.y', 0.5);
     },
     addSplash: function(x, y, side) {
         this.splash = this.game.add.sprite(x, y, 'water-splash', 0);
@@ -123,7 +145,7 @@ Play.prototype = {
         }, this.splash);
     },
     sideAction: function(pointer, e) {
-        if (!this.crew.alive || this.gameover) return;
+        if (!this.crew.alive || this.gameover || this.starting) return;
 
         var side = pointer.positionDown.x > this.game.width / 2 ? 'right' : 'left';
         var nextElem = this.elemArrays[side][0];
@@ -197,6 +219,26 @@ Play.prototype = {
 
             this.placeElement(element, 'right');
         }
+
+        this.getAllElements().forEach(function(elem) {
+            elem.y = elem.y + this.game.height;
+            elem.body.velocity.y = 0;
+
+            this.game.add.tween(elem).to({
+                y: elem.y - this.game.height
+            }, 1000, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
+                elem.body.velocity.y = config.baseElementSpeed;
+                this.starting = false;
+            }.bind(this));
+        }, this);
+
+        this.game.add.tween(this.scoreText).to({
+            y: this.game.height * 2 / 3
+        }, 900, Phaser.Easing.Bounce.Out, true, 0, false);
+
+        setTimeout(function() {
+            this.timer.start();
+        }.bind(this), 600);
     },
     getAllElements: function() {
         return this.elemArrays.left.concat(this.elemArrays.right);
@@ -280,17 +322,22 @@ Play.prototype = {
                 }
             }, this);
         }
-
-
     },
     shutdown: function() {
         this.game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
         this.crew.destroy();
         this.scoreboard.destroy();
     },
+    slideDownCrew: function() {
+        this.game.add.tween(this.crew).to({
+            y: this.game.height / 2 - CELL_SIZE / 3 * 2
+        }, 500, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
+
+        }.bind(this));
+    },
     startGame: function() {
         if (!this.crew.alive && !this.gameover) {
-            this.timer.start();
+
             this.placeStartElements();
 
             // this.crew.body.allowGravity = true;
@@ -354,8 +401,6 @@ Play.prototype = {
             this.showScoreboard();
 
             this.gameover = true;
-
-
         }
     }
 };

@@ -1,19 +1,23 @@
 'use strict';
 
+var _ = require('../utils');
+
 var Timer = function(game, time, deathHandler) {
-	Phaser.Sprite.call(this, game, game.width / 2, game.height - 100, 'timer', 0);
+	Phaser.Sprite.call(this, game, game.width / 2, game.height + 100, 'timer', 0);
 	this.anchor.setTo(0.5, 0.5);
 
 	this.maxDuration = time;
 	this.currentTime = time;
 
+	this.visible = false;
 	this.started = false;
 	this.deathHandler = deathHandler;
 
 	this.game.add.existing(this);
 	this.timebarWidth = this.width - 50;
-
-	this.bar = this.game.add.tileSprite(this.x - this.width / 2 + 25, this.y - this.height / 2 + 16, this.timebarWidth, 28, 'timebar');
+	this.bar = this.game.add.tileSprite(-this.timebarWidth / 2, 0, this.timebarWidth / 2, 28, 'timebar');
+	this.bar.anchor.setTo(0, 0.5);
+	this.addChild(this.bar);
 };
 Timer.prototype = Object.create(Phaser.Sprite.prototype);
 Timer.prototype.constructor = Timer;
@@ -22,8 +26,15 @@ Timer.prototype.setBar = function() {
 	this.bar.width = this.timebarWidth * this.currentTime / this.maxDuration;
 };
 Timer.prototype.start = function() {
-	this.started = true;
+	this.visible = true;
 	this.currentTime = this.currentTime / 2;
+
+	this.game.add.tween(this).to({
+		y: this.game.height - 100
+	}, 700, Phaser.Easing.Bounce.Out, true, 0, false).onComplete.add(function() {
+		this.started = true;
+	}.bind(this));
+
 };
 Timer.prototype.destroyAll = function() {
 	this.bar.destroy();

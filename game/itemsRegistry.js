@@ -62,6 +62,7 @@ var itemsRegistry = {
 			type: 'tool',
 			x: 76,
 			y: 128,
+			price: 100,
 			move: [128, 160]
 		},
 		// {name: 'harpoon', id: 1, type: 'tool'},

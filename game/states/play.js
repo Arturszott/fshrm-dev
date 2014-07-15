@@ -197,28 +197,19 @@ Play.prototype = {
         this.game.isAccelerated = false;
     },
     placeStartElements: function() {
-        var element;
-        
+        var elements = [];
+
         for (var i = 0; i <= 1 / config.verticalCellSize - 1; i++) {
+
             this.elemArrays.left.forEach(function(elem) {
                 elem.y -= CELL_SIZE;
             });
-
-            element = this.pickElement();
-            this.placeElement(element, 'left');
-        }
-        for (var i = 0; i <= 1 / config.verticalCellSize - 1; i++) {
             this.elemArrays.right.forEach(function(elem) {
                 elem.y -= CELL_SIZE;
             });
 
-            if (this.elemArrays.left[this.elemArrays.right.length].key === 'mine') {
-                element = Fish;
-            } else {
-                element = this.pickElement();
-            }
+            this.placeElementsPair();
 
-            this.placeElement(element, 'right');
         }
 
         this.getAllElements().forEach(function(elem) {
@@ -314,9 +305,21 @@ Play.prototype = {
         sideArr.push(obj);
     },
     pickElement: function() {
-        var elements = [Mine, Fish];
+        var elements = [Fish, Fish];
         var n = Math.floor(Math.random() * 2);
         return elements[n];
+    },
+    placeElementsPair: function(){
+        var elements = [];
+        elements.push(this.pickElement());
+        elements.push(this.pickElement());
+
+        if (elements[0] === Mine && elements[1] === Mine) {
+            elements[Math.floor(Math.random() * 2)] = Fish;
+        }
+
+        this.placeElement(elements[0], 'left');
+        this.placeElement(elements[1], 'right');
     },
     update: function() {
         if (!this.gameover) {

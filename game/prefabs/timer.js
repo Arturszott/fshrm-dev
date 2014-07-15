@@ -47,7 +47,7 @@ Timer.prototype.stop = function() {
 };
 Timer.prototype.decrease = function() {
 	if (!this.started) return false;
-	var magicNumber = 60;
+	var magicNumber = 70;
 	var decreaseValue = Math.tan(Math.sqrt(this.game.level) / 10) * magicNumber;
 
 	if (this.currentTime - decreaseValue <= 0) {
@@ -62,7 +62,7 @@ Timer.prototype.decrease = function() {
 Timer.prototype.increase = function() {
 	if (!this.started) return false;
 
-	var increaseValue = 150;
+	var increaseValue = 200 + this.game.level * 10;
 
 	if (this.currentTime + increaseValue >= this.maxDuration) {
 		this.currentTime = this.maxDuration;

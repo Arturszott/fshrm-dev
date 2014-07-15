@@ -1,6 +1,9 @@
 'use strict';
 
 var config = require('../config');
+var storage = require('../storage');
+
+var Intro = require('../intro');
 
 var Bay = require('../bay');
 
@@ -8,7 +11,6 @@ var Crew = require('../prefabs/crew');
 var Fish = require('../prefabs/fish');
 var Mine = require('../prefabs/mine');
 var Timer = require('../prefabs/timer');
-var storage = require('../storage');
 var Scoreboard = require('../prefabs/scoreboard');
 
 var _ = require('../utils');
@@ -86,22 +88,21 @@ Play.prototype = {
         }
     },
     playIntro: function() {
-        console.log('playing intro!')
-        var leftSide = this.game.add.tileSprite(0, 0, this.game.width/2, this.game.height, 'introlayer');
-        var rightSide = this.game.add.tileSprite(this.game.width/2, 0, this.game.width/2, this.game.height, 'introlayer');
+        this.intro = new Intro(this.game, this);
 
-        this.introGroup = this.game.add.group();
+        // this.water.autoScroll(0, 0);
+        // this.background.autoScroll(0, 0);
 
-        this.game.world.bringToTop(this.crew);
+        console.log(this.intro);
+        console.log('playing intro!');
 
+        // var okClick = function() {
+        //     if (isPlaying) return;
 
+        //     isPlaying = true;
+        // };
 
-        this.crew.rest();
-        this.water.autoScroll(0, 0);
-        this.background.autoScroll(0, 0);
-
-        // this.introGroup.add(this.readySign);
-
+        this.intro.playStep();
     },
     bayReturn: function() {
         this.refreshGame(true);
@@ -197,7 +198,7 @@ Play.prototype = {
     },
     placeStartElements: function() {
         var element;
-
+        
         for (var i = 0; i <= 1 / config.verticalCellSize - 1; i++) {
             this.elemArrays.left.forEach(function(elem) {
                 elem.y -= CELL_SIZE;
@@ -232,9 +233,14 @@ Play.prototype = {
             }.bind(this));
         }, this);
 
-        this.game.add.tween(this.scoreText).to({
-            y: this.game.height * 2 / 3
-        }, 900, Phaser.Easing.Bounce.Out, true, 0, false);
+        this.game.add.tween(this.scoreText)
+            .to({
+                y: this.game.height * 2 / 3 + -30
+            }, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false)
+            .to({
+                y: this.game.height * 2 / 3
+            }, 200, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+
 
         setTimeout(function() {
             this.timer.start();

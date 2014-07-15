@@ -30,8 +30,10 @@ Timer.prototype.start = function() {
 	this.currentTime = this.currentTime / 2;
 
 	this.game.add.tween(this).to({
+		y: this.game.height - 120
+	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false).to({
 		y: this.game.height - 100
-	}, 700, Phaser.Easing.Bounce.Out, true, 0, false).onComplete.add(function() {
+	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
 		this.started = true;
 	}.bind(this));
 

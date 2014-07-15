@@ -48,7 +48,7 @@ var Bay = function(game) {
 	this.crew.hero.visible = false;
 	this.crew.tool.visible = false;
 
-	this.crew.btn = this.game.add.button(this.crew.hero.x, this.crew.hero.y + 10, 'playBtn', this.goFishing, this);
+	this.crew.btn = this.game.add.button(this.crew.hero.x, this.crew.hero.y + 10, 'playBtn', this.goFishing, this, 0, 0, 1, 0);
 	this.crew.btn.scale.x = 0.8;
 	this.crew.btn.scale.y = 0.8;
 	this.crew.btn.anchor.setTo(0.5, 0.5);

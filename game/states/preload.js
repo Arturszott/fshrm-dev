@@ -29,19 +29,25 @@ Preload.prototype = {
         this.load.image('bottom', 'assets/bottom.png');
         this.load.image('introlayer', 'assets/introtile.png');
         this.load.image('waterlayer', 'assets/sea.png');
+        this.load.image('line', 'assets/line.png');
         this.load.image('timer', 'assets/timer.png');
         this.load.image('timebar', 'assets/time.png');
 
         this.load.image('title', 'assets/logo.png');
 
         // BUTTONS
-        this.load.image('playBtn', 'assets/btn_play.png');
-        this.load.image('homeBtn', 'assets/btn_home.png');
-        this.load.image('rankBtn', 'assets/btn_rank.png');
+        this.load.spritesheet('playBtn', 'assets/icons/btn_play.png', 80, 68, 2);
+        this.load.spritesheet('homeBtn', 'assets/icons/btn_home.png', 80, 68, 2);
+        this.load.spritesheet('rankBtn', 'assets/icons/btn_rank.png', 80, 68, 2);
 
         // others
         this.load.image('compassButton', 'assets/compassbtn.png');
         this.load.image('getReady', 'assets/icons/getready.png');
+        this.load.image('howto', 'assets/icons/howto.png');
+        this.load.image('dead', 'assets/icons/dead.png');
+        this.load.image('heart', 'assets/icons/heart.png');
+        this.load.image('tap-left', 'assets/icons/tapL.png');
+        this.load.image('tap-right', 'assets/icons/tapR.png');
 
         // bay
         this.load.spritesheet('building_house', 'assets/bay/b_home.png', 164, 164, 4);
@@ -57,6 +63,8 @@ Preload.prototype = {
         this.load.spritesheet('buy-btn', 'assets/icons/buy.png', 76, 60, 2);
         this.load.spritesheet('buy-btn-bought', 'assets/icons/bought.png', 76, 60, 1);
         this.load.spritesheet('buy-btn-nomoney', 'assets/icons/notenough.png', 76, 60, 1);
+
+        this.load.spritesheet('ok-btn', 'assets/icons/ok.png', 80, 68, 2);
 
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg2.png', 120, 168, 8);
         this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 120, 168, 2);

@@ -24,13 +24,13 @@ var Scoreboard = function(game) {
 
 	var buttonsY = 380;
 
-	this.bayButton = this.game.add.button(this.game.width / 2, buttonsY, 'homeBtn', this.bayClick, this);
+	this.bayButton = this.game.add.button(this.game.width / 2, buttonsY, 'homeBtn', this.bayClick, this, 0, 0, 1, 0);
 	this.bayButton.anchor.setTo(0.5, 0.5);
 
-	this.startButton = this.game.add.button(this.bayButton.x - this.bayButton.width - 10, buttonsY, 'playBtn', this.startClick, this);
+	this.startButton = this.game.add.button(this.bayButton.x - this.bayButton.width - 10, buttonsY, 'playBtn', this.startClick, this, 0, 0, 1, 0);
 	this.startButton.anchor.setTo(0.5, 0.5);
 
-	this.rankButton = this.game.add.button(this.bayButton.x + this.bayButton.width + 10, buttonsY, 'rankBtn', this.startClick, this);
+	this.rankButton = this.game.add.button(this.bayButton.x + this.bayButton.width + 10, buttonsY, 'rankBtn', this.startClick, this, 0, 0, 1, 0);
 	this.rankButton.anchor.setTo(0.5, 0.5);
 
 	this.add(this.rankButton);
@@ -70,8 +70,10 @@ Scoreboard.prototype.show = function(score) {
 	this.bestScoreText.setText(bestScore + '');
 
 	this.game.add.tween(this).to({
+		y: 40
+	}, 300, Phaser.Easing.Sinusoidal.Out, true, 400).to({
 		y: 0
-	}, 300, Phaser.Easing.Sinusoidal.Out, true, 400);
+	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0);;
 };
 
 Scoreboard.prototype.hide = function() {
@@ -83,10 +85,8 @@ Scoreboard.prototype.hide = function() {
 			y: y
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0)
 		.onComplete.add(function() {
-			setTimeout(function() {
-				that.destroy();
-			}, 10);
-		});
+			setTimeout(this.destroy.bind(this));
+		}.bind(this));
 }
 
 Scoreboard.prototype.startClick = function() {

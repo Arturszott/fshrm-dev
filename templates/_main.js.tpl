@@ -23,7 +23,7 @@ window.onDeviceReady = function() {
 	}
 	var screenRatio = w / h;
 
-	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.AUTO, '<%= _.slugify(projectName) %>');
+	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.CANVAS, '<%= _.slugify(projectName) %>');
 
 	game.widthRatio = 505 * screenRatio / 288;
 

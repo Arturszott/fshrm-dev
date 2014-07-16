@@ -305,7 +305,7 @@ Play.prototype = {
         sideArr.push(obj);
     },
     pickElement: function() {
-        var elements = [Fish, Fish];
+        var elements = [Mine, Fish];
         var n = Math.floor(Math.random() * 2);
         return elements[n];
     },

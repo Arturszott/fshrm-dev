@@ -4,27 +4,6 @@ var _ = require('../utils');
 var storage = require('../storage');
 var itemsRegistry = require('../itemsRegistry');
 
-var Building = require('./buildingBoard');
-
-function createFishAmount() {
-	this.totalFish = storage.getFishCount();
-
-	this.moneyBoard = this.create(-16, -this.board.height / 2 + 10, 'money-board');
-	_.scale(this.moneyBoard, 0.9)
-	// _.anchorC(this.moneyBoard);
-	this.moneyBoard.anchor.set(0, 0.5);
-
-	this.fishcoin = this.create(this.moneyBoard.width + this.moneyBoard.x + 12, this.moneyBoard.y, 'fishcoin');
-	this.fishcoin.anchor.set(1, 0.5);
-
-	this.totalText = this.game.add.bitmapText(-2, this.moneyBoard.y - 12, 'fisherman', (this.totalFish || 0) + '', 18);
-	// this.totalText.position.x = this.totalText.position.x - this.totalText.textWidth / 2;
-
-	this.board.addChild(this.moneyBoard);
-	this.board.addChild(this.fishcoin);
-	this.board.addChild(this.totalText);
-}
-
 function createLabels(x, y) {
 	this.categoryLabels = [];
 
@@ -53,26 +32,65 @@ function createLabels(x, y) {
 		_.scale(label, 0.75);
 	}, this);
 }
-var Shop = function(game, x, y) {
-	Building.call(this, game, x, y);
+var Building = function(game, x, y) {
+	Phaser.Group.call(this, game);
 
 	this.signKey = 'shop-sign';
 	this.boardKey = 'long-board';
 	this.itemBgKey = 'shop-item-bg';
-	this.noItemsKey = 'shop-all-sold';
+	this.noItemsKey = 'shop-item-bg';
+
+	createLabels.call(this, x, y + 300);
+	this.createBoard();
+	this.createSign();
+
+	this.initialize();
+
+	this.y = -this.game.height;
+	this.x = 0;
 };
 
-Shop.prototype = Object.create(Building.prototype);
-Shop.prototype.constructor = Shop;
+Building.prototype = Object.create(Phaser.Group.prototype);
+Building.prototype.constructor = Building;
 
-Shop.prototype.initialize = function() {
+Building.prototype.initialize = function() {
 	createFishAmount.call(this);
+}
+Building.prototype.createBoard = function() {
+	this.board = this.create(this.game.width / 2, 180, this.boardKey);
+	_.anchorC(this.board);
+}
+Building.prototype.createSign = function() {
+	this.sign = this.create(0, 10, this.signKey);
+	this.sign.anchor.setTo(0.0, 0);
+	_.scale(this.sign, 0.7)
 }
 
 
+// CATEGORY FUNCTION, IMPORTANT
+Building.prototype.switchCategory = function(label, name) {
+
+	if (label.isPicked) return;
+
+	this.categoryLabels.forEach(function(label) {
+		label.isPicked = false;
+	}, this);
+
+	label.isPicked = true;
+
+	_.rmLoopTween(this.game, this.labelWave);
+
+	label.y = label.baseY;
+
+	this.labelWave = this.game.add.tween(label).to({
+		y: label.baseY + 13
+	}, 250, Phaser.Easing.Linear.None, true, 0, 1000, true);
+}
+
 /////////////////// ITEM SLIDER ///////////////////////
 
-Shop.prototype.showItem = function() {
+
+Building.prototype.showItem = function() {
 
 	this.itemGroup && this.itemGroup.destroy();
 
@@ -121,7 +139,100 @@ Shop.prototype.showItem = function() {
 
 	this.board.addChild(this.itemGroup);
 }
-Shop.prototype.buyItem = function() {
+Building.prototype.previousItem = function() {
+	this.currentItemIndex--;
+	this.rightArrow.visible = true;
+	this.showItem();
+
+	if (this.currentItemIndex - 1 < 0) {
+		this.leftArrow.visible = false;
+	}
+}
+Building.prototype.nextItem = function() {
+	this.currentItemIndex++;
+	this.leftArrow.visible = true;
+	this.showItem();
+
+	if (this.currentItemIndex + 1 >= this.itemsLength) {
+		this.rightArrow.visible = false;
+	}
+}
+
+Building.prototype.createItemSlider = function(category) {
+
+	this.leftArrow && this.leftArrow.destroy();
+	this.rightArrow && this.rightArrow.destroy();
+	this.itemBg && this.itemBg.destroy();
+	this.itemGroup && this.itemGroup.destroy();
+
+
+	this.leftArrow = this.game.add.button(-this.board.width / 2 + 5, 0, 'arr-left', this.previousItem, this, 0, 0, 1, 0);
+	this.leftArrow.anchor.set(0.5);
+	this.leftArrow.visible = false;
+
+	this.rightArrow = this.game.add.button(this.board.width / 2 - 5, 0, 'arr-right', this.nextItem, this, 0, 0, 1, 0);
+	this.rightArrow.anchor.set(0.5);
+	this.rightArrow.visible = false;
+
+	this.board.addChild(this.leftArrow);
+	this.board.addChild(this.rightArrow);
+
+	var items = this.getAvailableItems(category);
+
+	this.sliderItems = items;
+	this.itemsLength = items.length;
+
+	console.log(items);
+
+	if (this.itemsLength > 0) {
+		this.itemBg = this.game.add.sprite(0, 0, this.itemBgKey, 0);
+		this.itemBg.animations.add('scrollin');
+		this.itemBg.animations.play('scrollin', 24, true);
+
+	} else {
+		this.itemBg = this.game.add.sprite(0, 0, this.noItemsKey, 0);
+		this.itemBg.animations.add('wavin');
+		this.itemBg.animations.play('wavin', 1, true);
+	}
+
+	_.anchorC(this.itemBg);
+	_.scale(this.itemBg, 1);
+
+	this.board.addChild(this.itemBg);
+
+	if (this.itemsLength) {
+		this.currentItemIndex = 0;
+		this.showItem();
+
+		if (this.itemsLength > 1) {
+			this.rightArrow.visible = true;
+		}
+
+	}
+
+
+
+	// var scrollAnim = this.itemBg.animations.add('scrollin');
+	// this.itemBg.animations.play('scrollin', 24, true);
+}
+Building.prototype.show = function(score) {
+	if (this.isShown) return false;
+
+	this.isShown = true;
+	this.game.add.tween(this).to({
+		y: 0
+	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
+
+	this.categoryLabels.forEach(function(label) {
+		this.game.add.tween(label).to({
+			y: label.y - 300
+		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(function() {
+			this.categoryShow('hero');
+		}.bind(this));
+	}, this);
+
+};
+Building.prototype.buyItem = function() {
 
 	function tweenOut(el, onComplete) {
 		var onComplete = onComplete || function() {};
@@ -152,7 +263,7 @@ Shop.prototype.buyItem = function() {
 		tweenOut.call(this, this.fishcoinPrice);
 	}
 }
-Shop.prototype.getAvailableItems = function(category) {
+Building.prototype.getAvailableItems = function(category) {
 	var all, unlocked, availableItems;
 
 	all = itemsRegistry.findByType(category);
@@ -164,5 +275,39 @@ Shop.prototype.getAvailableItems = function(category) {
 
 	return availableItems;
 }
+Building.prototype.categoryShow = function(category) {
+	if (this.currentCategory === category) return;
+	this.currentItem && this.currentItem.destroy();
 
-module.exports = Shop;
+
+	this.currentCategory = category;
+	this.switchCategory(this[category + 'Label']);
+
+	this.createItemSlider(category);
+}
+Building.prototype.hide = function() {
+	var y = -this.game.height;
+	var that = this;
+
+	this.isShown = false;
+
+	_.rmLoopTween(this.game, this.labelWave);
+	this.categoryLabels.forEach(function(label) {
+		this.game.add.tween(label).to({
+			y: label.y + 300
+		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
+	}, this);
+
+	this.game.add.tween(this)
+		.to({
+			y: y
+		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0)
+		.onComplete.add(function() {
+			// setTimeout(function() {
+			// 	that.destroy();
+			// }, 10);
+		});
+}
+
+
+module.exports = Building;

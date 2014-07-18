@@ -92,7 +92,7 @@ var itemsRegistry = {
 			type: 'mount',
 			x: 144,
 			y: 184,
-			price: 100000
+			price: 100
 		},
 		{
 			name: 'blackboat',

@@ -25,41 +25,14 @@ function createFishAmount() {
 	this.board.addChild(this.totalText);
 }
 
-function createLabels(x, y) {
-	this.categoryLabels = [];
-
-	this.heroLabel = this.game.add.button(x + 30, y - 50, 'category-label-hero', this.categoryShow.bind(this, 'hero'), this);
-	_.anchorC(this.heroLabel);
-	this.heroLabel.baseY = y - 50 - 300;
-
-	this.mountLabel = this.game.add.button(x - 20, y + 40, 'category-label-mount', this.categoryShow.bind(this, 'mount'), this);
-	_.anchorC(this.mountLabel);
-	this.mountLabel.baseY = y + 40 - 300;
-
-	this.toolLabel = this.game.add.button(x - 40, y - 40, 'category-label-tool', this.categoryShow.bind(this, 'tool'), this);
-	_.anchorC(this.toolLabel);
-	this.toolLabel.baseY = y - 40 - 300;
-
-	this.postcardLabel = this.game.add.button(x + 70, y - 0, 'category-label-postcard', this.categoryShow.bind(this, 'postcard'), this);
-	_.anchorC(this.postcardLabel);
-	this.postcardLabel.baseY = y - 0 - 300;
-
-	this.categoryLabels.push(this.heroLabel);
-	this.categoryLabels.push(this.mountLabel);
-	this.categoryLabels.push(this.toolLabel);
-	this.categoryLabels.push(this.postcardLabel);
-
-	this.categoryLabels.forEach(function(label) {
-		_.scale(label, 0.75);
-	}, this);
-}
 var Shop = function(game, x, y) {
-	Building.call(this, game, x, y);
-
 	this.signKey = 'shop-sign';
 	this.boardKey = 'long-board';
 	this.itemBgKey = 'shop-item-bg';
 	this.noItemsKey = 'shop-all-sold';
+
+	Building.call(this, game, x, y);
+
 };
 
 Shop.prototype = Object.create(Building.prototype);

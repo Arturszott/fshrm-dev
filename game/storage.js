@@ -32,6 +32,13 @@ var storageHandler = {
 		}
 		return eqp;
 	},
+	setEquipment: function(category, item){
+		var eqp = this.getEquipment();
+
+		eqp[category] = item;
+
+		localStorage.setItem('equipment', JSON.stringify(eqp));
+	},
 	setDefaultEquipment: function() {
 		console.log('defaultin');
 
@@ -46,14 +53,15 @@ var storageHandler = {
 		return eqp;
 	},
 	getUnlockedItems: function() {
-		return localStorage.getItem('unlockedItems') || [0, 100, 1000];
+		return JSON.parse(localStorage.getItem('unlockedItems')) || [0, 100, 1000];
 	},
 	unlockItem: function(id) {
 		var items = this.getUnlockedItems();
+		console.log(items);
 
 		if (items.indexOf(id) === -1) {
 			items.push(id);
-			localStorage.setItem('unlockedItems', items);
+			localStorage.setItem('unlockedItems', JSON.stringify(items));
 		}
 	},
 	// every time the function is called, last time played is updated to the current time

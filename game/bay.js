@@ -2,7 +2,7 @@
 
 var Crew = require('./prefabs/crew');
 var Shop = require('./prefabs/shop');
-var House = require('./prefabs/house');
+var House = require('./prefabs/home');
 
 var createBuilding = function(name, x, y) {
 	var building = this.game.add.sprite(x, y, 'building_' + name);
@@ -133,128 +133,130 @@ Bay.prototype = {
 	showBuilding: function(building, board) {
 		if (this.leaving || (this.currentBoard && this.currentBoard.isShown)) return;
 
-			// fade building labels
+		// fade building labels
+		this.labels.forEach(function(label) {
+			this.game.add.tween(label).to({
+				alpha: 0
+			}, 500, Phaser.Easing.Linear.None, true, 0, false);
+		}, this);
+
+		this.addBayButton();
+
+		// calculate building moving offset 
+		// to place them on bottom left corner of the screen
+
+		this.buildingOffset = {
+			y: this.shop.y - building.y,
+			x: this.shop.x - building.x
+		}
+		this.boatOffset = this.buildingOffset.y > 0 ? 100 : 0;
+
+		// move the buildings if necessery
+		this.buildings.forEach(function(b) {
+			this.game.add.tween(b).to({
+				y: b.y + this.buildingOffset.y,
+				x: b.x + this.buildingOffset.x,
+			}, 300, Phaser.Easing.Linear.None, true, 0, false);
+		}.bind(this));
+
+		this.game.add.tween(this.crew).to({
+			y: this.crew.y + this.buildingOffset.y + this.boatOffset,
+			x: this.crew.x + this.buildingOffset.x
+		}, 300, Phaser.Easing.Linear.None, true, 0, false);
+
+		this.currentBoard = board;
+		board.show();
+
+	},
+	hideBuilding: function() {
+		if (this.currentBoard && this.currentBoard.isShown) {
+
+			this.game.add.tween(this.bayButton).to({
+				y: this.game.height + 100,
+			}, 400, Phaser.Easing.Sinusoidal.None, true, 0, false).onComplete.add(function() {
+				this.bayButton.destroy();
+			}.bind(this));
+
+			this.game.add.tween(this.crew).to({
+				y: this.crew.y - this.buildingOffset.y - this.boatOffset,
+				x: this.crew.x - this.buildingOffset.x
+			}, 300, Phaser.Easing.Linear.None, true, 0, false);
+
+			this.currentBoard.hide();
+
 			this.labels.forEach(function(label) {
 				this.game.add.tween(label).to({
-					alpha: 0
+					alpha: 1
 				}, 500, Phaser.Easing.Linear.None, true, 0, false);
 			}, this);
 
-			this.addBayButton();
-
-			// calculate building moving offset 
-			// to place them on bottom left corner of the screen
-			this.buildingOffset = {
-				y: this.shop.y - building.y,
-				x: this.shop.x - building.x
-			}
-
-			// move the buildings if necessery
 			this.buildings.forEach(function(b) {
 				this.game.add.tween(b).to({
-					y: b.y + this.buildingOffset.y,
-					x: b.x + this.buildingOffset.x,
+					y: b.y - this.buildingOffset.y,
+					x: b.x - this.buildingOffset.x
 				}, 300, Phaser.Easing.Linear.None, true, 0, false);
 			}.bind(this));
 
-			this.game.add.tween(this.crew).to({
-				y: this.crew.y + this.buildingOffset.y,
-				x: this.crew.x + this.buildingOffset.x
-			}, 300, Phaser.Easing.Linear.None, true, 0, false);
+			this.currentBoard = null;
+		}
+	},
+	travelStart: function() {
+		this.game.water.autoScroll(300, 0);
+		this.game.background.autoScroll(300, 0);
+	},
+	travelStop: function() {
+		this.game.water.autoScroll(0, 0);
+		this.game.background.autoScroll(0, 0);
+	},
+	goFishing: function() {
+		if (this.leaving || (this.currentBoard && this.currentBoard.isShown)) return;
 
-			this.currentBoard = board; 
-			board.show();
+		this.leaving = true;
+		console.log('go Fishing!!')
 
-		},
-		hideBuilding: function() {
-			if (this.currentBoard && this.currentBoard.isShown) {
+		var baseY = this.crew.hero.y;
+		var that = this;
+		this.game.world.bringToTop(this.crew.hero);
+		this.crew.hero.y = -this.game.height - this.crew.hero.height;
+		this.crew.hero.visible = true;
 
-				this.game.add.tween(this.bayButton).to({
-					y: this.game.height + 100,
-				}, 400, Phaser.Easing.Sinusoidal.None, true, 0, false).onComplete.add(function() {
-					this.bayButton.destroy();
-				}.bind(this));
+		var duration = 500;
 
-				this.game.add.tween(this.crew).to({
-					y: this.crew.y - this.buildingOffset.y,
-					x: this.crew.x - this.buildingOffset.x
-				}, 300, Phaser.Easing.Linear.None, true, 0, false);
+		this.game.add.tween(this.crew.hero).to({
+			y: baseY
+		}, duration * 3, Phaser.Easing.Bounce.Out, true, duration, false).onComplete.add(function() {
+			this.crew.awake.call(this.crew);
+		}.bind(this));
 
-				this.currentBoard.hide();
+		this.game.add.tween(this.crew.btn).to({
+			alpha: 0
+		}, duration * 1, Phaser.Easing.Sinusoidal.Out, true, 0, false);
 
-				this.labels.forEach(function(label) {
-					this.game.add.tween(label).to({
-						alpha: 1
-					}, 500, Phaser.Easing.Linear.None, true, 0, false);
-				}, this);
+		this.game.add.tween(this.crew).to({
+			y: this.game.height * 2
+		}, duration * 3, Phaser.Easing.Linear.None, true, duration * 4, false).onComplete.add(function() {
+			that.game.bayReturn.call(that.baseState);
+		}.bind(this));
 
-				this.buildings.forEach(function(b) {
-					this.game.add.tween(b).to({
-						y: b.y - this.buildingOffset.y,
-						x: b.x - this.buildingOffset.x
-					}, 300, Phaser.Easing.Linear.None, true, 0, false);
-				}.bind(this));
-
-				this.currentBoard = null;
-			}
-		},
-		travelStart: function() {
-			this.game.water.autoScroll(300, 0);
-			this.game.background.autoScroll(300, 0);
-		},
-		travelStop: function() {
-			this.game.water.autoScroll(0, 0);
-			this.game.background.autoScroll(0, 0);
-		},
-		goFishing: function() {
-			if (this.leaving || (this.currentBoard && this.currentBoard.isShown)) return;
-
-			this.leaving = true;
-			console.log('go Fishing!!')
-
-			var baseY = this.crew.hero.y;
-			var that = this;
-			this.game.world.bringToTop(this.crew.hero);
-			this.crew.hero.y = -this.game.height - this.crew.hero.height;
-			this.crew.hero.visible = true;
-
-			var duration = 500;
-
-			this.game.add.tween(this.crew.hero).to({
-				y: baseY
-			}, duration * 3, Phaser.Easing.Bounce.Out, true, duration, false).onComplete.add(function() {
-				this.crew.awake.call(this.crew);
-			}.bind(this));
-
-			this.game.add.tween(this.crew.btn).to({
-				alpha: 0
-			}, duration * 1, Phaser.Easing.Sinusoidal.Out, true, 0, false);
-
-			this.game.add.tween(this.crew).to({
-				y: this.game.height * 2
-			}, duration * 3, Phaser.Easing.Linear.None, true, duration * 4, false).onComplete.add(function() {
-				that.game.bayReturn.call(that.baseState);
-			}.bind(this));
-
-			this.buildings.forEach(function(building) {
-				this.game.add.tween(building).to({
-					y: building.y - this.game.height
-				}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
-
-				setTimeout(function() {
-					building.label.waveTween.stop();
-				}.bind(this), duration * 4);
-
-				this.game.add.tween(building.label).to({
-					y: building.label.y - this.game.height
-				}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
-			}.bind(this));
+		this.buildings.forEach(function(building) {
+			this.game.add.tween(building).to({
+				y: building.y - this.game.height
+			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
 
 			setTimeout(function() {
-				this.game.water.autoScroll(0, -300);
-				this.game.background.autoScroll(0, -300);
+				building.label.waveTween.stop();
 			}.bind(this), duration * 4);
-		}
-	}
 
-	module.exports = Bay;
+			this.game.add.tween(building.label).to({
+				y: building.label.y - this.game.height
+			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
+		}.bind(this));
+
+		setTimeout(function() {
+			this.game.water.autoScroll(0, -300);
+			this.game.background.autoScroll(0, -300);
+		}.bind(this), duration * 4);
+	}
+}
+
+module.exports = Bay;

@@ -35,10 +35,12 @@ function createLabels(x, y) {
 var Building = function(game, x, y) {
 	Phaser.Group.call(this, game);
 
-	this.signKey = 'shop-sign';
-	this.boardKey = 'long-board';
-	this.itemBgKey = 'shop-item-bg';
-	this.noItemsKey = 'shop-item-bg';
+	this.signKey = this.signKey || 'shop-sign';
+	this.boardKey = this.boardKey || 'long-board';
+	this.itemBgKey = this.itemBgKey ||'shop-item-bg';
+	this.noItemsKey = this.noItemsKey ||'shop-item-bg';
+	this.arrLeftKey = this.arrLeftKey ||'arr-left';
+	this.arrRightKey = this.arrRightKey ||'arr-right';
 
 	createLabels.call(this, x, y + 300);
 	this.createBoard();
@@ -46,7 +48,7 @@ var Building = function(game, x, y) {
 
 	this.initialize();
 
-	this.y = -this.game.height;
+	this.y = -this.game.height;	
 	this.x = 0;
 };
 
@@ -61,9 +63,9 @@ Building.prototype.createBoard = function() {
 	_.anchorC(this.board);
 }
 Building.prototype.createSign = function() {
-	this.sign = this.create(0, 10, this.signKey);
+	this.sign = this.create(10, 10, this.signKey);
 	this.sign.anchor.setTo(0.0, 0);
-	_.scale(this.sign, 0.7)
+	_.scale(this.sign, 0.8)
 }
 
 
@@ -166,11 +168,11 @@ Building.prototype.createItemSlider = function(category) {
 	this.itemGroup && this.itemGroup.destroy();
 
 
-	this.leftArrow = this.game.add.button(-this.board.width / 2 + 5, 0, 'arr-left', this.previousItem, this, 0, 0, 1, 0);
+	this.leftArrow = this.game.add.button(-this.board.width / 2 + 5, 0, this.arrLeftKey, this.previousItem, this, 0, 0, 1, 0);
 	this.leftArrow.anchor.set(0.5);
 	this.leftArrow.visible = false;
 
-	this.rightArrow = this.game.add.button(this.board.width / 2 - 5, 0, 'arr-right', this.nextItem, this, 0, 0, 1, 0);
+	this.rightArrow = this.game.add.button(this.board.width / 2 - 5, 0, this.arrRightKey, this.nextItem, this, 0, 0, 1, 0);
 	this.rightArrow.anchor.set(0.5);
 	this.rightArrow.visible = false;
 

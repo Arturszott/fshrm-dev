@@ -65,7 +65,7 @@ Building.prototype.createBoard = function() {
 Building.prototype.createSign = function() {
 	this.sign = this.create(10, 10, this.signKey);
 	this.sign.anchor.setTo(0.0, 0);
-	_.scale(this.sign, 0.8)
+	_.scale(this.sign, 0.7)
 }
 
 

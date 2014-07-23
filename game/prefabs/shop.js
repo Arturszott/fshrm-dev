@@ -17,7 +17,9 @@ function createFishAmount() {
 	this.fishcoin = this.create(this.moneyBoard.width + this.moneyBoard.x + 12, this.moneyBoard.y, 'fishcoin');
 	this.fishcoin.anchor.set(1, 0.5);
 
-	this.totalText = this.game.add.bitmapText(-2, this.moneyBoard.y - 12, 'fisherman', (this.totalFish || 0) + '', 18);
+	this.totalText = this.game.add.bitmapText(-2, this.moneyBoard.y - 16, 'fisherman', (this.totalFish || 0) + '', 26);
+	_.scale(this.totalText, 0.7);
+
 	// this.totalText.position.x = this.totalText.position.x - this.totalText.textWidth / 2;
 
 	this.board.addChild(this.moneyBoard);
@@ -67,11 +69,12 @@ Shop.prototype.showItem = function() {
 	this.fishcoinPrice = this.create(this.priceLabel.width + this.priceLabel.x - 88, this.priceLabel.y - 10, 'fishcoin');
 	this.fishcoinPrice.anchor.set(0.5, 0);
 
-	this.priceText = this.game.add.bitmapText(this.priceLabel.x, this.priceLabel.y, 'fisherman', (this.currentItem.data.price || 69) + '', 22);
+	this.priceText = this.game.add.bitmapText(this.priceLabel.x, this.priceLabel.y, 'fisherman', (this.currentItem.data.price || 69) + '', 26);
 	this.priceText.position.x = this.priceText.position.x - this.priceLabel.width / 2 + 15;
-	this.priceText.position.y = this.priceText.position.y - this.priceText.textHeight / 2 + 2;
+	this.priceText.position.y = this.priceText.position.y - this.priceText.textHeight / 2 + 7;
+	_.scale(this.priceText, 0.7);
 
-	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 16, 'brown', this.currentItem.data.title.toUpperCase() || '', 22);
+	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 12, 'brown', this.currentItem.data.title.toUpperCase() || '', 22);
 	this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
 	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
 

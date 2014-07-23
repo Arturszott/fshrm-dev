@@ -66,6 +66,13 @@ Bay.prototype = {
 		setTimeout(this.travelStop.bind(this), 1000);
 		console.log('traveling to bay');
 
+		
+		this.game.add.tween(this.game.monster).to({
+			x: this.game.monster.x + this.game.width,
+		}, 800, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function(){
+			this.game.monster.destroy();
+		}.bind(this));
+
 		this.game.add.tween(this.workshop).to({
 			x: this.game.width / 1.75,
 		}, 800, Phaser.Easing.Sinusoidal.Out, true, 600, false);
@@ -91,11 +98,9 @@ Bay.prototype = {
 			y: this.game.height * 1,
 		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false).onComplete.add(this.crew.rest.bind(this.crew));
 
-
-
 		this.game.add.tween(this.game.water).to({
 			x: -50,
-		}, 4000, Phaser.Easing.Sinusoidal.None, true, 0, 1000, true);
+		}, 2500, Phaser.Easing.Sinusoidal.None, true, 0, 1000, true);
 
 	},
 	visitshop: function() {

@@ -66,8 +66,6 @@ Play.prototype = {
         this.game.level = 1;
         this.itemPart = parts.randomizeItem();
 
-        console.log(this.itemPart)
-
         // we will hold there fish & mines
         this.elemArrays.left = [];
         this.elemArrays.right = [];
@@ -77,7 +75,7 @@ Play.prototype = {
         this.water.autoScroll(0, config.baseWaterSpeed);
         this.background.autoScroll(0, config.baseBottomSpeed);
 
-        this.timer = new Timer(this.game, config.GAME_TIME, this.deathHandler.bind(this));
+        this.timer = new Timer(this.game, config.GAME_TIME, this.summonMonster.bind(this));
         this.crew = new Crew(this.game, this.game.width / 2, -CELL_SIZE * 2, 1);
         this.game.add.existing(this.crew);
 
@@ -185,11 +183,9 @@ Play.prototype = {
         this.game.isAccelerated = true;
     },
     slowDownAll: function() {
-        console.log('slowing down')
         this.background.autoScroll(0, config.baseBottomSpeed);
         this.water.autoScroll(0, config.baseBottomSpeed);
         this.getAllElements().forEach(function(elem) {
-            // elem.body.acceleration.y = 0;
             elem.body.velocity.y = config.baseElementSpeed;
         });
         this.game.isAccelerated = false;
@@ -241,9 +237,20 @@ Play.prototype = {
     stopAllElements: function() {
         var that = this;
 
+        this.water.autoScroll(0, 0);
+        this.background.autoScroll(0, 0);
+
         this.elemArrays.right.forEach(function(elem) {
             elem.body.velocity.y = 0;
             elem.body.acceleration.y = 0;
+
+            that.game.add.tween(elem).to({
+                x: that.game.width + 100,
+            }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300, false).onComplete.add(function() {
+                setTimeout(function() {
+                    elem.destroy();
+                }, 10);
+            });
         });
 
         this.elemArrays.left.forEach(function(elem) {
@@ -252,7 +259,7 @@ Play.prototype = {
 
             that.game.add.tween(elem).to({
                 x: -100,
-            }, 1000, Phaser.Easing.Sinusoidal.Out, true, 500, false).onComplete.add(function() {
+            }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300, false).onComplete.add(function() {
                 setTimeout(function() {
                     elem.destroy();
                 }, 10);
@@ -364,6 +371,7 @@ Play.prototype = {
             this.game.level++;
         }
         this.scoreText.setText(this.score.toString());
+        this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
         PGLowLatencyAudio && PGLowLatencyAudio.play('score');
     },
     showScoreboard: function() {
@@ -376,11 +384,62 @@ Play.prototype = {
         that.game.add.existing(that.scoreboard);
         that.scoreboard.show(that.score);
     },
+    randomMonster: function(location) {
+        // mocked one
+        var monstersNumber = 2
+        return 'monster_' + Math.floor(Math.random() * monstersNumber);
+    },
+    randomSplash: function(location) {
+        // mocked one
+        var splashNumber = 3
+        return 'splash_' + Math.floor(Math.random() * splashNumber);
+    },
+    summonMonster: function() {
+        if (!this.gameover) {
+            this.gameover = true;
+
+            this.game.add.tween(this.scoreText).to({
+                y: this.game.height + 100
+            }, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
+                this.scoreText.destroy();
+            }.bind(this));
+
+            this.monsterSprite = this.game.add.sprite(this.game.width / 2, -CELL_SIZE * 2, this.randomMonster());
+            this.monsterSprite.anchor.setTo(0.5, 0.5);
+
+            var monsterAnim = this.monsterSprite.animations.add('monstering');
+            this.monsterSprite.animations.play('monstering', 10, true);
+
+            this.game.monster = this.monsterSprite;
+
+            setTimeout(function() {
+                var splashSprite = this.game.add.sprite(this.game.width / 2, CELL_SIZE / 3 * 2 + 30, this.randomSplash());
+                splashSprite.anchor.setTo(0.5, 0.5);
+
+                var splashAnim = splashSprite.animations.add('monstering');
+                splashAnim.killOnComplete = true;
+                splashSprite.animations.play('monstering', 10, 0);
+
+                this.crew.destroy();
+            }.bind(this), 150);
+
+            this.stopAllElements();
+
+            this.game.add.tween(this.monsterSprite).to({
+                y: CELL_SIZE / 3 * 2
+            }, 150, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
+
+            }.bind(this));
+
+            setTimeout(function() {
+                this.showScoreboard();
+            }.bind(this), 1000);
+        }
+    },
     deathHandler: function(elem) {
 
         if (!this.gameover) {
             this.slowDownAll();
-            // this.stopAllElements();
 
             this.timer.stop();
             this.timer.destroyAll();
@@ -395,7 +454,6 @@ Play.prototype = {
             boomSprite.scale.y = this.game.width / 288;
             this.game.physics.arcade.enableBody(boomSprite);
 
-
             var boomAnim = boomSprite.animations.add('splashing');
 
             boomSprite.animations.play('splashing', 16, 0);
@@ -404,9 +462,7 @@ Play.prototype = {
                 elem.visible = false;
             });
 
-            boomAnim.onComplete.add(function() {
-
-            }, this);
+            boomAnim.onComplete.add(function() {}, this);
 
             this.showScoreboard();
 

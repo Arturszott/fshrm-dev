@@ -42,6 +42,7 @@ Timer.prototype.destroyAll = function() {
 	this.bar.destroy();
 	this.destroy();
 };
+
 Timer.prototype.stop = function() {
 	this.started = false;
 };
@@ -52,6 +53,14 @@ Timer.prototype.decrease = function() {
 
 	if (this.currentTime - decreaseValue <= 0) {
 		this.currentTime = 0;
+
+		this.game.add.tween(this).to({
+			y: this.game.height + 100
+		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
+			this.started = false;
+			this.destroyAll();
+		}.bind(this));
+
 		this.deathHandler();
 	} else {
 		this.currentTime -= decreaseValue;

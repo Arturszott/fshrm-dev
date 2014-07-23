@@ -68,7 +68,7 @@ Preload.prototype = {
 
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg2.png', 120, 168, 8);
         this.load.spritesheet('home-item-bg', 'assets/checkedhome.png', 120, 168, 1);
-        this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 120, 168, 2);
+        this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 128, 96, 1);
 
         this.load.image('board', 'assets/menu-shorter.png');
         this.load.image('long-board', 'assets/menu.png');
@@ -92,7 +92,6 @@ Preload.prototype = {
         this.load.image('gameover', 'assets/gameover.png');
         this.load.image('shop-sign', 'assets/shop.png');
         this.load.image('home-sign', 'assets/HOME.png');
-        // this.load.image('gameover', 'assets/gameover2.png');
 
         this.load.bitmapFont('fisherman', 'assets/fonts/fisherman2.png', 'assets/fonts/fisherman2.fnt');
         this.load.bitmapFont('brown', 'assets/fonts/brown/brown.png', 'assets/fonts/brown/brown.fnt');
@@ -107,6 +106,16 @@ Preload.prototype = {
         this.load.spritesheet('barrel', 'assets/barrel.png', 104, 120, 5);
         this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
         this.load.spritesheet('boom', 'assets/boom.png', 288, 555, 11);
+
+
+        this.load.spritesheet('boom', 'assets/boom.png', 288, 555, 11);
+
+        this.load.spritesheet('monster_0', 'assets/monsters/monsterI.png', 324, 312, 6);
+        this.load.spritesheet('monster_1', 'assets/monsters/monsterII.png', 280, 250, 5);
+
+        this.load.spritesheet('splash_0', 'assets/monsters/splash.png', 352, 296, 5);
+        this.load.spritesheet('splash_1', 'assets/monsters/splash1.png', 352, 296, 5);
+        this.load.spritesheet('splash_2', 'assets/monsters/ZIP.png', 352, 296, 5);
 
         if (!!PGLowLatencyAudio) {
             PGLowLatencyAudio.preloadFX('flap', 'assets/flap.wav');

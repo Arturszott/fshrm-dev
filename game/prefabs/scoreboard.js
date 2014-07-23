@@ -14,13 +14,19 @@ var Scoreboard = function(game) {
 	gameover = this.create(this.game.width / 2, 30, 'gameover');
 	gameover.anchor.setTo(0.5, 0);
 
+	this.gameoverWave = this.game.add.tween(gameover).to({
+		y: 0,
+	}, 900, Phaser.Easing.Linear.None, true, 0, 5, true);
+
+
+
 	var scoreX = 25
 
 	this.scoreText = this.game.add.bitmapText(scoreX, -62, 'fisherman', '', 18);
-	this.scoreLabel = this.game.add.bitmapText(-this.scoreboard.width / 2 + 30, -62, 'fisherman', 'Score:', 18);
+	this.scoreLabel = this.game.add.bitmapText(-this.scoreboard.width / 2 + 30, -62, 'fisherman', 'score:', 18);
 
 	this.bestScoreText = this.game.add.bitmapText(scoreX, -30, 'fisherman', '', 18);
-	this.bestScoreLabel = this.game.add.bitmapText(-this.scoreboard.width / 2 + 30, -30, 'fisherman', 'Best:', 18);
+	this.bestScoreLabel = this.game.add.bitmapText(-this.scoreboard.width / 2 + 30, -30, 'fisherman', 'best:', 18);
 
 	var buttonsY = 380;
 

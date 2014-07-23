@@ -94,7 +94,7 @@ Preload.prototype = {
         this.load.image('home-sign', 'assets/HOME.png');
         // this.load.image('gameover', 'assets/gameover2.png');
 
-        this.load.bitmapFont('fisherman', 'assets/fonts/fisherman.png', 'assets/fonts/fisherman.fnt');
+        this.load.bitmapFont('fisherman', 'assets/fonts/fisherman2.png', 'assets/fonts/fisherman2.fnt');
         this.load.bitmapFont('brown', 'assets/fonts/brown/brown.png', 'assets/fonts/brown/brown.fnt');
 
         // @key, @src, @frame x, @frame y, @number of frames
@@ -104,6 +104,7 @@ Preload.prototype = {
         this.load.spritesheet('water-splash', 'assets/water-splash.png', 72, 100, 6);
 
         this.load.spritesheet('mine', 'assets/BOMB.png', 112, 132, 5);
+        this.load.spritesheet('barrel', 'assets/barrel.png', 104, 120, 5);
         this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
         this.load.spritesheet('boom', 'assets/boom.png', 288, 555, 11);
 

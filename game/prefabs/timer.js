@@ -48,7 +48,7 @@ Timer.prototype.stop = function() {
 Timer.prototype.decrease = function() {
 	if (!this.started) return false;
 	var magicNumber = 70;
-	var decreaseValue = Math.tan(Math.sqrt(this.game.level) / 10) * magicNumber;
+	var decreaseValue = Math.tan(Math.sqrt(this.game.level + 2) / 10) * magicNumber;
 
 	if (this.currentTime - decreaseValue <= 0) {
 		this.currentTime = 0;

@@ -2,6 +2,7 @@
 
 var config = require('../config');
 var storage = require('../storage');
+var parts = require('../parts');
 
 var Intro = require('../intro');
 
@@ -10,6 +11,7 @@ var Bay = require('../bay');
 var Crew = require('../prefabs/crew');
 var Fish = require('../prefabs/fish');
 var Mine = require('../prefabs/mine');
+var Barrel = require('../prefabs/barrel');
 var Timer = require('../prefabs/timer');
 var Scoreboard = require('../prefabs/scoreboard');
 
@@ -27,7 +29,6 @@ Play.prototype = {
         right: []
     },
     create: function() {
-
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
         this.game.physics.arcade.gravity.y = 0;
 
@@ -63,6 +64,9 @@ Play.prototype = {
     refreshGame: function(isFromBay) {
 
         this.game.level = 1;
+        this.itemPart = parts.randomizeItem();
+
+        console.log(this.itemPart)
 
         // we will hold there fish & mines
         this.elemArrays.left = [];
@@ -90,18 +94,8 @@ Play.prototype = {
     playIntro: function() {
         this.intro = new Intro(this.game, this);
 
-        // this.water.autoScroll(0, 0);
-        // this.background.autoScroll(0, 0);
-
         console.log(this.intro);
         console.log('playing intro!');
-
-        // var okClick = function() {
-        //     if (isPlaying) return;
-
-        //     isPlaying = true;
-        // };
-
         this.intro.playStep();
     },
     bayReturn: function() {
@@ -109,12 +103,10 @@ Play.prototype = {
     },
     setInput: function() {
         this.game.input.onDown.add(this.sideAction, this);
-
     },
     createScoreBox: function() {
         this.score = 0;
         this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height + 100, 'fisherman', this.score.toString(), 24);
-        // this.scoreText.anchor.setTo(0.5, 0.5);
         this.scoreText.updateTransform();
         this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
         this.scoreText.visible = false;
@@ -145,6 +137,9 @@ Play.prototype = {
             }, 10);
         }, this.splash);
     },
+    addPart: function() {
+        storage.addPart(this.itemPart.item.id);
+    },
     sideAction: function(pointer, e) {
         if (!this.crew.alive || this.gameover || this.starting) return;
 
@@ -162,14 +157,16 @@ Play.prototype = {
         this.accelerateAll();
 
         if (nextElem.key === 'mine') {
-            this.deathHandler(nextElem);
+            return this.deathHandler(nextElem);
+        } else if (nextElem.key === 'barrel') {
+            this.addPart();
         } else {
             this.checkScore();
-            this.dispose();
-            this.refill()
-            nextElem.throwAway(side);
         }
 
+        this.dispose();
+        this.refill()
+        nextElem.throwAway(side);
     },
     accelerateAll: function() {
         if (this.game.isAccelerated) return;
@@ -178,7 +175,7 @@ Play.prototype = {
         this.water.autoScroll(0, config.waterAccelerationSpeed);
 
         this.getAllElements().forEach(function(elem) {
-            elem.body.velocity.y = -600;
+            elem.body.velocity.y = config.accelerationSpeed;
         });
 
         if (this.splash) {
@@ -188,6 +185,7 @@ Play.prototype = {
         this.game.isAccelerated = true;
     },
     slowDownAll: function() {
+        console.log('slowing down')
         this.background.autoScroll(0, config.baseBottomSpeed);
         this.water.autoScroll(0, config.baseBottomSpeed);
         this.getAllElements().forEach(function(elem) {
@@ -307,9 +305,14 @@ Play.prototype = {
     pickElement: function() {
         var elements = [Mine, Fish];
         var n = Math.floor(Math.random() * 2);
+
+        if (this.itemPart && this.score > this.itemPart.score && !this.itemPart.rolledOut) {
+            this.itemPart.rolledOut = true;
+            return Barrel
+        }
         return elements[n];
     },
-    placeElementsPair: function(){
+    placeElementsPair: function() {
         var elements = [];
         elements.push(this.pickElement());
         elements.push(this.pickElement());
@@ -348,15 +351,13 @@ Play.prototype = {
         if (!this.crew.alive && !this.gameover) {
 
             this.placeStartElements();
-
-            // this.crew.body.allowGravity = true;
             this.crew.alive = true;
             this.scoreText.visible = true;
 
             this.instructionGroup.destroy();
         }
     },
-    checkScore: function(pipeGroup) {
+    checkScore: function() {
         this.score++;
 
         if (Math.floor(this.score / 15) == this.game.level) {

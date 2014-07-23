@@ -1,8 +1,10 @@
 'use strict';
 
+var itemsRegistry = require('./itemsRegistry');
+
 var storageHandler = {
 
-
+	// fish fish fish
 	addFish: function(amount) {
 		var fishCount;
 
@@ -23,16 +25,47 @@ var storageHandler = {
 	},
 
 
+	// parts parts parts
+
+	addPart: function(id) {
+		var parts = this.getOwnedParts() || [];
+
+		var itemParts = parts.filter(function(item) {
+			return item.id === id;
+		})[0];
+
+		if (itemParts) {
+			parts[parts.indexOf(itemParts)].owned++;
+
+			localStorage.setItem('parts', JSON.stringify(parts));
+
+		} else {
+			var totalParts = itemsRegistry.findByID(id).parts;
+
+			parts.push({
+				id: id,
+				owned: 1,
+				total: totalParts
+			});
+
+			localStorage.setItem('parts', JSON.stringify(parts));
+		}
+	},
+	getOwnedParts: function() {
+		var parts = JSON.parse(localStorage.getItem('parts'));
+		return parts;
+	},
+
+	// eqp eqp eqp
 	getEquipment: function() {
 		var eqp = JSON.parse(localStorage.getItem('equipment'));
 		if (!eqp) {
 			return this.setDefaultEquipment();
 			this.getEquipment();
-
 		}
 		return eqp;
 	},
-	setEquipment: function(category, item){
+	setEquipment: function(category, item) {
 		var eqp = this.getEquipment();
 
 		eqp[category] = item;
@@ -40,8 +73,6 @@ var storageHandler = {
 		localStorage.setItem('equipment', JSON.stringify(eqp));
 	},
 	setDefaultEquipment: function() {
-		console.log('defaultin');
-
 		var eqp = {
 			tool: 'pole',
 			mount: 'pontoon',
@@ -57,8 +88,6 @@ var storageHandler = {
 	},
 	unlockItem: function(id) {
 		var items = this.getUnlockedItems();
-		console.log(items);
-
 		if (items.indexOf(id) === -1) {
 			items.push(id);
 			localStorage.setItem('unlockedItems', JSON.stringify(items));

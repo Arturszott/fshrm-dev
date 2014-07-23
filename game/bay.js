@@ -45,7 +45,6 @@ var Bay = function(game) {
 	this.shop = createBuilding.call(this, 'shop', x, this.game.CELL_SIZE * 5);
 
 	this.crew = new Crew(this.game, this.game.width / 6 * 4, -300, 1);
-	console.log(this.crew);
 	this.crew.hero.visible = false;
 	this.crew.tool.visible = false;
 

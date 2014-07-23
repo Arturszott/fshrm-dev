@@ -45,6 +45,14 @@ var itemsRegistry = {
 	getItems: function() {
 		return this.setDefaultValues(this.items);
 	},
+	getCraftables: function(){
+		return this.items.filter(function(item){
+			return item.hasOwnProperty('craftable');
+		})
+	},
+	getRawItems: function() {
+		return this.items;
+	},
 	items: [
 		// TOOLS
 		{
@@ -63,6 +71,30 @@ var itemsRegistry = {
 			x: 76,
 			y: 128,
 			price: 100,
+			move: [128, 160]
+		},
+		{
+			name: 'spear',
+			title: 'super spear',
+			id: 2,
+			type: 'tool',
+			x: 76,
+			y: 128,
+			craftable: true,
+			parts: 2,
+			tier: 1,
+			move: [128, 160]
+		},
+		{
+			name: 'spear',
+			title: 'ultra spear',
+			id: 3,
+			type: 'tool',
+			x: 76,
+			y: 128,
+			craftable: true,
+			parts: 5,
+			tier: 1,
 			move: [128, 160]
 		},
 		// {name: 'harpoon', id: 1, type: 'tool'},

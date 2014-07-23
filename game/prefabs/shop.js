@@ -132,7 +132,7 @@ Shop.prototype.getAvailableItems = function(category) {
 	unlocked = storage.getUnlockedItems();
 
 	availableItems = all.filter(function(item) {
-		return unlocked.indexOf(item.id) === -1;
+		return unlocked.indexOf(item.id) === -1 && item.hasOwnProperty('price');
 	});
 
 	return availableItems;

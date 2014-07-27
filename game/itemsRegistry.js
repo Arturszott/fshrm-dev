@@ -45,10 +45,13 @@ var itemsRegistry = {
 	getItems: function() {
 		return this.setDefaultValues(this.items);
 	},
+	filterCraftables: function(items){
+		return items.filter(function(item){
+			return item.craftable && item.craftable === true;
+		});
+	},
 	getCraftables: function(){
-		return this.items.filter(function(item){
-			return item.hasOwnProperty('craftable');
-		})
+		return this.filterCraftables(this.items);
 	},
 	getRawItems: function() {
 		return this.items;
@@ -57,6 +60,7 @@ var itemsRegistry = {
 		// TOOLS
 		{
 			name: 'pole',
+			title: 'Old net',
 			id: 0,
 			type: 'tool',
 			x: 76,
@@ -74,28 +78,26 @@ var itemsRegistry = {
 			move: [128, 160]
 		},
 		{
-			name: 'spear',
-			title: 'super spear',
+			name: 'thorshammer2',
+			title: "Thor's Hammer",
 			id: 2,
 			type: 'tool',
-			x: 76,
-			y: 128,
+			x: 100,
+			y: 136,
 			craftable: true,
-			parts: 2,
-			tier: 1,
-			move: [128, 160]
+			tier: 4,
+			parts: 3,
+			move: [190, 190]
 		},
 		{
-			name: 'spear',
-			title: 'ultra spear',
+			name: 'sword2',
+			title: "King's Sword",
 			id: 3,
 			type: 'tool',
-			x: 76,
-			y: 128,
-			craftable: true,
-			parts: 5,
-			tier: 1,
-			move: [128, 160]
+			x: 60,
+			y: 124,
+			price: 7000,
+			move: [155, 227]
 		},
 		// {name: 'harpoon', id: 1, type: 'tool'},
 
@@ -104,14 +106,43 @@ var itemsRegistry = {
 			name: 'default',
 			id: 100,
 			type: 'hero',
+			title: 'True Jack',
 			x: 144,
 			y: 152
+		},
+		{
+			name: 'chinese',
+			id: 101,
+			type: 'hero',
+			title: 'Yu Yu San',
+			x: 144,
+			y: 152,
+			price: 8000
+		},
+		{
+			name: 'irish',
+			id: 102,
+			type: 'hero',
+			title: 'Paddy',
+			x: 144,
+			y: 152,
+			price: 6666
+		},
+		{
+			name: 'sailor',
+			id: 103,
+			type: 'hero',
+			title: 'Pink Beard',
+			x: 144,
+			y: 152,
+			price: 13000
 		},
 		// {name: 'blackbeard', id: 101, type: 'hero'},
 
 		// MOUNTS
 		{
 			name: 'pontoon',
+			title: 'Old pontoon',
 			id: 1000,
 			type: 'mount',
 			x: 144,
@@ -120,31 +151,44 @@ var itemsRegistry = {
 		{
 			name: 'blackboat',
 			title: 'black boat',
-			id: 1002,
+			id: 1001,
 			type: 'mount',
 			x: 144,
 			y: 184,
 			price: 100
 		},
 		{
-			name: 'blackboat',
-			title: 'RED boat',
+			name: 'raft',
+			title: 'Raw Raft',
+			id: 1002,
+			type: 'mount',
+			x: 144,
+			y: 184,
+			craftable: true,
+			tier: 1,
+			parts: 2,
+		},
+		{
+			name: 'raftt',
+			title: 'Rafty Raft',
 			id: 1003,
 			type: 'mount',
 			x: 144,
 			y: 184,
-			price: 100000
+			craftable: true,
+			tier: 2,
+			parts: 3,
 		},
 		{
-			name: 'blackboat',
-			title: 'YELLOW boat',
+			name: 'crocodile',
+			title: 'Mighty Croc',
 			id: 1004,
 			type: 'mount',
 			x: 144,
 			y: 184,
-			price: 100000
+			price: 4000
 		},
-		// {name: 'raft', id: 1001, type: 'mount'},
+
 	]
 }
 

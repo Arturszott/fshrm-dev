@@ -3,6 +3,7 @@
 var Crew = require('./prefabs/crew');
 var Shop = require('./prefabs/shop');
 var House = require('./prefabs/home');
+var Garage = require('./prefabs/garage');
 
 var createBuilding = function(name, x, y) {
 	var building = this.game.add.sprite(x, y, 'building_' + name);
@@ -40,7 +41,7 @@ var Bay = function(game) {
 
 	var x = -100;
 
-	this.workshop = createBuilding.call(this, 'garage', x, this.game.CELL_SIZE * 1 + 30);
+	this.garage = createBuilding.call(this, 'garage', x, this.game.CELL_SIZE * 1 + 30);
 	this.house = createBuilding.call(this, 'house', x, this.game.CELL_SIZE * 2 + 30);
 	this.shop = createBuilding.call(this, 'shop', x, this.game.CELL_SIZE * 5);
 
@@ -64,19 +65,19 @@ Bay.prototype = {
 		this.travelStart();
 
 		setTimeout(this.travelStop.bind(this), 1000);
-		console.log('traveling to bay');
 
-		
-		this.game.add.tween(this.game.monster).to({
-			x: this.game.monster.x + this.game.width,
-		}, 800, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function(){
-			this.game.monster.destroy();
-		}.bind(this));
+		if(this.game.monster){
+			this.game.add.tween(this.game.monster).to({
+				x: this.game.monster.x + this.game.width,
+			}, 800, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function(){
+				this.game.monster.destroy();
+			}.bind(this));
+		}
 
-		this.game.add.tween(this.workshop).to({
+		this.game.add.tween(this.garage).to({
 			x: this.game.width / 1.75,
 		}, 800, Phaser.Easing.Sinusoidal.Out, true, 600, false);
-		this.game.add.tween(this.workshop.label).to({
+		this.game.add.tween(this.garage.label).to({
 			x: this.game.width / 1.75 + 20,
 		}, 800, Phaser.Easing.Sinusoidal.Out, true, 600, false);
 
@@ -112,7 +113,10 @@ Bay.prototype = {
 
 	},
 	visitgarage: function() {
-		console.log('visiting parts')
+		if (!this.garageBoard) {
+			this.garageBoard = new Garage(this.game, this.shop.x, this.shop.y);
+		}
+		this.showBuilding(this.garage, this.garageBoard);
 	},
 	visithouse: function() {
 		console.log('visiting house')
@@ -219,7 +223,7 @@ Bay.prototype = {
 		console.log('go Fishing!!')
 
 		var baseY = this.crew.hero.y;
-		var that = this;
+
 		this.game.world.bringToTop(this.crew.hero);
 		this.crew.hero.y = -this.game.height - this.crew.hero.height;
 		this.crew.hero.visible = true;
@@ -239,7 +243,7 @@ Bay.prototype = {
 		this.game.add.tween(this.crew).to({
 			y: this.game.height * 2
 		}, duration * 3, Phaser.Easing.Linear.None, true, duration * 4, false).onComplete.add(function() {
-			that.game.bayReturn.call(that.baseState);
+			this.game.bayReturn.call(this.baseState);
 		}.bind(this));
 
 		this.buildings.forEach(function(building) {

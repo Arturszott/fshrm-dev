@@ -44,6 +44,10 @@ Home.prototype.showItem = function() {
 	this.crew[this.currentCategory].waveTween
 	this.crew[this.currentCategory].animations.stop();
 	this.crew[this.currentCategory].loadTexture(this.sliderItems[this.currentItemIndex].name);
+
+	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 12, 'brown', this.sliderItems[this.currentItemIndex].title.toUpperCase() || '', 22);
+	this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
+	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
 	// this.currentItem = this.create(0, 0, this.sliderItems[this.currentItemIndex].name);
 	// this.currentItem.data = this.sliderItems[this.currentItemIndex];
 	// _.anchorC(this.currentItem);
@@ -54,9 +58,7 @@ Home.prototype.showItem = function() {
 	// this.currentItem.scale.x = scale;
 	// this.currentItem.scale.y = scale;
 
-	// this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 16, 'brown', (this.currentItem.data.title || '').toUpperCase(), 22);
-	// this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
-	// this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
+
 	if(storage.getEquipment()[this.currentCategory] === this.sliderItems[this.currentItemIndex].name){
 		this.selectButton = this.game.add.button(0, this.itemBg.height/2, 'btn_using', this.itemUsed, this, 0, 0, 0, 0);
 	} else {
@@ -70,7 +72,7 @@ Home.prototype.showItem = function() {
 
 	this.itemGroup.add(this.selectButton);
 	// this.itemGroup.add(this.currentItem);
-	// this.itemGroup.add(this.itemTitle);
+	this.itemGroup.add(this.itemTitle);
 	this.itemGroup.add(this.crew);
 
 	this.board.addChild(this.itemGroup);

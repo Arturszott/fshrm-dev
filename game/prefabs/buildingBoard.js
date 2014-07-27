@@ -29,6 +29,10 @@ function createLabels(x, y) {
 	this.categoryLabels.push(this.postcardLabel);
 
 	this.categoryLabels.forEach(function(label) {
+		var categoryItems = this.getAvailableItems(label.key.replace('category-label-', ''));
+		if (categoryItems.length === 0) {
+			label.alpha = 0.4;
+		}
 		_.scale(label, 0.75);
 	}, this);
 }
@@ -37,10 +41,10 @@ var Building = function(game, x, y) {
 
 	this.signKey = this.signKey || 'shop-sign';
 	this.boardKey = this.boardKey || 'long-board';
-	this.itemBgKey = this.itemBgKey ||'shop-item-bg';
-	this.noItemsKey = this.noItemsKey ||'shop-item-bg';
-	this.arrLeftKey = this.arrLeftKey ||'arr-left';
-	this.arrRightKey = this.arrRightKey ||'arr-right';
+	this.itemBgKey = this.itemBgKey || 'shop-item-bg';
+	this.noItemsKey = this.noItemsKey || 'shop-item-bg';
+	this.arrLeftKey = this.arrLeftKey || 'arr-left';
+	this.arrRightKey = this.arrRightKey || 'arr-right';
 
 	createLabels.call(this, x, y + 300);
 	this.createBoard();
@@ -48,7 +52,7 @@ var Building = function(game, x, y) {
 
 	this.initialize();
 
-	this.y = -this.game.height;	
+	this.y = -this.game.height;
 	this.x = 0;
 };
 
@@ -71,9 +75,6 @@ Building.prototype.createSign = function() {
 
 // CATEGORY FUNCTION, IMPORTANT
 Building.prototype.switchCategory = function(label, name) {
-
-	if (label.isPicked) return;
-
 	this.categoryLabels.forEach(function(label) {
 		label.isPicked = false;
 	}, this);
@@ -90,7 +91,6 @@ Building.prototype.switchCategory = function(label, name) {
 }
 
 /////////////////// ITEM SLIDER ///////////////////////
-
 
 Building.prototype.showItem = function() {
 
@@ -209,16 +209,12 @@ Building.prototype.createItemSlider = function(category) {
 		if (this.itemsLength > 1) {
 			this.rightArrow.visible = true;
 		}
-
 	}
-
-
-
-	// var scrollAnim = this.itemBg.animations.add('scrollin');
-	// this.itemBg.animations.play('scrollin', 24, true);
 }
 Building.prototype.show = function(score) {
+	this.notEmpty = false;
 	if (this.isShown) return false;
+
 
 	this.isShown = true;
 	this.game.add.tween(this).to({
@@ -229,7 +225,18 @@ Building.prototype.show = function(score) {
 		this.game.add.tween(label).to({
 			y: label.y - 300
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(function() {
-			this.categoryShow('hero');
+			var categories = ['hero', 'tool', 'mount'];
+			categories.forEach(function(cat) {
+				if (!this.notEmpty && this.getAvailableItems(cat).length) {
+					var items = this.getAvailableItems(cat);
+					this.categoryShow(cat);
+					this.notEmpty = cat;
+				}
+			}, this);
+			// if (!this.notEmpty) {
+			// 	this.categoryShow('hero');
+			// }
+
 		}.bind(this));
 	}, this);
 
@@ -289,11 +296,12 @@ Building.prototype.categoryShow = function(category) {
 }
 Building.prototype.hide = function() {
 	var y = -this.game.height;
-	var that = this;
 
 	this.isShown = false;
+	this.currentCategory = null;
 
 	_.rmLoopTween(this.game, this.labelWave);
+
 	this.categoryLabels.forEach(function(label) {
 		this.game.add.tween(label).to({
 			y: label.y + 300
@@ -304,11 +312,7 @@ Building.prototype.hide = function() {
 		.to({
 			y: y
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0)
-		.onComplete.add(function() {
-			// setTimeout(function() {
-			// 	that.destroy();
-			// }, 10);
-		});
+		.onComplete.add(function() {});
 }
 
 

@@ -2,8 +2,9 @@
 
 var config = require('../config');
 var storage = require('../storage');
-var parts = require('../parts');
 
+var itemsRegistry = require('../itemsRegistry');
+var parts = require('../parts');
 var Intro = require('../intro');
 
 var Bay = require('../bay');

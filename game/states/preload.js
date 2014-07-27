@@ -41,7 +41,6 @@ Preload.prototype = {
         this.load.spritesheet('rankBtn', 'assets/icons/btn_rank.png', 80, 68, 2);
 
         // others
-        this.load.image('compassButton', 'assets/compassbtn.png');
         this.load.image('getReady', 'assets/icons/getready.png');
         this.load.image('howto', 'assets/icons/howto.png');
         this.load.image('dead', 'assets/icons/dead.png');
@@ -64,19 +63,26 @@ Preload.prototype = {
         this.load.spritesheet('buy-btn-bought', 'assets/icons/bought.png', 76, 60, 1);
         this.load.spritesheet('buy-btn-nomoney', 'assets/icons/notenough.png', 76, 60, 1);
 
+        this.load.spritesheet('btn_craft', 'assets/icons/buy.png', 76, 60, 2);
+        this.load.spritesheet('btn_no_craft', 'assets/icons/notenough.png', 76, 60, 1);
+
         this.load.spritesheet('ok-btn', 'assets/icons/ok.png', 80, 68, 2);
 
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg2.png', 120, 168, 8);
         this.load.spritesheet('home-item-bg', 'assets/checkedhome.png', 120, 168, 1);
+        this.load.spritesheet('garage-item-bg', 'assets/GARAGEbackgroun.png', 128, 168, 1);
+
         this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 128, 96, 1);
 
         this.load.image('board', 'assets/menu-shorter.png');
         this.load.image('long-board', 'assets/menu.png');
         this.load.image('home-board', 'assets/HOMEboard.png');
+        this.load.image('garage-board', 'assets/GARAGEboard.png');
 
         this.load.image('money-board', 'assets/icons/SHOPboard.png');
         this.load.image('btn_select', 'assets/icons/select.png');
         this.load.image('btn_using', 'assets/icons/using.png');
+        this.load.image('part', 'assets/icons/part.png');
 
         this.load.image('category-label-hero', 'assets/icons/SHOPcharacter.png');
         this.load.image('category-label-tool', 'assets/icons/SHOPtool.png');
@@ -89,9 +95,13 @@ Preload.prototype = {
         this.load.image('arr-left-home', 'assets/icons/Ly.png');
         this.load.image('arr-right-home', 'assets/icons/Ry.png');
 
+        this.load.image('arr-left-garage', 'assets/icons/Lg.png');
+        this.load.image('arr-right-garage', 'assets/icons/Rg.png');
+
         this.load.image('gameover', 'assets/gameover.png');
         this.load.image('shop-sign', 'assets/shop.png');
         this.load.image('home-sign', 'assets/HOME.png');
+        this.load.image('garage-sign', 'assets/garage.png');
 
         this.load.bitmapFont('fisherman', 'assets/fonts/fisherman2.png', 'assets/fonts/fisherman2.fnt');
         this.load.bitmapFont('brown', 'assets/fonts/brown/brown.png', 'assets/fonts/brown/brown.fnt');
@@ -104,10 +114,6 @@ Preload.prototype = {
 
         this.load.spritesheet('mine', 'assets/BOMB.png', 112, 132, 5);
         this.load.spritesheet('barrel', 'assets/barrel.png', 104, 120, 5);
-        this.load.spritesheet('explosion', 'assets/explosion.png', 64, 62, 16);
-        this.load.spritesheet('boom', 'assets/boom.png', 288, 555, 11);
-
-
         this.load.spritesheet('boom', 'assets/boom.png', 288, 555, 11);
 
         this.load.spritesheet('monster_0', 'assets/monsters/monsterI.png', 324, 312, 6);

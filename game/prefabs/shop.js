@@ -11,7 +11,6 @@ function createFishAmount() {
 
 	this.moneyBoard = this.create(-16, -this.board.height / 2 + 10, 'money-board');
 	_.scale(this.moneyBoard, 0.9)
-	// _.anchorC(this.moneyBoard);
 	this.moneyBoard.anchor.set(0, 0.5);
 
 	this.fishcoin = this.create(this.moneyBoard.width + this.moneyBoard.x + 12, this.moneyBoard.y, 'fishcoin');
@@ -19,8 +18,6 @@ function createFishAmount() {
 
 	this.totalText = this.game.add.bitmapText(-2, this.moneyBoard.y - 16, 'fisherman', (this.totalFish || 0) + '', 26);
 	_.scale(this.totalText, 0.7);
-
-	// this.totalText.position.x = this.totalText.position.x - this.totalText.textWidth / 2;
 
 	this.board.addChild(this.moneyBoard);
 	this.board.addChild(this.fishcoin);
@@ -48,6 +45,7 @@ Shop.prototype.initialize = function() {
 /////////////////// ITEM SLIDER ///////////////////////
 
 Shop.prototype.showItem = function() {
+	this.bought = false;
 
 	this.itemGroup && this.itemGroup.destroy();
 
@@ -98,6 +96,8 @@ Shop.prototype.showItem = function() {
 	this.board.addChild(this.itemGroup);
 }
 Shop.prototype.buyItem = function() {
+	if (this.bought) return;
+	this.bought = true;
 
 	function tweenOut(el, onComplete) {
 		var onComplete = onComplete || function() {};

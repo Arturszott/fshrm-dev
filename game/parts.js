@@ -28,7 +28,6 @@ var partsManager = {
 		var parts = storage.getOwnedParts().filter(function(itemParts) {
 			return itemParts.id === id;
 		});
-		// console.log(parts);
 		return parts ? parts[0] : null;
 	},
 
@@ -39,12 +38,10 @@ var partsManager = {
 		if (!this.isInGame()) return false;
 
 		var items = this.getMissingParts();
-		console.log(items);
 		if(!items.length) return false;
 
 		var item = items[Math.floor(Math.random() * items.length)];
 		var tierRange = config.tiers[item.tier];
-
 		return {
 			item: item,
 			score: Math.floor(Math.random() * (tierRange[1] - tierRange[0]) + tierRange[0])

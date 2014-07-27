@@ -123,6 +123,8 @@ Preload.prototype = {
         this.load.spritesheet('splash_1', 'assets/monsters/splash1.png', 352, 296, 5);
         this.load.spritesheet('splash_2', 'assets/monsters/ZIP.png', 352, 296, 5);
 
+        this.load.spritesheet('crafting', 'assets/crafting.png', 96, 90, 8);
+
         if (!!PGLowLatencyAudio) {
             PGLowLatencyAudio.preloadFX('flap', 'assets/flap.wav');
             PGLowLatencyAudio.preloadFX('score', 'assets/score.wav');

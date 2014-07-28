@@ -38,34 +38,49 @@ Garage.prototype.showItem = function() {
 	this.itemGroup && this.itemGroup.destroy();
 	this.current = this.sliderItems[this.currentItemIndex];
 
-	this.currentItem = this.create(0, -20, this.current.name);
+	var sliceItem = function(item) {
+		var scale = this.itemBg.height / item.y * 0.75;
+
+		scale = scale > 0.8 * 0.75 ? 0.8 : scale;
+
+		var slicesGroup = this.game.add.group();
+		var slice;
+
+		for (var i = 0; i < item.parts; i++) {
+			slice = this.create((item.x / item.parts + 5) * i - item.x / 2, 0, item.name);
+			slice.crop(new Phaser.Rectangle(item.x / item.parts * i, 0, item.x / item.parts, item.y));
+			slice.anchor.set(0, 0.5);
+			slice.alpha = 0.5;
+			slicesGroup.add(slice);
+		};
+
+		return slicesGroup;
+	}
+
+	this.currentItem = sliceItem.call(this, this.current);
 	this.currentItem.data = this.current;
-	_.anchorC(this.currentItem);
 
-	var scale = this.itemBg.height / this.currentItem.height * 0.75;
-
-	scale = scale > 0.8 * 0.75 ? 0.8 : scale;
-	this.currentItem.scale.x = scale;
-	this.currentItem.scale.y = scale;
-
-	var cropRect = new Phaser.Rectangle(0, 0, this.currentItem.width / this.current.parts, this.currentItem.height);
-	this.currentItem.crop(cropRect);
-
-	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 12, 'brown', this.current.title.toUpperCase() || '', 22);
+	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 20, 'brown', this.current.title.toUpperCase() || '', 24);
 	this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
 	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
 
 	var ownedParts = parts.findPartById(this.current.id);
 	ownedParts = ownedParts ? ownedParts.owned : 0;
 
-	this.partsText = this.game.add.bitmapText(0, 60, 'fisherman', ownedParts + '/' + this.current.parts + '', 22);
+	// for (var i = 0; i < ownedParts; i++) {
+	// 	var currentSlice = this.currentItem.children[i]
+	// 	currentSlice.alpha = 0.85;
+
+	// }
+
+	this.partsText = this.game.add.bitmapText(0, this.itemBg.height / 2 - 10, 'fisherman', ownedParts + '/' + this.current.parts + '', 22);
 	this.partsText.position.x = this.partsText.position.x - this.partsText.textWidth / 2;
-	this.partsText.position.y = this.partsText.position.y - this.partsText.textHeight / 2;
+	// this.partsText.position.y = this.partsText.position.y - this.partsText.textHeight / 2;
 
 	if (ownedParts === this.current.parts) {
-		this.craftButton = this.game.add.button(0, this.itemBg.height / 2 + 30, 'btn_craft', this.startCrafting.bind(this, this.current), this, 0, 0, 1, 0);
+		this.craftButton = this.game.add.button(0, this.itemBg.height / 2 + 60, 'btn_craft', this.startCrafting.bind(this, this.current), this, 0, 0, 1, 0);
 	} else {
-		this.craftButton = this.game.add.button(0, this.itemBg.height / 2 + 30, 'btn_no_craft', this.noCraft, this, 0, 0, 0, 0);
+		this.craftButton = this.game.add.button(0, this.itemBg.height / 2 + 60, 'btn_no_craft', this.noCraft, this, 0, 0, 0, 0);
 	}
 
 	_.anchorC(this.craftButton);
@@ -84,7 +99,7 @@ Garage.prototype.noCraft = function() {
 
 }
 Garage.prototype.startCrafting = function(name) {
-	console.log('crafting started');
+	if(this.currentItem.isCrafted) return;
 
 	this.game.add.tween(this.partsText).to({
 		y: -this.game.height
@@ -94,8 +109,8 @@ Garage.prototype.startCrafting = function(name) {
 	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
 
 
-	this.tapRight = this.game.add.sprite(-this.game.width - this.itemBg.width / 2, 0, 'tap-right');
-	this.tapLeft = this.game.add.sprite(this.game.width + this.itemBg.width / 2, 0, 'tap-left');
+	this.tapRight = this.game.add.sprite(-this.game.width - this.itemBg.width / 2 - 10, 0, 'tap-right');
+	this.tapLeft = this.game.add.sprite(this.game.width + this.itemBg.width / 2 + 10, 0, 'tap-left');
 
 	_.anchorC(this.tapRight);
 	_.anchorC(this.tapLeft);
@@ -103,32 +118,76 @@ Garage.prototype.startCrafting = function(name) {
 	this.itemGroup.add(this.tapRight);
 	this.itemGroup.add(this.tapLeft);
 
+	var finalLeft = this.tapLeft.x - this.game.width;
+	var finalRight = this.tapRight.x + this.game.width
+
 	this.game.add.tween(this.tapRight).to({
-		x: this.tapRight.x + this.game.width
-	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
+		x: finalRight
+	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0).to({
+		x: finalRight - 10
+	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0, 3, true);
 
 	this.game.add.tween(this.tapLeft).to({
-		x: this.tapLeft.x - this.game.width
-	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
+		x: finalLeft
+	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0).to({
+		x: finalLeft + 10
+	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0, 3, true);;
 
+	this.tapped = 0;
 
-	// storage.setEquipment(this.currentCategory, name);
+	this.itemBg.inputEnabled = true;
+	this.itemBg.events.onInputDown.add(function() {
+		this.cloud && this.cloud.destroy();
+		this.cloud = this.game.add.sprite(0, 0, 'crafting');
+		_.anchorC(this.cloud);
+		_.scale(this.cloud, 2);
+		this.cloud.smokin = this.cloud.animations.add('smokin');
+		this.cloud.smokin.killOnComplete = true;
+		this.cloud.animations.play('smokin', 14, 2);
+		this.itemGroup.add(this.cloud);
+		this.currentItem.children[this.tapped].alpha = 1;
 
-	// function tweenOut(el, onComplete) {
-	// 	var onComplete = onComplete || function() {};
+		this.tapped++;
 
-	// 	this.game.add.tween(el).to({
-	// 		x: el.x - this.game.width
-	// 	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(onComplete.bind(this));
-	// }
+		if (this.tapped === this.currentItem.children.length) {
+			console.log('end of tappin')
 
-	// tweenOut.call(this, this.selectButton, function() {
-	// 	this.selectButton.loadTexture('btn_using', 0);
-	// 	this.game.add.tween(this.selectButton).to({
-	// 		x: 0
-	// 	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
-	// }.bind(this));
+			var key = this.currentItem.data.name;
+			this.currentItem.destroy();
+			this.currentItem = this.create(0, 0, key);
+			_.anchorC(this.currentItem);
+			this.itemGroup.add(this.currentItem);
+			this.currentItem.animations.add('wind');
+			this.currentItem.animations.play('wind', 8, true);
 
+			this.itemBg.inputEnabled = false;
+
+			this.game.add.tween(this.tapRight).to({
+				x: finalRight - this.game.width
+			}, 200, Phaser.Easing.Sinusoidal.Out, true, 0);
+
+			this.game.add.tween(this.tapLeft).to({
+				x: finalLeft + this.game.width
+			}, 200, Phaser.Easing.Sinusoidal.Out, true, 0);
+
+			this.craftButton.loadTexture('buy-btn-bought');
+			this.game.add.tween(this.craftButton).to({
+				y: this.itemBg.height / 2 + 60
+			}, 200, Phaser.Easing.Sinusoidal.Out, true, 0);
+
+			this.currentItem.isCrafted = true;
+			storage.unlockItem(this.current.id);
+
+		} else {
+			this.game.add.tween(this.tapRight).to({
+				x: finalRight - 10
+			}, 200, Phaser.Easing.Sinusoidal.Out, true, 0, 3, true);
+
+			this.game.add.tween(this.tapLeft).to({
+				x: finalLeft + 10
+			}, 200, Phaser.Easing.Sinusoidal.Out, true, 0, 3, true);
+		}
+	}, this);
 }
 Garage.prototype.getAvailableItems = function(category) {
 	var all, unlocked, availableItems;

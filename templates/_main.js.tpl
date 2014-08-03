@@ -3,12 +3,8 @@
 //global variables
 window.appStarted = false;
 
-window.onload = function() {
-	document.addEventListener("deviceready", onDeviceReady, false);
-	setTimeout(function() {
-		onDeviceReady()
-	}, 200);
-};
+
+
 window.onDeviceReady = function() {
 	if(window.appStarted) return;
 	window.appStarted = true;
@@ -23,7 +19,7 @@ window.onDeviceReady = function() {
 	}
 	var screenRatio = w / h;
 
-	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.CANVAS, '<%= _.slugify(projectName) %>');
+	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.CANVAS, 'game');
 
 	game.widthRatio = 505 * screenRatio / 288;
 
@@ -33,3 +29,7 @@ window.onDeviceReady = function() {
 
 	game.state.start('boot');
 }
+document.addEventListener("deviceready", onDeviceReady, false);
+setTimeout(function() {
+	onDeviceReady()
+}, 200);

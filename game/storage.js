@@ -52,7 +52,7 @@ var storageHandler = {
 		}
 	},
 	getOwnedParts: function() {
-		var parts = JSON.parse(localStorage.getItem('parts'));
+		var parts = JSON.parse(localStorage.getItem('parts')) || [];
 		return parts;
 	},
 

@@ -68,37 +68,57 @@ var itemsRegistry = {
 			move: [128, 160]
 		},
 		{
-			name: 'spear',
-			title: 'sharp spear',
+			name: 'lasso',
+			title: "Lucky Lasso",
 			id: 1,
 			type: 'tool',
-			x: 76,
-			y: 128,
-			price: 100,
-			move: [128, 160]
+			x: 96,
+			y: 120,
+			price: 3000,
+			move: [128, 128]
+		},
+		
+		{
+			name: 'sword2',
+			title: "King's Sword",
+			id: 2,
+			type: 'tool',
+			x: 60,
+			y: 124,
+			price: 5600,
+			move: [155, 227]
 		},
 		{
 			name: 'thorshammer2',
 			title: "Thor's Hammer",
-			id: 2,
+			id: 3,
 			type: 'tool',
 			x: 100,
 			y: 136,
-			craftable: true,
-			tier: 4,
-			parts: 3,
+			price: 9999,
 			move: [190, 190]
 		},
 		{
-			name: 'sword2',
-			title: "King's Sword",
-			id: 3,
+			name: 'cake',
+			title: "Berry Pie",
+			id: 4,
 			type: 'tool',
-			x: 60,
+			x: 102,
 			y: 124,
-			price: 7000,
-			move: [155, 227]
+			price: 14000,
+			move: [120, 164]
 		},
+		{
+			name: 'laserpistol',
+			title: "Laser Gun",
+			id: 5,
+			type: 'tool',
+			x: 96,
+			y: 72,
+			price: 21000,
+			move: [132, 100]
+		},
+
 		// {name: 'harpoon', id: 1, type: 'tool'},
 
 		// HEROS
@@ -111,22 +131,22 @@ var itemsRegistry = {
 			y: 152
 		},
 		{
-			name: 'chinese',
-			id: 101,
-			type: 'hero',
-			title: 'Yu Yu San',
-			x: 144,
-			y: 152,
-			price: 8000
-		},
-		{
 			name: 'irish',
-			id: 102,
+			id: 101,
 			type: 'hero',
 			title: 'Paddy',
 			x: 144,
 			y: 152,
 			price: 6666
+		},
+		{
+			name: 'chinese',
+			id: 102,
+			type: 'hero',
+			title: 'Yu Yu San',
+			x: 144,
+			y: 152,
+			price: 9860
 		},
 		{
 			name: 'sailor',
@@ -136,6 +156,33 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 13000
+		},
+		{
+			name: 'bavarian',
+			id: 104,
+			type: 'hero',
+			title: 'Helmut',
+			x: 144,
+			y: 152,
+			price: 16000
+		},
+		{
+			name: 'diver',
+			id: 105,
+			type: 'hero',
+			title: 'Johny Deep',
+			x: 144,
+			y: 152,
+			price: 20000
+		},
+		{
+			name: 'swimmer',
+			id: 106,
+			type: 'hero',
+			title: 'Thorpedo',
+			x: 144,
+			y: 152,
+			price: 24000
 		},
 		// {name: 'blackbeard', id: 101, type: 'hero'},
 
@@ -149,13 +196,13 @@ var itemsRegistry = {
 			y: 184
 		},
 		{
-			name: 'blackboat',
-			title: 'black boat',
+			name: 'woodboat',
+			title: 'Simple Boat',
 			id: 1001,
 			type: 'mount',
 			x: 144,
 			y: 184,
-			price: 100
+			price: 2000
 		},
 		{
 			name: 'raft',
@@ -187,6 +234,15 @@ var itemsRegistry = {
 			x: 144,
 			y: 184,
 			price: 4000
+		},
+		{
+			name: 'motorboat',
+			title: 'Shiny Boat',
+			id: 1005,
+			type: 'mount',
+			x: 144,
+			y: 184,
+			price: 12000
 		},
 
 	]

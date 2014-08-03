@@ -13,11 +13,13 @@ var Timer = function(game, time, deathHandler) {
 	this.started = false;
 	this.deathHandler = deathHandler;
 
-	this.game.add.existing(this);
+	this.game.add.existing(this)
 	this.timebarWidth = this.width - 50;
-	this.bar = this.game.add.tileSprite(-this.timebarWidth / 2, 0, this.timebarWidth / 2, 28, 'timebar');
+	this.bar = this.game.add.sprite(-this.timebarWidth / 2, 0, 'timebar');
+	this.game.stage.addChild(this);
 	this.bar.anchor.setTo(0, 0.5);
 	this.addChild(this.bar);
+	this.setBar();
 };
 Timer.prototype = Object.create(Phaser.Sprite.prototype);
 Timer.prototype.constructor = Timer;
@@ -27,7 +29,7 @@ Timer.prototype.setBar = function() {
 };
 Timer.prototype.start = function() {
 	this.visible = true;
-	this.currentTime = this.currentTime / 2;
+	// this.currentTime = this.currentTime / 2;
 
 	this.game.add.tween(this).to({
 		y: this.game.height - 120

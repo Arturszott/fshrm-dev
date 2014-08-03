@@ -24,8 +24,8 @@ var Intro = function(game, parent) {
 	var half = this.game.width / 2;
 	var fullheight = this.game.height;
 
-	var leftSide = this.game.add.tileSprite(-half, 0, half, fullheight, 'introlayer');
-	var rightSide = this.game.add.tileSprite(half * 3, 0, half, fullheight, 'introlayer');
+	// var leftSide = this.game.add.tileSprite(-half, 0, half, fullheight, 'introlayer');
+	// var rightSide = this.game.add.tileSprite(half * 3, 0, half, fullheight, 'introlayer');
 	var line = this.game.add.tileSprite(half, 2 * fullheight, 32, fullheight, 'line');
 	_.anchorC(line);
 
@@ -59,8 +59,8 @@ var Intro = function(game, parent) {
 	_.scale(howTo, 0.8);
 
 	this.introGroup = this.game.add.group();
-	this.introGroup.add(leftSide);
-	this.introGroup.add(rightSide);
+	// this.introGroup.add(leftSide);
+	// this.introGroup.add(rightSide);
 	this.introGroup.add(line);
 	this.introGroup.add(howTo);
 	this.introGroup.add(dead);
@@ -69,8 +69,8 @@ var Intro = function(game, parent) {
 	this.introGroup.add(tapLeft);
 	this.introGroup.add(this.okButton);
 
-	leftSide.alpha = 0.8;
-	rightSide.alpha = 0.8;
+	// leftSide.alpha = 0.8;
+	// rightSide.alpha = 0.8;
 
 	var mine = new Mine(this.game, LEFT_POSITION - half, this.game.CELL_SIZE * 2);
 	mine.body.velocity.y = 0;
@@ -90,12 +90,12 @@ var Intro = function(game, parent) {
 
 		var delay = 600;
 
-		this.game.add.tween(leftSide).to({
-			x: 0
-		}, 500, Phaser.Easing.Sinusoidal.Out, true, delay, false);
-		this.game.add.tween(rightSide).to({
-			x: half
-		}, 500, Phaser.Easing.Sinusoidal.Out, true, delay, false);
+		// this.game.add.tween(leftSide).to({
+		// 	x: 0
+		// }, 500, Phaser.Easing.Sinusoidal.Out, true, delay, false);
+		// this.game.add.tween(rightSide).to({
+		// 	x: half
+		// }, 500, Phaser.Easing.Sinusoidal.Out, true, delay, false);
 
 		this.game.world.bringToTop(this.parent.crew);
 
@@ -227,33 +227,33 @@ var Intro = function(game, parent) {
 		this.game.add.tween(tapLeft).to({
 			x: LEFT_POSITION + 25
 		}, 400, Phaser.Easing.Linear.Out, true, 0, false);
-		this.game.add.tween(leftSide).to({
-			alpha: 0.3
-		}, 100, Phaser.Easing.Linear.Out, true, 0, 5, true);
+		// this.game.add.tween(leftSide).to({
+		// 	alpha: 0.3
+		// }, 100, Phaser.Easing.Linear.Out, true, 0, 5, true);
 
 		this.game.add.tween(tapRight).to({
 			x: RIGHT_POSITION - 25
 		}, 400, Phaser.Easing.Linear.Out, true, 600, false);
 
-		setTimeout(function() {
-			this.game.add.tween(rightSide).to({
-				alpha: 0.3
-			}, 100, Phaser.Easing.Linear.Out, true, 0, 5, true);
-		}.bind(this), 600);
+		// setTimeout(function() {
+		// 	this.game.add.tween(rightSide).to({
+		// 		alpha: 0.3
+		// 	}, 100, Phaser.Easing.Linear.Out, true, 0, 5, true);
+		// }.bind(this), 600);
 
 	}
 
 	this.step4 = function() {
-		this.game.add.tween(leftSide).to({
-			x: -half
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
-			leftSide.destroy();
-		});
-		this.game.add.tween(rightSide).to({
-			x: 3 * half
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
-			rightSide.destroy();
-		});
+		// this.game.add.tween(leftSide).to({
+		// 	x: -half
+		// }, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		// 	leftSide.destroy();
+		// });
+		// this.game.add.tween(rightSide).to({
+		// 	x: 3 * half
+		// }, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		// 	rightSide.destroy();
+		// });
 		this.game.add.tween(line).to({
 			y: -fullheight
 		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {

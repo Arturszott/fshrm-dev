@@ -15,30 +15,29 @@ function preloadRegistry(c) {
 
 Preload.prototype = {
     preload: function() {
-
+        this.game.time.advancedTiming = true;
         this.asset = this.add.sprite(this.game.width / 2, this.game.height / 2, 'preloader');
         this.asset.anchor.setTo(0.5, 0.5);
 
         this.load.setPreloadSprite(this.asset);
         this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
-        this.add.sprite((this.game.width - 288) / 2, 0, 'splash');
-
         preloadRegistry(this);
 
-        this.load.image('bottom', 'assets/bottom.png');
-        this.load.image('introlayer', 'assets/introtile.png');
-        this.load.image('waterlayer', 'assets/sea.png');
-        this.load.image('line', 'assets/line.png');
-        this.load.image('timer', 'assets/timer.png');
-        this.load.image('timebar', 'assets/time.png');
-
-        this.load.image('title', 'assets/logo.png');
+        // this.load.image('bottom', 'assets/bottom.png');
+        this.load.image('bottom', 'assets/tileBottom.png');
+        this.load.image('water', 'assets/tileWater.png');
+        this.load.image('introlayer', 'assets/play/introtile.png');
+        this.load.image('waterlayer', 'assets/play/sea.png');
+        this.load.image('timer', 'assets/play/timer.png');
+        this.load.image('timebar', 'assets/play/time.png');
 
         // BUTTONS
         this.load.spritesheet('playBtn', 'assets/icons/btn_play.png', 80, 68, 2);
         this.load.spritesheet('homeBtn', 'assets/icons/btn_home.png', 80, 68, 2);
         this.load.spritesheet('rankBtn', 'assets/icons/btn_rank.png', 80, 68, 2);
+
+        this.load.spritesheet('lassoFull', 'assets/items/tool/lassofull.png', 128, 120, 12);
 
         // others
         this.load.image('getReady', 'assets/icons/getready.png');
@@ -70,7 +69,7 @@ Preload.prototype = {
 
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg2.png', 120, 168, 8);
         this.load.spritesheet('home-item-bg', 'assets/checkedhome.png', 120, 168, 1);
-        this.load.spritesheet('garage-item-bg', 'assets/GARAGEbackgroun.png', 128, 168, 1);
+        this.load.spritesheet('garage-item-bg', 'assets/parchment.png', 144, 180, 1);
 
         this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 128, 96, 1);
 
@@ -84,7 +83,7 @@ Preload.prototype = {
         this.load.image('btn_using', 'assets/icons/using.png');
         this.load.image('part', 'assets/icons/part.png');
 
-        this.load.image('category-label-hero', 'assets/icons/SHOPcharacter.png');
+        this.load.image('category-label-hero', 'assets/icons/SHOPcharacter2.png');
         this.load.image('category-label-tool', 'assets/icons/SHOPtool.png');
         this.load.image('category-label-mount', 'assets/icons/SHOPboat.png');
         this.load.image('category-label-postcard', 'assets/icons/SHOPpostcard.png');
@@ -98,23 +97,22 @@ Preload.prototype = {
         this.load.image('arr-left-garage', 'assets/icons/Lg.png');
         this.load.image('arr-right-garage', 'assets/icons/Rg.png');
 
-        this.load.image('gameover', 'assets/gameover.png');
+        this.load.image('gameover', 'assets/gm.png');
         this.load.image('shop-sign', 'assets/shop.png');
         this.load.image('home-sign', 'assets/HOME.png');
         this.load.image('garage-sign', 'assets/garage.png');
 
         this.load.bitmapFont('fisherman', 'assets/fonts/fisherman2.png', 'assets/fonts/fisherman2.fnt');
         this.load.bitmapFont('brown', 'assets/fonts/brown/brown.png', 'assets/fonts/brown/brown.fnt');
+        this.load.spritesheet('fish', 'assets/play/fish1.png', 100, 144, 4);
 
-        // @key, @src, @frame x, @frame y, @number of frames
-        this.load.spritesheet('fish', 'assets/fish1.png', 100, 144, 4);
+        this.load.spritesheet('water-wave', 'assets/play/water-wave.png', 144, 380, 4);
+        this.load.spritesheet('water-splash', 'assets/play/water-splash.png', 72, 100, 6);
 
-        this.load.spritesheet('water-wave', 'assets/water-wave.png', 144, 380, 4);
-        this.load.spritesheet('water-splash', 'assets/water-splash.png', 72, 100, 6);
-
-        this.load.spritesheet('mine', 'assets/BOMB.png', 112, 132, 5);
-        this.load.spritesheet('barrel', 'assets/barrel.png', 104, 120, 5);
-        this.load.spritesheet('boom', 'assets/boom.png', 288, 555, 11);
+        this.load.spritesheet('mine', 'assets/play/BOMB.png', 112, 132, 5);
+        this.load.spritesheet('mineRed', 'assets/play/BOMB2.png', 112, 132, 5);
+        this.load.spritesheet('barrel', 'assets/play/barrel.png', 104, 120, 5);
+        this.load.spritesheet('boom', 'assets/play/boom.png', 144, 278, 10);
 
         this.load.spritesheet('monster_0', 'assets/monsters/monsterI.png', 324, 312, 6);
         this.load.spritesheet('monster_1', 'assets/monsters/monsterII.png', 280, 250, 5);
@@ -123,7 +121,7 @@ Preload.prototype = {
         this.load.spritesheet('splash_1', 'assets/monsters/splash1.png', 352, 296, 5);
         this.load.spritesheet('splash_2', 'assets/monsters/ZIP.png', 352, 296, 5);
 
-        this.load.spritesheet('crafting', 'assets/crafting.png', 96, 90, 8);
+        this.load.spritesheet('crafting', 'assets/play/crafting.png', 96, 90, 8);
 
         if (!!PGLowLatencyAudio) {
             PGLowLatencyAudio.preloadFX('flap', 'assets/flap.wav');
@@ -133,8 +131,8 @@ Preload.prototype = {
         }
     },
     create: function() {
-
-
+        this.game.add.sprite(0, 0, '');
+        this.game.add.sprite(0, 0, '');
     },
     update: function() {
         var that = this;

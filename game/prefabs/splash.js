@@ -1,19 +1,23 @@
 'use strict';
 
-var Splash = function(game, x, y, frame) {
-  Phaser.Sprite.call(this, game, x, y, 'splash', frame);
+var WaterObject = require('./waterobject');
 
+var Splash = function(game, x, y) {
+  WaterObject.call(this, game, x, y, 'water-splash');
+  this.splashAnim = this.animations.add('splashing');
+  this.animations.play('splashing', 24, 1);
+  this.body.velocity.y = -600;
   // initialize your prefab here
   
 };
 
-Splash.prototype = Object.create(Phaser.Sprite.prototype);
+Splash.prototype = Object.create(WaterObject.prototype);
 Splash.prototype.constructor = Splash;
 
 Splash.prototype.update = function() {
-  
-  // write your prefab's specific update code here
-  
+	if (this.y < 0) {
+		this.destroy();
+	}
 };
 
 module.exports = Splash;

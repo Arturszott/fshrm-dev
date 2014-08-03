@@ -1,7 +1,7 @@
 'use strict';
 
 var Hero = function(game, x, y, type) {
-	var y = y + 50;
+	var y = y + 34;
 	Phaser.Sprite.call(this, game, x, y, type || 'fisherman', 0);
 
 	this.anchor.setTo(0.5, 0.5);

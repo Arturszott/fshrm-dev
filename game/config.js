@@ -10,13 +10,13 @@ var config = {
 	GAME_TIME: 4000,
 	throwAnimationTime: 400,
 	// strange units
-	accelerationSpeed: -600,
+	accelerationSpeed: -900,
 	bottomAccelerationSpeed: -300,
 	waterAccelerationSpeed: -450,
 	baseElementSpeed: -20,
 	fishRotationAngle: 270,
 
-	itemChance: 1,
+	itemChance: 0.2,
 
 	tiers: {
 		1: [30, 100],

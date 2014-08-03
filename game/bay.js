@@ -7,11 +7,12 @@ var Garage = require('./prefabs/garage');
 
 var createBuilding = function(name, x, y) {
 	var building = this.game.add.sprite(x, y, 'building_' + name);
-
+	this.game.stage.addChild(building);
 	var scrollAnim = building.animations.add('living');
 	building.animations.play('living', 2, true);
 
 	building.label = this.game.add.sprite(x, y - 80, 'building_label_' + name);
+	this.game.stage.addChild(building.label);
 	building.label.anchor.set(0.5);
 
 	building.label.scale.x = 0.8;
@@ -50,6 +51,7 @@ var Bay = function(game) {
 	this.crew.tool.visible = false;
 
 	this.crew.btn = this.game.add.button(this.crew.hero.x, this.crew.hero.y + 10, 'playBtn', this.goFishing, this, 0, 0, 1, 0);
+	this.game.stage.addChild(this.crew);
 	this.crew.btn.scale.x = 0.8;
 	this.crew.btn.scale.y = 0.8;
 	this.crew.btn.anchor.setTo(0.5, 0.5);
@@ -99,15 +101,16 @@ Bay.prototype = {
 			y: this.game.height * 1,
 		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false).onComplete.add(this.crew.rest.bind(this.crew));
 
-		this.game.add.tween(this.game.water).to({
-			x: -50,
-		}, 2500, Phaser.Easing.Sinusoidal.None, true, 0, 1000, true);
+		// this.game.add.tween(this.game.water).to({
+		// 	x: -50,
+		// }, 2500, Phaser.Easing.Sinusoidal.None, true, 0, 1000, true);
 
 	},
 	visitshop: function() {
 		console.log('visiting shop')
 		if (!this.shopBoard) {
 			this.shopBoard = new Shop(this.game, this.shop.x, this.shop.y);
+			this.game.stage.addChild(this.shopBoard);
 		}
 		this.showBuilding(this.shop, this.shopBoard);
 
@@ -115,6 +118,7 @@ Bay.prototype = {
 	visitgarage: function() {
 		if (!this.garageBoard) {
 			this.garageBoard = new Garage(this.game, this.shop.x, this.shop.y);
+			this.game.stage.addChild(this.garageBoard);
 		}
 		this.showBuilding(this.garage, this.garageBoard);
 	},
@@ -122,6 +126,7 @@ Bay.prototype = {
 		console.log('visiting house')
 		if (!this.houseBoard) {
 			this.houseBoard = new House(this.game, this.shop.x, this.shop.y);
+			this.game.stage.addChild(this.houseBoard);
 		}
 		this.showBuilding(this.house, this.houseBoard);
 	},
@@ -129,6 +134,7 @@ Bay.prototype = {
 		if (this.currentBoard && this.currentBoard.isShown) return;
 
 		this.bayButton = this.game.add.button(this.game.width - 10, this.game.height + 100, 'homeBtn', this.hideBuilding, this);
+		this.game.stage.addChild(this.bayButton);
 		this.bayButton.anchor.setTo(1, 1);
 
 		this.bayButton.scale.y = 0.8;
@@ -209,12 +215,12 @@ Bay.prototype = {
 		}
 	},
 	travelStart: function() {
-		this.game.water.autoScroll(300, 0);
-		this.game.background.autoScroll(300, 0);
+		// this.game.water.autoScroll(300, 0);
+		// this.game.background.autoScroll(300, 0);
 	},
 	travelStop: function() {
-		this.game.water.autoScroll(0, 0);
-		this.game.background.autoScroll(0, 0);
+		// this.game.water.autoScroll(0, 0);
+		// this.game.background.autoScroll(0, 0);
 	},
 	goFishing: function() {
 		if (this.leaving || (this.currentBoard && this.currentBoard.isShown)) return;

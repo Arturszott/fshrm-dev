@@ -5,11 +5,13 @@ var Tool = function(game, x, y, type, offset, parent) {
 
 	this.basePosition = {
 		x: x + offset.x,
-		y: y + offset.y
+		y: y + offset.y - 5
 	}
 
-	Phaser.Sprite.call(this, game, x + offset.x, y + offset.y, type || 'pole', 0);
-	this.windAnim = this.animations.add('wind');
+	Phaser.Sprite.call(this, game, x + offset.x, y + offset.y, 'lassoFull' || 'pole', 0);
+	this.windAnim = this.animations.add('wind', [0, 1, 2, 3]);
+	this.swingRight = this.animations.add('swingRight', [8, 9, 10, 11]);
+	this.swingLeft = this.animations.add('swingLeft', [4, 5, 6, 7]);
 	this.animations.play('wind', 8, true);
 
 	this.type = type;
@@ -37,35 +39,26 @@ Tool.prototype.catch = function(side, swimDistance) {
 	var that = this;
 	var anim;
 
-	this.loadTexture(this.type + '-' + side, 0);
-	this.waveTween.pause();
-
+	this.idleTimeout ? clearTimeout(this.idleTimeout) : true;
+	this.animations.stop();
 	if (side === 'right') {
-		this.game.add.tween(this).to({
-			x: this.game.width / 2 + swimDistance - this.offset.x,
-		}, 80, Phaser.Easing.Linear.None, true);
+		this.x = this.game.width / 2 + swimDistance - this.offset.x;
 
 		this.y = this.basePosition.y + 40;
+		anim = this.swingRight;
+		this.animations.play('swingRight', 24, 1);
 	}
 	if (side === 'left') {
-		this.game.add.tween(this).to({
-			x: this.game.width / 2 - swimDistance + this.offset.x,
-		}, 80, Phaser.Easing.Linear.None, true);
+		this.x = this.game.width / 2 - swimDistance + this.offset.x;
 
 		this.y = this.basePosition.y + 40;
+		anim = this.swingLeft;
+		this.animations.play('swingLeft', 24, 1);
 	}
 
-	anim = this.animations.add('swing');
-	this.animations.play('swing', 24, 1);
-
-	anim.onComplete.add(function() {
-		this.waveTween.resume();
-
-		this.loadTexture(this.type, 0);
-		this.windAnim = this.animations.add('wind');
-		this.animations.play('wind', 8, true);
-
-	}, this);
+	this.idleTimeout = setTimeout(function() {
+		this.animations.play('wind');
+	}.bind(this), 200);
 
 
 

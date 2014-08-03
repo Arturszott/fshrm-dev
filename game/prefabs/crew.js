@@ -38,7 +38,7 @@ var Crew = function(game, x, y) {
 Crew.prototype = Object.create(Phaser.Group.prototype);
 Crew.prototype.constructor = Crew;
 Crew.prototype.catch = function(side, element) {
-	this.parent.bringToTop(this);
+	// this.parent.bringToTop(this);
 
 	var swimDistance = 40 * this.game.widthRatio;
 

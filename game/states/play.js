@@ -11,6 +11,9 @@ var Bay = require('../bay');
 
 var Crew = require('../prefabs/crew');
 var Fish = require('../prefabs/fish');
+var Splash = require('../prefabs/splash');
+var Bottom = require('../prefabs/bottom');
+var Water = require('../prefabs/water');
 var Mine = require('../prefabs/mine');
 var Barrel = require('../prefabs/barrel');
 var Timer = require('../prefabs/timer');
@@ -29,17 +32,26 @@ Play.prototype = {
         left: [],
         right: []
     },
+    render: function() {
+        this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
+        if(this.game.slowTriggered){
+            this.game.slowTriggered = false;
+            this.game.isAccelerated = false;
+        }
+    },
     create: function() {
-        this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.physics.arcade.gravity.y = 0;
+        storage.addFish(99999);
 
+
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);
+        // this.game.physics.arcade.gravity.y = 0;
         // almost constant, aye?
         CELL_SIZE = this.game.height * config.verticalCellSize;
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
 
-        this.background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'bottom');
-        this.water = this.game.add.tileSprite(0, 0, this.game.width + 100, this.game.height, 'waterlayer');
+        this.background = new Bottom(this.game, 0, 0, 'bottom');
+        this.water = new Water(this.game, 0, 0, 'water');
 
         this.game.background = this.background;
         this.game.water = this.water;
@@ -61,8 +73,32 @@ Play.prototype = {
         }
 
         // this.startGame();
+
+        this.game.add.sprite(0, 0, '');
+        this.game.add.sprite(0, 0, '');
+    },
+    destroyLayers: function() {
+        this.fishLayer && this.fishLayer.destroy(true);
+        this.mineLayer && this.mineLayer.destroy(true);
+        this.splashLayer && this.splashLayer.destroy(true);
+        // this.waterLayer && this.waterLayer.destroy(true);
+        // this.bottomLayer && this.bottomLayer.destroy(true);
     },
     refreshGame: function(isFromBay) {
+        this.destroyLayers();
+        
+        this.fishLayer = new Phaser.SpriteBatch(this.game);
+        this.mineLayer = new Phaser.SpriteBatch(this.game);
+        this.splashLayer = new Phaser.SpriteBatch(this.game);
+
+        this.bottomLayer = new Phaser.SpriteBatch(this.game);
+        this.waterLayer = new Phaser.SpriteBatch(this.game);
+
+        this.game.stage.addChild(this.bottomLayer);
+        this.game.stage.addChild(this.fishLayer);
+        this.game.stage.addChild(this.waterLayer);
+        this.game.stage.addChild(this.mineLayer);
+        this.game.stage.addChild(this.splashLayer);
 
         this.game.level = 1;
         this.itemPart = parts.randomizeItem();
@@ -73,12 +109,15 @@ Play.prototype = {
 
         this.createScoreBox();
 
-        this.water.autoScroll(0, config.baseWaterSpeed);
-        this.background.autoScroll(0, config.baseBottomSpeed);
+        this.bottomLayer.addChild(this.background);
+        this.waterLayer.addChild(this.water);
+
+        // this.water.autoScroll(0, config.baseWaterSpeed);
+        // this.background.autoScroll(0, config.baseBottomSpeed);
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.summonMonster.bind(this));
         this.crew = new Crew(this.game, this.game.width / 2, -CELL_SIZE * 2, 1);
-        this.game.add.existing(this.crew);
+        this.game.stage.addChild(this.crew);
 
         // other functions eq. update depend on this
         this.gameover = false;
@@ -92,20 +131,18 @@ Play.prototype = {
     },
     playIntro: function() {
         this.intro = new Intro(this.game, this);
-
-        console.log(this.intro);
-        console.log('playing intro!');
         this.intro.playStep();
     },
     bayReturn: function() {
         this.refreshGame(true);
     },
     setInput: function() {
-        this.game.input.onDown.add(this.sideAction, this);
+        this.game.input.onTap.add(this.sideAction, this);
     },
     createScoreBox: function() {
         this.score = 0;
         this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height + 100, 'fisherman', this.score.toString(), 24);
+        this.game.stage.addChild(this.scoreText);
         this.scoreText.updateTransform();
         this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
         this.scoreText.visible = false;
@@ -120,21 +157,8 @@ Play.prototype = {
         // this.instructionGroup.setAll('anchor.y', 0.5);
     },
     addSplash: function(x, y, side) {
-        this.splash = this.game.add.sprite(x, y, 'water-splash', 0);
-        this.splash.anchor.setTo(0.5, 0.5);
-        this.game.physics.arcade.enableBody(this.splash);
-        var splashAnim = this.splash.animations.add('splashing');
-        this.splash.animations.play('splashing', 12, 1);
-
-        if (this.elemArrays[side][1].key === 'mine') this.game.world.bringToTop(this.elemArrays[side][1]);
-
-        splashAnim.onComplete.add(function() {
-            var that = this;
-            this.visibile = false;
-            setTimeout(function() {
-                that.destroy();
-            }, 10);
-        }, this.splash);
+        var splash = new Splash(this.game, x, y, 0);
+        this.splashLayer.addChild(splash);
     },
     addPart: function() {
         storage.addPart(this.itemPart.item.id);
@@ -148,8 +172,6 @@ Play.prototype = {
         if (nextElem.key === 'fish') {
             this.addSplash(nextElem.x, CELL_SIZE * 1.6, side);
         }
-
-        nextElem.bringToTop();
 
         this.crew.catch(side, nextElem);
         this.timer.increase();
@@ -169,26 +191,9 @@ Play.prototype = {
     },
     accelerateAll: function() {
         if (this.game.isAccelerated) return;
-
-        this.background.autoScroll(0, config.bottomAccelerationSpeed);
-        this.water.autoScroll(0, config.waterAccelerationSpeed);
-
-        this.getAllElements().forEach(function(elem) {
-            elem.body.velocity.y = config.accelerationSpeed;
-        });
-
-        if (this.splash) {
-            this.splash.body.velocity.y = -250;
-        }
-
         this.game.isAccelerated = true;
     },
     slowDownAll: function() {
-        this.background.autoScroll(0, config.baseBottomSpeed);
-        this.water.autoScroll(0, config.baseBottomSpeed);
-        this.getAllElements().forEach(function(elem) {
-            elem.body.velocity.y = config.baseElementSpeed;
-        });
         this.game.isAccelerated = false;
     },
     placeStartElements: function() {
@@ -238,8 +243,8 @@ Play.prototype = {
     stopAllElements: function() {
         var that = this;
 
-        this.water.autoScroll(0, 0);
-        this.background.autoScroll(0, 0);
+        // this.water.autoScroll(0, 0);
+        // this.background.autoScroll(0, 0);
 
         this.elemArrays.right.forEach(function(elem) {
             elem.body.velocity.y = 0;
@@ -266,13 +271,10 @@ Play.prototype = {
                 }, 10);
             });
         });
-
-
-        this.background.autoScroll(0, 0);
     },
     dispose: function() {
-        this.elemArrays.left.shift();
-        this.elemArrays.right.shift();
+        this.elemArrays.left.shift().dispose();
+        this.elemArrays.right.shift().dispose();
     },
     refill: function() {
         var element;
@@ -288,6 +290,7 @@ Play.prototype = {
             element = this.pickElement();
         }
         this.placeElement(element, 'right');
+        element = null;
     },
     placeElement: function(elem, side) {
         var x;
@@ -300,15 +303,21 @@ Play.prototype = {
 
         var y = this.game.height;
         var obj = new elem(this.game, x, y + CELL_SIZE);
-        obj.addToWorld();
+
+        if (obj.key === 'fish') {
+            this.fishLayer.addChild(obj);
+        } else {
+            this.mineLayer.addChild(obj);
+        }
 
         if (lastElem) {
             obj.y = lastElem.y + CELL_SIZE;
-            obj.body.velocity.y = lastElem.body.velocity.y;
-            obj.body.acceleration.y = lastElem.body.acceleration.y;
+            obj.body.velocity.y = lastElem.body.velocity.y
         }
 
         sideArr.push(obj);
+        obj = null;
+        lastElem = null;
     },
     pickElement: function() {
         var elements = [Mine, Fish];
@@ -331,20 +340,15 @@ Play.prototype = {
 
         this.placeElement(elements[0], 'left');
         this.placeElement(elements[1], 'right');
+        elements = null;
     },
     update: function() {
         if (!this.gameover) {
             this.timer.decrease();
-
-            this.getAllElements().forEach(function(elem) {
-                if (this.game.isAccelerated && elem.y < CELL_SIZE * 2) {
-                    this.slowDownAll();
-                }
-            }, this);
         }
     },
     shutdown: function() {
-        this.game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
+        this.elemArrays = {};
         this.crew.destroy();
         this.scoreboard.destroy();
     },
@@ -382,7 +386,7 @@ Play.prototype = {
         this.game.bay.baseState = this;
 
         that.scoreboard = new Scoreboard(that.game);
-        that.game.add.existing(that.scoreboard);
+        this.game.stage.addChild(this.scoreboard);
         that.scoreboard.show(that.score);
     },
     randomMonster: function(location) {
@@ -406,6 +410,7 @@ Play.prototype = {
             }.bind(this));
 
             this.monsterSprite = this.game.add.sprite(this.game.width / 2, -CELL_SIZE * 2, this.randomMonster());
+            this.game.stage.addChild(this.monsterSprite);
             this.monsterSprite.anchor.setTo(0.5, 0.5);
 
             var monsterAnim = this.monsterSprite.animations.add('monstering');
@@ -415,6 +420,7 @@ Play.prototype = {
 
             setTimeout(function() {
                 var splashSprite = this.game.add.sprite(this.game.width / 2, CELL_SIZE / 3 * 2 + 30, this.randomSplash());
+                this.game.stage.addChild(splashSprite);
                 splashSprite.anchor.setTo(0.5, 0.5);
 
                 var splashAnim = splashSprite.animations.add('monstering');
@@ -449,21 +455,20 @@ Play.prototype = {
             this.crew.destroy();
 
             var boomSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
+            this.game.stage.addChild(boomSprite)
             boomSprite.anchor.setTo(0.5, 0.5);
 
-            boomSprite.scale.x = this.game.width / 288;
-            boomSprite.scale.y = this.game.width / 288;
+            boomSprite.scale.x = this.game.width / 144;
+            boomSprite.scale.y = this.game.width / 144;
             this.game.physics.arcade.enableBody(boomSprite);
 
             var boomAnim = boomSprite.animations.add('splashing');
+            boomAnim.killOnComplete = true;
 
             boomSprite.animations.play('splashing', 16, 0);
 
-            this.getAllElements().forEach(function(elem) {
-                elem.visible = false;
-            });
-
-            boomAnim.onComplete.add(function() {}, this);
+            // NUKE FUNCTION
+            this.destroyLayers();
 
             this.showScoreboard();
 

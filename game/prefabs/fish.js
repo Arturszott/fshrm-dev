@@ -11,21 +11,14 @@ var Fish = function(game, x, y, frame) {
 
 	this.scale.x = 0.5;
 	this.scale.y = 0.5;
-
-	this.underwater = true;
-
-	// commented for performance
-	// this.game.add.tween(this.scale).to({
-	// 	x: 0.6,
-	// 	y: 0.6
-	// }, 1200, Phaser.Easing.Linear.None, true, 0, 1000, true);
 };
 Fish.prototype = Object.create(WaterObject.prototype);
 Fish.prototype.constructor = Fish;
 
 Fish.prototype.throwAway = function(side) {
 	this.visible = false;
-	this.body.velocity.y = -200;
+	this.destroy();
+	// this.body.velocity.y = -200;
 
 	// var x = side === 'left' ? -80 : this.game.width + 80;
 

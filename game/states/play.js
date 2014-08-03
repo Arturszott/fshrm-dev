@@ -64,7 +64,8 @@ Play.prototype = {
         // FUCKING IMPORTANT FUNCTION
         this.refreshGame();
 
-        if (!storage.isIntroPlayed()) {
+        // if (!storage.isIntroPlayed()) {
+        if (false) {
             setTimeout(function() {}.bind(this), 600);
             this.playIntro()
             // this.startGame();

@@ -26,8 +26,6 @@ var Intro = function(game, parent) {
 
 	// var leftSide = this.game.add.tileSprite(-half, 0, half, fullheight, 'introlayer');
 	// var rightSide = this.game.add.tileSprite(half * 3, 0, half, fullheight, 'introlayer');
-	var line = this.game.add.tileSprite(half, 2 * fullheight, 32, fullheight, 'line');
-	_.anchorC(line);
 
 	var currentStep = 0;
 	var isPlaying = false;
@@ -61,7 +59,6 @@ var Intro = function(game, parent) {
 	this.introGroup = this.game.add.group();
 	// this.introGroup.add(leftSide);
 	// this.introGroup.add(rightSide);
-	this.introGroup.add(line);
 	this.introGroup.add(howTo);
 	this.introGroup.add(dead);
 	this.introGroup.add(heart);
@@ -220,10 +217,6 @@ var Intro = function(game, parent) {
 
 		}.bind(this));
 
-		this.game.add.tween(line).to({
-			y: this.game.height / 2
-		}, 600, Phaser.Easing.Linear.Out, true, 0, false);
-
 		this.game.add.tween(tapLeft).to({
 			x: LEFT_POSITION + 25
 		}, 400, Phaser.Easing.Linear.Out, true, 0, false);
@@ -254,11 +247,6 @@ var Intro = function(game, parent) {
 		// }, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
 		// 	rightSide.destroy();
 		// });
-		this.game.add.tween(line).to({
-			y: -fullheight
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
-			line.destroy();
-		});
 
 		this.game.add.tween(tapRight).to({
 			x: RIGHT_POSITION + half

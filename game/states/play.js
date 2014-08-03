@@ -33,7 +33,7 @@ Play.prototype = {
         right: []
     },
     render: function() {
-        this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
+        // this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
         if(this.game.slowTriggered){
             this.game.slowTriggered = false;
             this.game.isAccelerated = false;
@@ -81,8 +81,8 @@ Play.prototype = {
         this.fishLayer && this.fishLayer.destroy(true);
         this.mineLayer && this.mineLayer.destroy(true);
         this.splashLayer && this.splashLayer.destroy(true);
-        // this.waterLayer && this.waterLayer.destroy(true);
-        // this.bottomLayer && this.bottomLayer.destroy(true);
+        this.waterLayer && this.waterLayer.destroy(true);
+        this.bottomLayer && this.bottomLayer.destroy(true);
     },
     refreshGame: function(isFromBay) {
         this.destroyLayers();

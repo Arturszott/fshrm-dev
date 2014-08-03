@@ -29,7 +29,8 @@ function createLabels(x, y) {
 	this.categoryLabels.push(this.postcardLabel);
 
 	this.categoryLabels.forEach(function(label) {
-		this.game.stage.addChild(label);
+		// this.game.stage.addChild(label);
+		console.log(label);
 		var categoryItems = this.getAvailableItems(label.key.replace('category-label-', ''));
 		if (categoryItems.length === 0) {
 			label.alpha = 0.4;
@@ -287,6 +288,7 @@ Building.prototype.getAvailableItems = function(category) {
 	return availableItems;
 }
 Building.prototype.categoryShow = function(category) {
+	console.log('catergory')
 	if (this.currentCategory === category) return;
 	this.currentItem && this.currentItem.destroy();
 

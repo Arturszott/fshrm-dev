@@ -34,7 +34,7 @@ Play.prototype = {
     },
     render: function() {
         // this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
-        if(this.game.slowTriggered){
+        if (this.game.slowTriggered) {
             this.game.slowTriggered = false;
             this.game.isAccelerated = false;
         }
@@ -42,10 +42,17 @@ Play.prototype = {
     create: function() {
         storage.addFish(99999);
 
+        this.boomSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
+        this.boomSprite.anchor.setTo(0.5, 0.5);
+        this.boomSprite.scale.x = this.game.width / 144;
+        this.boomSprite.scale.y = this.game.width / 144;
+        this.boomSprite.visible = false;
+        this.boomSprite.animations.add('splashing');
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        // this.game.physics.arcade.gravity.y = 0;
-        // almost constant, aye?
+        this.game.physics.arcade.gravity.y = 0;
+
+
         CELL_SIZE = this.game.height * config.verticalCellSize;
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
@@ -59,7 +66,6 @@ Play.prototype = {
         this.game.bayReturn = this.bayReturn;
 
         this.setInput();
-        this.showInstructions();
 
         // FUCKING IMPORTANT FUNCTION
         this.refreshGame();
@@ -81,40 +87,30 @@ Play.prototype = {
     destroyLayers: function() {
         this.fishLayer && this.fishLayer.destroy(true);
         this.mineLayer && this.mineLayer.destroy(true);
-        this.splashLayer && this.splashLayer.destroy(true);
         this.waterLayer && this.waterLayer.destroy(true);
         this.bottomLayer && this.bottomLayer.destroy(true);
     },
     refreshGame: function(isFromBay) {
         this.destroyLayers();
-        
-        this.fishLayer = new Phaser.SpriteBatch(this.game);
-        this.mineLayer = new Phaser.SpriteBatch(this.game);
-        this.splashLayer = new Phaser.SpriteBatch(this.game);
 
-        this.bottomLayer = new Phaser.SpriteBatch(this.game);
-        this.waterLayer = new Phaser.SpriteBatch(this.game);
+        this.game.add.existing(this.background);
+        this.fishLayer = this.game.add.group();
+        this.game.add.existing(this.water);
+        this.mineLayer = this.game.add.group();
 
-        this.game.stage.addChild(this.bottomLayer);
-        this.game.stage.addChild(this.fishLayer);
-        this.game.stage.addChild(this.waterLayer);
-        this.game.stage.addChild(this.mineLayer);
-        this.game.stage.addChild(this.splashLayer);
+        // this.game.stage.addChild(this.background);
+        // this.game.stage.addChild(this.fishLayer);
+        // this.game.stage.addChild(this.water);
+        // this.game.stage.addChild(this.mineLayer);
+        // this.game.stage.addChild(this.boomSprite)
 
         this.game.level = 1;
         this.itemPart = parts.randomizeItem();
 
-        // we will hold there fish & mines
         this.elemArrays.left = [];
         this.elemArrays.right = [];
 
         this.createScoreBox();
-
-        this.bottomLayer.addChild(this.background);
-        this.waterLayer.addChild(this.water);
-
-        // this.water.autoScroll(0, config.baseWaterSpeed);
-        // this.background.autoScroll(0, config.baseBottomSpeed);
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.summonMonster.bind(this));
         this.crew = new Crew(this.game, this.game.width / 2, -CELL_SIZE * 2, 1);
@@ -148,18 +144,8 @@ Play.prototype = {
         this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
         this.scoreText.visible = false;
     },
-    showInstructions: function() {
-        // this.readySign = this.game.add.sprite(RIGHT_POSITION, 60, 'getReady');
-        // _.scale(this.readySign, 0.8);
-        this.instructionGroup = this.game.add.group();
-        // this.instructionGroup.add(this.readySign);
-        // // this.instructionGroup.add(this.game.add.sprite(this.game.width / 2, 325, 'instructions'));
-        // this.instructionGroup.setAll('anchor.x', 0.5);
-        // this.instructionGroup.setAll('anchor.y', 0.5);
-    },
     addSplash: function(x, y, side) {
-        var splash = new Splash(this.game, x, y, 0);
-        this.splashLayer.addChild(splash);
+        this.mineLayer.addChild(new Splash(this.game, x, y, 0));
     },
     addPart: function() {
         storage.addPart(this.itemPart.item.id);
@@ -344,14 +330,23 @@ Play.prototype = {
         elements = null;
     },
     update: function() {
+        var now = new Date().getTime();
+
+        if (this.then) {
+            this.game.multiplier = (now - this.then) * 60 / 1000;
+        }
+
         if (!this.gameover) {
             this.timer.decrease();
         }
+        this.then = now;
     },
     shutdown: function() {
         this.elemArrays = {};
         this.crew.destroy();
         this.scoreboard.destroy();
+        this.game.bay.destroy();
+        this.game.bay = null;
     },
     slideDownCrew: function() {
         this.game.add.tween(this.crew).to({
@@ -366,8 +361,6 @@ Play.prototype = {
             this.placeStartElements();
             this.crew.alive = true;
             this.scoreText.visible = true;
-
-            this.instructionGroup.destroy();
         }
     },
     checkScore: function() {
@@ -455,18 +448,10 @@ Play.prototype = {
 
             this.crew.destroy();
 
-            var boomSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
-            this.game.stage.addChild(boomSprite)
-            boomSprite.anchor.setTo(0.5, 0.5);
-
-            boomSprite.scale.x = this.game.width / 144;
-            boomSprite.scale.y = this.game.width / 144;
-            this.game.physics.arcade.enableBody(boomSprite);
-
-            var boomAnim = boomSprite.animations.add('splashing');
-            boomAnim.killOnComplete = true;
-
-            boomSprite.animations.play('splashing', 16, 0);
+            this.boomSprite.visible = true;
+            this.boomSprite.animations.play('splashing', 16, 0).onComplete.add(function(){
+                this.boomSprite.visible = false;
+            }.bind(this));
 
             // NUKE FUNCTION
             this.destroyLayers();

@@ -30,12 +30,13 @@ function createLabels(x, y) {
 
 	this.categoryLabels.forEach(function(label) {
 		// this.game.stage.addChild(label);
-		console.log(label);
 		var categoryItems = this.getAvailableItems(label.key.replace('category-label-', ''));
 		if (categoryItems.length === 0) {
 			label.alpha = 0.4;
 		}
 		_.scale(label, 0.75);
+		label.updateTransform();
+		console.log(label);
 	}, this);
 }
 var Building = function(game, x, y) {
@@ -187,8 +188,6 @@ Building.prototype.createItemSlider = function(category) {
 	this.sliderItems = items;
 	this.itemsLength = items.length;
 
-	console.log(items);
-
 	if (this.itemsLength > 0) {
 		this.itemBg = this.game.add.sprite(0, 0, this.itemBgKey, 0);
 		this.itemBg.animations.add('scrollin');
@@ -288,7 +287,6 @@ Building.prototype.getAvailableItems = function(category) {
 	return availableItems;
 }
 Building.prototype.categoryShow = function(category) {
-	console.log('catergory')
 	if (this.currentCategory === category) return;
 	this.currentItem && this.currentItem.destroy();
 

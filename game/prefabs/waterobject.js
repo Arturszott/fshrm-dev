@@ -17,34 +17,34 @@ Waterobject.prototype.constructor = Waterobject;
 // 	this.game.add.existing(this);
 // 	this.dynamicLayer
 // };
-Waterobject.prototype.dispose = function(){
+Waterobject.prototype.dispose = function() {
 	this.disposed = true;
 	this.alive = false;
 }
 Waterobject.prototype.update = function() {
-	if(this.alive && !this.disposed){
-		if(this.game.isAccelerated){
-			this.y -= 12;
+	if (this.alive && !this.disposed) {
+		if (this.game.isAccelerated) {
+			this.y -= 12 * this.game.multiplier;
 		} else {
-			this.y -= 0.2;
+			this.y -= 0.2 * this.game.multiplier;
 		}
-		if(this.y < 170){
+		if (this.y < 170) {
 			this.game.slowTriggered = true;
 		}
 	}
-	if(this.disposed){
+	if (this.disposed) {
 		this.body.velocity.y = config.accelerationSpeed;
 	}
-	if(this.y < 170){
-		if(this.alive){
-			
+	if (this.y < 170) {
+		if (this.alive) {
+
 			// this.y -= 1
 		}
 		// this.alive = false;
 	}
 	if (this.y < 0) {
 		this.destroy();
-	} 
+	}
 };
 
 module.exports = Waterobject;

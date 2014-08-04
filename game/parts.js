@@ -19,7 +19,6 @@ var partsManager = {
 
 		return craftableItems.filter(function(item) {
 			var itemParts = this.findPartById(item.id);
-			// console.log(itemParts, item)
 			return !itemParts || item.parts > itemParts.owned;
 		}.bind(this));
 	},
@@ -41,6 +40,7 @@ var partsManager = {
 		if(!items.length) return false;
 
 		var item = items[Math.floor(Math.random() * items.length)];
+		items = null;
 		var tierRange = config.tiers[item.tier];
 		return {
 			item: item,

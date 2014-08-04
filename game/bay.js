@@ -7,16 +7,15 @@ var Garage = require('./prefabs/garage');
 
 var createBuilding = function(name, x, y) {
 	var building = this.game.add.sprite(x, y, 'building_' + name);
-	this.game.stage.addChild(building);
-	var scrollAnim = building.animations.add('living');
+	building.animations.add('living');
 	building.animations.play('living', 2, true);
-
 	building.label = this.game.add.sprite(x, y - 80, 'building_label_' + name);
-	this.game.stage.addChild(building.label);
 	building.label.anchor.set(0.5);
-
 	building.label.scale.x = 0.8;
 	building.label.scale.y = 0.8;
+
+	this.game.add.existing(building);
+	this.game.add.existing(building.label);
 
 	building.label.waveTween = this.game.add.tween(building.label).to({
 		y: building.label.y + 10
@@ -51,7 +50,7 @@ var Bay = function(game) {
 	this.crew.tool.visible = false;
 
 	this.crew.btn = this.game.add.button(this.crew.hero.x, this.crew.hero.y + 10, 'playBtn', this.goFishing, this, 0, 0, 1, 0);
-	this.game.stage.addChild(this.crew);
+	this.game.add.existing(this.crew);
 	this.crew.btn.scale.x = 0.8;
 	this.crew.btn.scale.y = 0.8;
 	this.crew.btn.anchor.setTo(0.5, 0.5);
@@ -60,7 +59,20 @@ var Bay = function(game) {
 }
 
 Bay.prototype = {
-
+	destroy: function(){
+		this.baseState = null;
+		this.buildings.forEach(function(el){
+			el.destroy();
+		});
+		this.labels.forEach(function(el){
+			el.destroy();
+		});
+		this.crew.destroy();
+		this.game = null;
+		this.garage.destroy();
+		this.house.destroy();
+		this.shop.destroy();
+	},
 	travel: function() {
 		var that = this;
 
@@ -110,7 +122,7 @@ Bay.prototype = {
 		console.log('visiting shop')
 		if (!this.shopBoard) {
 			this.shopBoard = new Shop(this.game, this.shop.x, this.shop.y);
-			this.game.stage.addChild(this.shopBoard);
+			this.game.add.existing(this.shopBoard);
 		}
 		this.showBuilding(this.shop, this.shopBoard);
 
@@ -118,7 +130,7 @@ Bay.prototype = {
 	visitgarage: function() {
 		if (!this.garageBoard) {
 			this.garageBoard = new Garage(this.game, this.shop.x, this.shop.y);
-			this.game.stage.addChild(this.garageBoard);
+			this.game.add.existing(this.garageBoard);
 		}
 		this.showBuilding(this.garage, this.garageBoard);
 	},
@@ -126,7 +138,7 @@ Bay.prototype = {
 		console.log('visiting house')
 		if (!this.houseBoard) {
 			this.houseBoard = new House(this.game, this.shop.x, this.shop.y);
-			this.game.stage.addChild(this.houseBoard);
+			this.game.add.existing(this.houseBoard);
 		}
 		this.showBuilding(this.house, this.houseBoard);
 	},
@@ -134,7 +146,7 @@ Bay.prototype = {
 		if (this.currentBoard && this.currentBoard.isShown) return;
 
 		this.bayButton = this.game.add.button(this.game.width - 10, this.game.height + 100, 'homeBtn', this.hideBuilding, this);
-		this.game.stage.addChild(this.bayButton);
+		this.game.add.existing(this.bayButton);
 		this.bayButton.anchor.setTo(1, 1);
 
 		this.bayButton.scale.y = 0.8;

@@ -29,7 +29,6 @@ function createLabels(x, y) {
 	this.categoryLabels.push(this.postcardLabel);
 
 	this.categoryLabels.forEach(function(label) {
-		// this.game.stage.addChild(label);
 		var categoryItems = this.getAvailableItems(label.key.replace('category-label-', ''));
 		if (categoryItems.length === 0) {
 			label.alpha = 0.4;

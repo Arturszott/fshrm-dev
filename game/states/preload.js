@@ -10,6 +10,12 @@ var itemsRegistry = require('../itemsRegistry');
 function preloadRegistry(c) {
     itemsRegistry.getItems().forEach(function(item) {
         c.load.spritesheet(item.name, 'assets/items/' + item.type + '/' + item.name + '.png', item.x, item.y, item.frame);
+        if(item.craftable){
+            c.load.spritesheet(item.name+'_craft', 'assets/items/crafts/' + item.type + '/' + item.name + '.png', item.cx, item.cy, item.parts);
+        }
+        // if(item.type === 'tool') {
+        //     c.load.spritesheet(item.name+'-full', 'assets/items/' + item.type + '/' + item.name + 'full.png', item.x, item.y, item.frame);
+        // }
     }, c);
 }
 
@@ -33,8 +39,9 @@ Preload.prototype = {
         this.load.image('timebar', 'assets/play/time.png');
 
         // BUTTONS
+        this.load.spritesheet('hackBtn', 'assets/icons/btn_home.png', 80, 68, 2);
         this.load.spritesheet('playBtn', 'assets/icons/btn_play.png', 80, 68, 2);
-        this.load.spritesheet('homeBtn', 'assets/icons/btn_home.png', 80, 68, 2);
+        this.load.spritesheet('homeBtn', 'assets/icons/btn_home2.png', 80, 68, 2);
         this.load.spritesheet('rankBtn', 'assets/icons/btn_rank.png', 80, 68, 2);
 
         this.load.spritesheet('lassoFull', 'assets/items/tool/lassofull.png', 128, 120, 12);
@@ -115,7 +122,9 @@ Preload.prototype = {
         this.load.spritesheet('boom', 'assets/play/boom.png', 144, 278, 10);
 
         this.load.spritesheet('monster_0', 'assets/monsters/monsterI.png', 324, 312, 6);
-        this.load.spritesheet('monster_1', 'assets/monsters/monsterII.png', 280, 250, 5);
+        this.load.spritesheet('monster_1', 'assets/monsters/monsterII.png', 280, 250, 6);
+        this.load.spritesheet('monster_2', 'assets/monsters/monster3.png', 220, 204, 6);
+        this.load.spritesheet('monster_3', 'assets/monsters/monster4.png', 232, 288, 6);
 
         this.load.spritesheet('splash_0', 'assets/monsters/splash.png', 352, 296, 5);
         this.load.spritesheet('splash_1', 'assets/monsters/splash1.png', 352, 296, 5);
@@ -131,8 +140,6 @@ Preload.prototype = {
         }
     },
     create: function() {
-        this.game.add.sprite(0, 0, '');
-        this.game.add.sprite(0, 0, '');
     },
     update: function() {
         var that = this;

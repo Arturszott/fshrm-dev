@@ -16,7 +16,6 @@ var Timer = function(game, time, deathHandler) {
 	this.game.add.existing(this)
 	this.timebarWidth = this.width - 50;
 	this.bar = this.game.add.sprite(-this.timebarWidth / 2, 0, 'timebar');
-	this.game.stage.addChild(this);
 	this.bar.anchor.setTo(0, 0.5);
 	this.addChild(this.bar);
 	this.setBar();

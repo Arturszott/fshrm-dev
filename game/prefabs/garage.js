@@ -46,14 +46,6 @@ Garage.prototype.showItem = function() {
 		var slicesGroup = this.game.add.group();
 		var slice;
 
-		for (var i = 0; i < item.parts; i++) {
-			slice = this.create((item.x / item.parts + 5) * i - item.x / 2, 0, item.name);
-			slice.crop(new Phaser.Rectangle(item.x / item.parts * i, 0, item.x / item.parts, item.y));
-			slice.anchor.set(0, 0.5);
-			slice.alpha = 0.5;
-			slicesGroup.add(slice);
-		};
-
 		return slicesGroup;
 	}
 
@@ -66,12 +58,6 @@ Garage.prototype.showItem = function() {
 
 	var ownedParts = parts.findPartById(this.current.id);
 	ownedParts = ownedParts ? ownedParts.owned : 0;
-
-	// for (var i = 0; i < ownedParts; i++) {
-	// 	var currentSlice = this.currentItem.children[i]
-	// 	currentSlice.alpha = 0.85;
-
-	// }
 
 	this.partsText = this.game.add.bitmapText(0, this.itemBg.height / 2 - 10, 'fisherman', ownedParts + '/' + this.current.parts + '', 22);
 	this.partsText.position.x = this.partsText.position.x - this.partsText.textWidth / 2;

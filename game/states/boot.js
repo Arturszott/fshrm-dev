@@ -16,9 +16,7 @@ Boot.prototype = {
     this.scale.setScreenSize(true);
   },
   create: function() {
-    this.game.add.sprite(0, 0, '')
     this.game.input.maxPointers = 1;
-
     this.game.state.start('preload');
   }
 };

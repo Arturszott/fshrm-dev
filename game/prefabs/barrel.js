@@ -11,21 +11,18 @@ var Barrel = function(game, x, y, frame) {
 
 	this.scale.x = 0.6;
 	this.scale.y = 0.6;
-	
+
 	this.underwater = false;
 };
 Barrel.prototype = Object.create(WaterObject.prototype);
 Barrel.prototype.constructor = Barrel;
 Barrel.prototype.throwAway = function(side) {
-	// this.visible = false;
-	this.body.velocity.y = -200;
-
 	var x = side === 'left' ? -80 : this.game.width + 80;
-
-	this.game.add.tween(this.scale).to({
+	var t1 = {
 		x: 1,
 		y: 1
-	}, config.throwAnimationTime, Phaser.Easing.Linear.None, true);
+	}
+	this.game.add.tween(this.scale).to(t1, config.throwAnimationTime, Phaser.Easing.Linear.None, true);
 
 	return this.game.add.tween(this).to({
 		x: x,

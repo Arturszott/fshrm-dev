@@ -41,6 +41,8 @@ Play.prototype = {
     },
     create: function() {
         storage.addFish(99999);
+        this.background = new Bottom(this.game, 0, 0, 'bottom');
+        this.water = new Water(this.game, 0, 0, 'water');
 
         this.boomSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
         this.boomSprite.anchor.setTo(0.5, 0.5);
@@ -57,8 +59,7 @@ Play.prototype = {
         LEFT_POSITION = this.game.width / 6;
         RIGHT_POSITION = this.game.width / 6 * 5;
 
-        this.background = new Bottom(this.game, 0, 0, 'bottom');
-        this.water = new Water(this.game, 0, 0, 'water');
+
 
         this.game.background = this.background;
         this.game.water = this.water;
@@ -78,43 +79,32 @@ Play.prototype = {
         } else {
             this.game.input.onDown.addOnce(this.startGame, this);
         }
-
-        // this.startGame();
-
-        this.game.add.sprite(0, 0, '');
-        this.game.add.sprite(0, 0, '');
     },
     destroyLayers: function() {
         this.fishLayer && this.fishLayer.destroy(true);
         this.mineLayer && this.mineLayer.destroy(true);
-        this.waterLayer && this.waterLayer.destroy(true);
-        this.bottomLayer && this.bottomLayer.destroy(true);
     },
-    refreshGame: function(isFromBay) {
+    refreshGame: function() {
+
         this.destroyLayers();
 
         this.game.add.existing(this.background);
+
         this.fishLayer = this.game.add.group();
         this.game.add.existing(this.water);
         this.mineLayer = this.game.add.group();
 
-        // this.game.stage.addChild(this.background);
-        // this.game.stage.addChild(this.fishLayer);
-        // this.game.stage.addChild(this.water);
-        // this.game.stage.addChild(this.mineLayer);
-        // this.game.stage.addChild(this.boomSprite)
-
-        this.game.level = 1;
         this.itemPart = parts.randomizeItem();
 
         this.elemArrays.left = [];
         this.elemArrays.right = [];
 
         this.createScoreBox();
+        this.game.level = 1;
 
         this.timer = new Timer(this.game, config.GAME_TIME, this.summonMonster.bind(this));
         this.crew = new Crew(this.game, this.game.width / 2, -CELL_SIZE * 2, 1);
-        this.game.stage.addChild(this.crew);
+        this.game.add.existing(this.crew);
 
         // other functions eq. update depend on this
         this.gameover = false;
@@ -122,7 +112,11 @@ Play.prototype = {
 
         this.slideDownCrew();
 
-        if (isFromBay) {
+        if (this.game.isFromBay) {
+            this.game.isFromBay = false;
+            if(this.game.bay){
+                this.game.bay.destroy();
+            }
             setTimeout(this.startGame.bind(this), 600);
         }
     },
@@ -131,10 +125,12 @@ Play.prototype = {
         this.intro.playStep();
     },
     bayReturn: function() {
-        this.refreshGame(true);
+        // this.refreshGame(true);
+        this.game.state.start('play');
+        this.game.isFromBay = true;
     },
     setInput: function() {
-        this.game.input.onTap.add(this.sideAction, this);
+        this.game.input.onDown.add(this.sideAction, this);
     },
     createScoreBox: function() {
         this.score = 0;
@@ -196,28 +192,27 @@ Play.prototype = {
             });
 
             this.placeElementsPair();
-
         }
 
         this.getAllElements().forEach(function(elem) {
             elem.y = elem.y + this.game.height;
-            elem.body.velocity.y = 0;
 
             this.game.add.tween(elem).to({
                 y: elem.y - this.game.height
             }, 1000, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
-                elem.body.velocity.y = config.baseElementSpeed;
                 this.starting = false;
             }.bind(this));
         }, this);
 
+        var t1 = {
+            y: this.game.height * 2 / 3 + -30
+        }
+        var t2 = {
+            y: this.game.height * 2 / 3
+        }
         this.game.add.tween(this.scoreText)
-            .to({
-                y: this.game.height * 2 / 3 + -30
-            }, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false)
-            .to({
-                y: this.game.height * 2 / 3
-            }, 200, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+            .to(t1, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false)
+            .to(t2, 200, Phaser.Easing.Sinusoidal.Out, true, 0, false);
 
 
         setTimeout(function() {
@@ -234,26 +229,20 @@ Play.prototype = {
         // this.background.autoScroll(0, 0);
 
         this.elemArrays.right.forEach(function(elem) {
-            elem.body.velocity.y = 0;
-            elem.body.acceleration.y = 0;
-
             that.game.add.tween(elem).to({
                 x: that.game.width + 100,
             }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300, false).onComplete.add(function() {
-                setTimeout(function() {
+                var t = setTimeout(function() {
                     elem.destroy();
                 }, 10);
             });
         });
 
         this.elemArrays.left.forEach(function(elem) {
-            elem.body.velocity.y = 0;
-            elem.body.acceleration.y = 0;
-
             that.game.add.tween(elem).to({
                 x: -100,
             }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300, false).onComplete.add(function() {
-                setTimeout(function() {
+                var t = setTimeout(function() {
                     elem.destroy();
                 }, 10);
             });
@@ -299,7 +288,6 @@ Play.prototype = {
 
         if (lastElem) {
             obj.y = lastElem.y + CELL_SIZE;
-            obj.body.velocity.y = lastElem.body.velocity.y
         }
 
         sideArr.push(obj);
@@ -380,12 +368,12 @@ Play.prototype = {
         this.game.bay.baseState = this;
 
         that.scoreboard = new Scoreboard(that.game);
-        this.game.stage.addChild(this.scoreboard);
+        this.game.add.existing(this.scoreboard);
         that.scoreboard.show(that.score);
     },
     randomMonster: function(location) {
         // mocked one
-        var monstersNumber = 2
+        var monstersNumber = 4
         return 'monster_' + Math.floor(Math.random() * monstersNumber);
     },
     randomSplash: function(location) {
@@ -404,7 +392,6 @@ Play.prototype = {
             }.bind(this));
 
             this.monsterSprite = this.game.add.sprite(this.game.width / 2, -CELL_SIZE * 2, this.randomMonster());
-            this.game.stage.addChild(this.monsterSprite);
             this.monsterSprite.anchor.setTo(0.5, 0.5);
 
             var monsterAnim = this.monsterSprite.animations.add('monstering');
@@ -414,7 +401,7 @@ Play.prototype = {
 
             setTimeout(function() {
                 var splashSprite = this.game.add.sprite(this.game.width / 2, CELL_SIZE / 3 * 2 + 30, this.randomSplash());
-                this.game.stage.addChild(splashSprite);
+                this.game.add.existing(splashSprite);
                 splashSprite.anchor.setTo(0.5, 0.5);
 
                 var splashAnim = splashSprite.animations.add('monstering');
@@ -427,7 +414,7 @@ Play.prototype = {
             this.stopAllElements();
 
             this.game.add.tween(this.monsterSprite).to({
-                y: CELL_SIZE / 3 * 2
+                y: CELL_SIZE
             }, 150, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
 
             }.bind(this));
@@ -445,11 +432,11 @@ Play.prototype = {
             this.timer.stop();
             this.timer.destroyAll();
             this.scoreText.destroy();
-
             this.crew.destroy();
 
             this.boomSprite.visible = true;
-            this.boomSprite.animations.play('splashing', 16, 0).onComplete.add(function(){
+            this.game.world.bringToTop(this.boomSprite);
+            this.boomSprite.animations.play('splashing', 16, 0).onComplete.add(function() {
                 this.boomSprite.visible = false;
             }.bind(this));
 

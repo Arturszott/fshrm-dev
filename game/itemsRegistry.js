@@ -21,19 +21,26 @@ var itemsRegistry = {
 
 		items.forEach(function(item) {
 			if (item.type === 'tool') {
+				// toolMoveSprites.push({
+				// 	name: item.name + '-left',
+				// 	type: 'tool',
+				// 	x: item.move[0],
+				// 	y: item.move[1],
+				// 	frames: 4
+				// });
+				// toolMoveSprites.push({
+				// 	name: item.name + '-right',
+				// 	type: 'tool',
+				// 	x: item.move[0],
+				// 	y: item.move[1],
+				// 	frames: 4
+				// });
 				toolMoveSprites.push({
-					name: item.name + '-left',
+					name: item.name + 'full',
 					type: 'tool',
 					x: item.move[0],
 					y: item.move[1],
-					frames: 4
-				});
-				toolMoveSprites.push({
-					name: item.name + '-right',
-					type: 'tool',
-					x: item.move[0],
-					y: item.move[1],
-					frames: 4
+					frames: item.frames || 12
 				});
 			}
 			item.frames = item.frames || 4;
@@ -45,12 +52,12 @@ var itemsRegistry = {
 	getItems: function() {
 		return this.setDefaultValues(this.items);
 	},
-	filterCraftables: function(items){
-		return items.filter(function(item){
+	filterCraftables: function(items) {
+		return items.filter(function(item) {
 			return item.craftable && item.craftable === true;
 		});
 	},
-	getCraftables: function(){
+	getCraftables: function() {
 		return this.filterCraftables(this.items);
 	},
 	getRawItems: function() {
@@ -66,8 +73,7 @@ var itemsRegistry = {
 			x: 76,
 			y: 128,
 			move: [128, 160]
-		},
-		{
+		}, {
 			name: 'lasso',
 			title: "Lucky Lasso",
 			id: 1,
@@ -77,9 +83,9 @@ var itemsRegistry = {
 			price: 3000,
 			move: [128, 128]
 		},
-		
+
 		{
-			name: 'sword2',
+			name: 'sword',
 			title: "King's Sword",
 			id: 2,
 			type: 'tool',
@@ -87,8 +93,7 @@ var itemsRegistry = {
 			y: 124,
 			price: 5600,
 			move: [155, 227]
-		},
-		{
+		}, {
 			name: 'thorshammer2',
 			title: "Thor's Hammer",
 			id: 3,
@@ -97,8 +102,7 @@ var itemsRegistry = {
 			y: 136,
 			price: 9999,
 			move: [190, 190]
-		},
-		{
+		}, {
 			name: 'cake',
 			title: "Berry Pie",
 			id: 4,
@@ -107,11 +111,11 @@ var itemsRegistry = {
 			y: 124,
 			price: 14000,
 			move: [120, 164]
-		},
-		{
+		}, {
 			name: 'laserpistol',
 			title: "Laser Gun",
 			id: 5,
+			frames: 16,
 			type: 'tool',
 			x: 96,
 			y: 72,
@@ -129,8 +133,7 @@ var itemsRegistry = {
 			title: 'True Jack',
 			x: 144,
 			y: 152
-		},
-		{
+		}, {
 			name: 'irish',
 			id: 101,
 			type: 'hero',
@@ -138,8 +141,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 6666
-		},
-		{
+		}, {
 			name: 'chinese',
 			id: 102,
 			type: 'hero',
@@ -147,8 +149,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 9860
-		},
-		{
+		}, {
 			name: 'sailor',
 			id: 103,
 			type: 'hero',
@@ -156,8 +157,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 13000
-		},
-		{
+		}, {
 			name: 'bavarian',
 			id: 104,
 			type: 'hero',
@@ -165,8 +165,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 16000
-		},
-		{
+		}, {
 			name: 'diver',
 			id: 105,
 			type: 'hero',
@@ -174,8 +173,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 20000
-		},
-		{
+		}, {
 			name: 'swimmer',
 			id: 106,
 			type: 'hero',
@@ -194,8 +192,7 @@ var itemsRegistry = {
 			type: 'mount',
 			x: 144,
 			y: 184
-		},
-		{
+		}, {
 			name: 'woodboat',
 			title: 'Simple Boat',
 			id: 1001,
@@ -203,30 +200,31 @@ var itemsRegistry = {
 			x: 144,
 			y: 184,
 			price: 2000
-		},
-		{
+		}, {
 			name: 'raft',
-			title: 'Raw Raft',
+			title: 'Rafty Raft',
 			id: 1002,
 			type: 'mount',
+			cx: 132,
+			cy: 148,
 			x: 144,
 			y: 184,
 			craftable: true,
 			tier: 1,
-			parts: 2,
-		},
-		{
+			parts: 4,
+		}, {
 			name: 'raftt',
-			title: 'Rafty Raft',
+			title: 'Woody',
 			id: 1003,
 			type: 'mount',
+			cx: 112,
+			cy: 156,
 			x: 144,
 			y: 184,
 			craftable: true,
 			tier: 2,
-			parts: 3,
-		},
-		{
+			parts: 4,
+		}, {
 			name: 'crocodile',
 			title: 'Mighty Croc',
 			id: 1004,
@@ -234,8 +232,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 184,
 			price: 4000
-		},
-		{
+		}, {
 			name: 'motorboat',
 			title: 'Shiny Boat',
 			id: 1005,
@@ -243,6 +240,18 @@ var itemsRegistry = {
 			x: 144,
 			y: 184,
 			price: 12000
+		}, {
+			name: 'rafttt',
+			title: 'Sweet Ana',
+			id: 1006,
+			type: 'mount',
+			cx: 144,
+			cy: 180,
+			x: 144,
+			y: 184,
+			craftable: true,
+			tier: 2,
+			parts: 5,
 		},
 
 	]

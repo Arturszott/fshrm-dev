@@ -8,11 +8,21 @@ var Tool = function(game, x, y, type, offset, parent) {
 		y: y + offset.y - 5
 	}
 
-	Phaser.Sprite.call(this, game, x + offset.x, y + offset.y, 'lassoFull' || 'pole', 0);
-	this.windAnim = this.animations.add('wind', [0, 1, 2, 3]);
-	this.swingRight = this.animations.add('swingRight', [8, 9, 10, 11]);
-	this.swingLeft = this.animations.add('swingLeft', [4, 5, 6, 7]);
-	this.animations.play('wind', 8, true);
+	Phaser.Sprite.call(this, game, x + offset.x, y + offset.y, type + 'full', 0);
+
+	// 2h tool case
+	if (type === 'laserpistol') {
+		this.windAnim = this.animations.add('idle-left', [0, 1, 2, 3]);
+		this.windAnimRight = this.animations.add('idle-right', [4, 5, 6, 7]);
+		this.swingLeft = this.animations.add('swingLeft', [8, 9, 10, 11]);
+		this.swingRight = this.animations.add('swingRight', [12, 13, 14, 15]);
+	} else {
+		this.windAnim = this.animations.add('idle-left', [0, 1, 2, 3]);
+		this.swingLeft = this.animations.add('swingLeft', [4, 5, 6, 7]);
+		this.swingRight = this.animations.add('swingRight', [8, 9, 10, 11]);
+	}
+
+	this.animations.play('idle-left', 8, true);
 
 	this.type = type;
 
@@ -37,27 +47,28 @@ Tool.prototype.update = function() {
 };
 Tool.prototype.catch = function(side, swimDistance) {
 	var that = this;
-	var anim;
+	// var anim;
 
 	this.idleTimeout ? clearTimeout(this.idleTimeout) : true;
 	this.animations.stop();
+
 	if (side === 'right') {
 		this.x = this.game.width / 2 + swimDistance - this.offset.x;
 
 		this.y = this.basePosition.y + 40;
-		anim = this.swingRight;
+		// anim = this.swingRight;
 		this.animations.play('swingRight', 24, 1);
 	}
 	if (side === 'left') {
 		this.x = this.game.width / 2 - swimDistance + this.offset.x;
 
 		this.y = this.basePosition.y + 40;
-		anim = this.swingLeft;
+		// anim = this.swingLeft;
 		this.animations.play('swingLeft', 24, 1);
 	}
 
 	this.idleTimeout = setTimeout(function() {
-		this.animations.play('wind');
+		this.animations.play('idle-' + side);
 	}.bind(this), 200);
 
 

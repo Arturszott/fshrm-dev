@@ -53,44 +53,58 @@ Shop.prototype.showItem = function() {
 	this.currentItem.data = this.sliderItems[this.currentItemIndex];
 	_.anchorC(this.currentItem);
 
+
+
 	var scale = this.itemBg.height / this.currentItem.height * 0.75;
 
 	// scale = scale > 0.8 * 0.75 ? 0.8 : scale;
 	this.currentItem.scale.x = scale;
 	this.currentItem.scale.y = scale;
 
+	if(storage.checkOwned(this.currentItem.data.id)){
+		this.bought = true;
+		this.buyButton = this.game.add.button(0 , this.board.height / 2 - 20, 'buy-btn', this.buyItem, this, 0, 0, 1, 0);
+		this.buyButton.loadTexture('buy-btn-bought', 0);
 
-	this.priceLabel = this.create(-40, this.board.height / 2 - 20, 'money-board');
-	_.anchorC(this.priceLabel);
-	_.scale(this.priceLabel, 1.1);
+	} else {
+		this.priceLabel = this.create(-40, this.board.height / 2 - 20, 'money-board');
+		_.anchorC(this.priceLabel);
+		_.scale(this.priceLabel, 1.1);
 
-	this.fishcoinPrice = this.create(this.priceLabel.width + this.priceLabel.x - 88, this.priceLabel.y - 10, 'fishcoin');
-	this.fishcoinPrice.anchor.set(0.5, 0);
+		this.fishcoinPrice = this.create(this.priceLabel.width + this.priceLabel.x - 88, this.priceLabel.y - 10, 'fishcoin');
+		this.fishcoinPrice.anchor.set(0.5, 0);
 
-	this.priceText = this.game.add.bitmapText(this.priceLabel.x, this.priceLabel.y, 'fisherman', (this.currentItem.data.price || 69) + '', 26);
-	this.priceText.position.x = this.priceText.position.x - this.priceLabel.width / 2 + 15;
-	this.priceText.position.y = this.priceText.position.y - this.priceText.textHeight / 2 + 7;
-	_.scale(this.priceText, 0.7);
+		this.priceText = this.game.add.bitmapText(this.priceLabel.x, this.priceLabel.y, 'fisherman', (this.currentItem.data.price || 69) + '', 26);
+		this.priceText.position.x = this.priceText.position.x - this.priceLabel.width / 2 + 15;
+		this.priceText.position.y = this.priceText.position.y - this.priceText.textHeight / 2 + 7;
+		_.scale(this.priceText, 0.7);
+
+		this.buyButton = this.game.add.button(this.board.width / 2 + this.priceLabel.x + 15, this.priceLabel.y, 'buy-btn', this.buyItem, this, 0, 0, 1, 0);
+
+		if (this.currentItem.data.price > this.totalFish) {
+			this.buyButton.loadTexture('buy-btn-nomoney', 0);
+		}
+	}
+
+	_.anchorC(this.buyButton);
+	_.scale(this.buyButton, 0.85);
+
 
 	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 12, 'brown', this.currentItem.data.title.toUpperCase() || '', 22);
 	this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
 	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
 
-	this.buyButton = this.game.add.button(this.board.width / 2 + this.priceLabel.x + 15, this.priceLabel.y, 'buy-btn', this.buyItem, this, 0, 0, 1, 0);
-	_.anchorC(this.buyButton);
-	_.scale(this.buyButton, 0.85);
-
-	if (this.currentItem.data.price > this.totalFish) {
-		this.buyButton.loadTexture('buy-btn-nomoney', 0);
-	}
-
 	this.itemGroup = this.game.add.group();
 
-	this.itemGroup.add(this.priceLabel);
+	if(!this.bought){
+		this.itemGroup.add(this.priceLabel);
+		this.itemGroup.add(this.priceText);
+		this.itemGroup.add(this.fishcoinPrice);
+	}
+
 	this.itemGroup.add(this.buyButton);
-	this.itemGroup.add(this.fishcoinPrice);
 	this.itemGroup.add(this.currentItem);
-	this.itemGroup.add(this.priceText);
+	
 	this.itemGroup.add(this.itemTitle);
 
 	this.board.addChild(this.itemGroup);
@@ -117,12 +131,14 @@ Shop.prototype.buyItem = function() {
 		}.bind(this));
 
 
+		storage.removeFish(this.currentItem.data.price);
+		storage.unlockItem(this.currentItem.data.id);
+		this.totalFish = storage.getFishCount();	
+
 		// handle fish amount change
 		tweenOut.call(this, this.priceText, function() {
-			storage.removeFish(this.currentItem.data.price);
-			storage.unlockItem(this.currentItem.data.id);
 
-			this.totalText.setText((this.totalFish - this.currentItem.data.price) + '');
+			this.totalText.setText(storage.getFishCount() + '');
 		});
 		tweenOut.call(this, this.priceLabel);
 		tweenOut.call(this, this.fishcoinPrice);

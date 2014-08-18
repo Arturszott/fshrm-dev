@@ -40,7 +40,7 @@ Play.prototype = {
         }
     },
     create: function() {
-        storage.addFish(99999);
+        storage.addFish(9999);
         this.background = new Bottom(this.game, 0, 0, 'bottom');
         this.water = new Water(this.game, 0, 0, 'water');
 

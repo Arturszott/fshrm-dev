@@ -227,12 +227,13 @@ Bay.prototype = {
 		}
 	},
 	travelStart: function() {
-		// this.game.water.autoScroll(300, 0);
-		// this.game.background.autoScroll(300, 0);
+		console.log('scroll')
+		this.game.water.autoScroll(4, 0);
+		this.game.background.autoScroll(3, 0);
 	},
 	travelStop: function() {
-		// this.game.water.autoScroll(0, 0);
-		// this.game.background.autoScroll(0, 0);
+		this.game.water.autoScroll(0, 0);
+		this.game.background.autoScroll(0, 0);
 	},
 	goFishing: function() {
 		if (this.leaving || (this.currentBoard && this.currentBoard.isShown)) return;

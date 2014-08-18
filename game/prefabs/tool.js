@@ -18,6 +18,7 @@ var Tool = function(game, x, y, type, offset, parent) {
 		this.swingRight = this.animations.add('swingRight', [12, 13, 14, 15]);
 	} else {
 		this.windAnim = this.animations.add('idle-left', [0, 1, 2, 3]);
+		this.windAnimRight = this.animations.add('idle-right', [0, 1, 2, 3]);
 		this.swingLeft = this.animations.add('swingLeft', [4, 5, 6, 7]);
 		this.swingRight = this.animations.add('swingRight', [8, 9, 10, 11]);
 	}

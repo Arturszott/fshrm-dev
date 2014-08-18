@@ -40,7 +40,7 @@ Crew.prototype.constructor = Crew;
 Crew.prototype.catch = function(side, element) {
 	// this.parent.bringToTop(this);
 
-	var swimDistance = 40 * this.game.widthRatio;
+	var swimDistance = 30 * this.game.widthRatio;
 
 	this.hero.catch(side, swimDistance);
 	this.tool.catch(side, swimDistance);

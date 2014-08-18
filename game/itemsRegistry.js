@@ -81,7 +81,7 @@ var itemsRegistry = {
 			x: 96,
 			y: 120,
 			price: 3000,
-			move: [128, 128]
+			move: [128, 120]
 		},
 
 		{
@@ -92,7 +92,7 @@ var itemsRegistry = {
 			x: 60,
 			y: 124,
 			price: 5600,
-			move: [155, 227]
+			move: [160, 227]
 		}, {
 			name: 'thorshammer2',
 			title: "Thor's Hammer",

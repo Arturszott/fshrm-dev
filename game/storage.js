@@ -91,6 +91,16 @@ var storageHandler = {
 		if (items.indexOf(id) === -1) {
 			items.push(id);
 			localStorage.setItem('unlockedItems', JSON.stringify(items));
+		} else {
+			return false;
+		}
+	},
+	checkOwned: function(id){
+		var items = this.getUnlockedItems();
+		if (items.indexOf(id) === -1) {
+			return false;
+		} else {
+			return true;
 		}
 	},
 	// every time the function is called, last time played is updated to the current time

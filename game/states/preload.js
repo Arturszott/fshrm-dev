@@ -13,9 +13,6 @@ function preloadRegistry(c) {
         if(item.craftable){
             c.load.spritesheet(item.name+'_craft', 'assets/items/crafts/' + item.type + '/' + item.name + '.png', item.cx, item.cy, item.parts);
         }
-        // if(item.type === 'tool') {
-        //     c.load.spritesheet(item.name+'-full', 'assets/items/' + item.type + '/' + item.name + 'full.png', item.x, item.y, item.frame);
-        // }
     }, c);
 }
 
@@ -36,8 +33,13 @@ Preload.prototype = {
         this.load.image('water', 'assets/tileWater.png');
         this.load.image('introlayer', 'assets/play/introtile.png');
         this.load.image('waterlayer', 'assets/play/sea.png');
+        this.load.image('white', 'assets/play/white.png');
         this.load.image('timer', 'assets/play/timer.png');
         this.load.image('timebar', 'assets/play/time.png');
+
+        this.load.image('title', 'assets/title/title.png');
+        this.load.image('stitle1', 'assets/title/stitle1.png');
+        this.load.image('stitle2', 'assets/title/stitle2.png');
 
         // BUTTONS
         this.load.spritesheet('hackBtn', 'assets/icons/btn_home.png', 80, 68, 2);
@@ -70,8 +72,8 @@ Preload.prototype = {
         this.load.spritesheet('buy-btn-bought', 'assets/icons/bought.png', 76, 60, 1);
         this.load.spritesheet('buy-btn-nomoney', 'assets/icons/notenough.png', 76, 60, 1);
 
-        this.load.spritesheet('btn_craft', 'assets/icons/buy.png', 76, 60, 2);
-        this.load.spritesheet('btn_no_craft', 'assets/icons/notenough.png', 76, 60, 1);
+        this.load.spritesheet('btn_craft', 'assets/icons/craft.png', 108, 60, 3);
+        // this.load.spritesheet('btn_no_craft', 'assets/icons/notenough.png', 76, 60, 1);
 
         this.load.spritesheet('ok-btn', 'assets/icons/ok.png', 80, 68, 2);
 

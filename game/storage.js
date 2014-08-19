@@ -76,7 +76,7 @@ var storageHandler = {
 		var eqp = {
 			tool: 'pole',
 			mount: 'pontoon',
-			hero: 'default'
+			hero: 'origin'
 		}
 
 		localStorage.setItem('equipment', JSON.stringify(eqp));
@@ -84,7 +84,7 @@ var storageHandler = {
 		return eqp;
 	},
 	getUnlockedItems: function() {
-		return JSON.parse(localStorage.getItem('unlockedItems')) || [0, 100, 1000];
+		return JSON.parse(localStorage.getItem('unlockedItems')) || [0, 99, 100, 1000];
 	},
 	unlockItem: function(id) {
 		var items = this.getUnlockedItems();

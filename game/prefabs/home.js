@@ -48,16 +48,6 @@ Home.prototype.showItem = function() {
 	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 12, 'brown', this.sliderItems[this.currentItemIndex].title.toUpperCase() || '', 22);
 	this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
 	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
-	// this.currentItem = this.create(0, 0, this.sliderItems[this.currentItemIndex].name);
-	// this.currentItem.data = this.sliderItems[this.currentItemIndex];
-	// _.anchorC(this.currentItem);
-
-	// var scale = this.itemBg.height / this.currentItem.height * 0.75;
-
-	// scale = scale > 0.8 * 0.75 ? 0.8 : scale;
-	// this.currentItem.scale.x = scale;
-	// this.currentItem.scale.y = scale;
-
 
 	if(storage.getEquipment()[this.currentCategory] === this.sliderItems[this.currentItemIndex].name){
 		this.selectButton = this.game.add.button(0, this.itemBg.height/2, 'btn_using', this.itemUsed, this, 0, 0, 0, 0);

@@ -100,8 +100,12 @@ var itemsRegistry = {
 			type: 'tool',
 			x: 100,
 			y: 136,
-			price: 9999,
-			move: [190, 190]
+			cx: 120,
+			cy: 144,
+			move: [190, 190],
+			craftable: true,
+			tier: 3,
+			parts: 3,
 		}, {
 			name: 'cake',
 			title: "Berry Pie",
@@ -110,7 +114,7 @@ var itemsRegistry = {
 			x: 102,
 			y: 124,
 			price: 14000,
-			move: [120, 164]
+			move: [120, 200]
 		}, {
 			name: 'laserpistol',
 			title: "Laser Gun",
@@ -127,10 +131,18 @@ var itemsRegistry = {
 
 		// HEROS
 		{
+			name: 'origin',
+			id: 99,
+			type: 'hero',
+			title: 'Al Fish',
+			x: 144,
+			y: 152
+		},
+		{
 			name: 'default',
 			id: 100,
 			type: 'hero',
-			title: 'True Jack',
+			title: 'Ron Kowalski',
 			x: 144,
 			y: 152
 		}, {
@@ -156,7 +168,7 @@ var itemsRegistry = {
 			title: 'Pink Beard',
 			x: 144,
 			y: 152,
-			price: 13000
+			price: 12000
 		}, {
 			name: 'bavarian',
 			id: 104,
@@ -164,7 +176,7 @@ var itemsRegistry = {
 			title: 'Helmut',
 			x: 144,
 			y: 152,
-			price: 16000
+			price: 14000
 		}, {
 			name: 'diver',
 			id: 105,
@@ -172,7 +184,7 @@ var itemsRegistry = {
 			title: 'Johny Deep',
 			x: 144,
 			y: 152,
-			price: 20000
+			price: 16000
 		}, {
 			name: 'swimmer',
 			id: 106,
@@ -180,10 +192,35 @@ var itemsRegistry = {
 			title: 'Thorpedo',
 			x: 144,
 			y: 152,
+			price: 18000
+		},
+		{
+			name: 'gangsta',
+			id: 106,
+			type: 'hero',
+			title: 'El Gaucho',
+			x: 144,
+			y: 152,
+			price: 20000
+		},
+		{
+			name: 'style',
+			id: 106,
+			type: 'hero',
+			title: 'Mr Dynamite',
+			x: 144,
+			y: 152,
+			price: 22000
+		},
+		{
+			name: 'princess',
+			id: 106,
+			type: 'hero',
+			title: 'Princess',
+			x: 144,
+			y: 152,
 			price: 24000
 		},
-		// {name: 'blackbeard', id: 101, type: 'hero'},
-
 		// MOUNTS
 		{
 			name: 'pontoon',
@@ -253,7 +290,6 @@ var itemsRegistry = {
 			tier: 2,
 			parts: 5,
 		},
-
 	]
 }
 

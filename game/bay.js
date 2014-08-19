@@ -280,8 +280,8 @@ Bay.prototype = {
 		}.bind(this));
 
 		setTimeout(function() {
-			this.game.water.autoScroll(0, -300);
-			this.game.background.autoScroll(0, -300);
+			this.game.water.autoScroll(0, -4);
+			this.game.background.autoScroll(0, -3);
 		}.bind(this), duration * 4);
 	}
 }

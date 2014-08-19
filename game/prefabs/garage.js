@@ -38,20 +38,10 @@ Garage.prototype.showItem = function() {
 	this.itemGroup && this.itemGroup.destroy();
 	this.current = this.sliderItems[this.currentItemIndex];
 
-	var sliceItem = function(item) {
-		var scale = this.itemBg.height / item.y * 0.75;
-
-		scale = scale > 0.8 * 0.75 ? 0.8 : scale;
-
-		var slicesGroup = this.game.add.group();
-		var slice;
-
-		return slicesGroup;
-	}
-
-	this.currentItem = sliceItem.call(this, this.current);
+	this.currentItem = this.create(0, 0, this.sliderItems[this.currentItemIndex].name + '_craft');
 	this.currentItem.data = this.current;
-
+	_.anchorC(this.currentItem);
+	console.log(this.currentItem);
 	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 20, 'brown', this.current.title.toUpperCase() || '', 24);
 	this.itemTitle.position.x = this.itemTitle.position.x - this.itemTitle.textWidth / 2;
 	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
@@ -59,14 +49,14 @@ Garage.prototype.showItem = function() {
 	var ownedParts = parts.findPartById(this.current.id);
 	ownedParts = ownedParts ? ownedParts.owned : 0;
 
-	this.partsText = this.game.add.bitmapText(0, this.itemBg.height / 2 - 10, 'fisherman', ownedParts + '/' + this.current.parts + '', 22);
+	this.partsText = this.game.add.bitmapText(-50, this.itemBg.height / 2 + 20, 'fisherman', ownedParts + '/' + this.current.parts + '', 22);
 	this.partsText.position.x = this.partsText.position.x - this.partsText.textWidth / 2;
-	// this.partsText.position.y = this.partsText.position.y - this.partsText.textHeight / 2;
+	this.partsText.position.y = this.partsText.position.y - this.partsText.textHeight / 2;
 
 	if (ownedParts === this.current.parts) {
-		this.craftButton = this.game.add.button(0, this.itemBg.height / 2 + 60, 'btn_craft', this.startCrafting.bind(this, this.current), this, 0, 0, 1, 0);
+		this.craftButton = this.game.add.button(this.itemBg.width / 2 - 30, this.itemBg.height / 2 + 20, 'btn_craft', this.startCrafting.bind(this, this.current), this, 0, 0, 1, 0);
 	} else {
-		this.craftButton = this.game.add.button(0, this.itemBg.height / 2 + 60, 'btn_no_craft', this.noCraft, this, 0, 0, 0, 0);
+		this.craftButton = this.game.add.button(this.itemBg.width / 2 - 30, this.itemBg.height / 2 + 20, 'btn_craft', this.noCraft, this, 2, 2, 2, 2);
 	}
 
 	_.anchorC(this.craftButton);
@@ -85,7 +75,7 @@ Garage.prototype.noCraft = function() {
 
 }
 Garage.prototype.startCrafting = function(name) {
-	if(this.currentItem.isCrafted) return;
+	if (this.currentItem.isCrafted) return;
 
 	this.game.add.tween(this.partsText).to({
 		y: -this.game.height

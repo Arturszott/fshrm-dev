@@ -30,12 +30,12 @@ function createLabels(x, y) {
 
 	this.categoryLabels.forEach(function(label) {
 		var categoryItems = this.getAvailableItems(label.key.replace('category-label-', ''));
+		console.log(categoryItems);
 		if (categoryItems.length === 0) {
 			label.alpha = 0.4;
 		}
 		_.scale(label, 0.75);
 		label.updateTransform();
-		console.log(label);
 	}, this);
 }
 var Building = function(game, x, y) {

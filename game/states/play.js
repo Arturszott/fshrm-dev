@@ -33,7 +33,6 @@ Play.prototype = {
         right: []
     },
     render: function() {
-        // this.game.debug.text(this.game.time.fps || '--', 2, 14, "#00ff00");
         if (this.game.slowTriggered) {
             this.game.slowTriggered = false;
             this.game.isAccelerated = false;
@@ -41,8 +40,10 @@ Play.prototype = {
     },
     create: function() {
         storage.addFish(9999);
+        this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
         this.background = new Bottom(this.game, 0, 0, 'bottom');
         this.water = new Water(this.game, 0, 0, 'water');
+
 
         this.boomSprite = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'boom');
         this.boomSprite.anchor.setTo(0.5, 0.5);
@@ -77,7 +78,7 @@ Play.prototype = {
             this.playIntro()
             // this.startGame();
         } else {
-            this.game.input.onDown.addOnce(this.startGame, this);
+            this.startInput = this.game.input.onDown.add(this.startGame, this);
         }
     },
     destroyLayers: function() {
@@ -110,14 +111,26 @@ Play.prototype = {
         this.gameover = false;
         this.starting = true
 
+        this.white = this.game.add.sprite(0, 0, 'introlayer');
+        this.white.height = this.game.height;
+        this.white.width = this.game.width;
+
+        this.game.add.tween(this.white).to({
+            alpha: 0
+        }, 1000, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+
         this.slideDownCrew();
+
+
 
         if (this.game.isFromBay) {
             this.game.isFromBay = false;
-            if(this.game.bay){
+            if (this.game.bay) {
                 this.game.bay.destroy();
             }
             setTimeout(this.startGame.bind(this), 600);
+        } else {
+            this.slideUpTitle();
         }
     },
     playIntro: function() {
@@ -225,8 +238,8 @@ Play.prototype = {
     stopAllElements: function() {
         var that = this;
 
-        // this.water.autoScroll(0, 0);
-        // this.background.autoScroll(0, 0);
+        this.water.autoScroll(0, 0);
+        this.background.autoScroll(0, 0);
 
         this.elemArrays.right.forEach(function(elem) {
             that.game.add.tween(elem).to({
@@ -332,8 +345,8 @@ Play.prototype = {
     shutdown: function() {
         this.elemArrays = {};
         this.crew.destroy();
-        this.scoreboard.destroy();
-        this.game.bay.destroy();
+        this.scoreboard && this.scoreboard.destroy();
+        this.game.bay && this.game.bay.destroy();
         this.game.bay = null;
     },
     slideDownCrew: function() {
@@ -343,13 +356,102 @@ Play.prototype = {
 
         }.bind(this));
     },
-    startGame: function() {
-        if (!this.crew.alive && !this.gameover) {
+    slideUpTitle: function() {
+        this.title = this.game.add.sprite(this.game.width / 2, this.game.height + 100, 'title');
+        this.stitle1 = this.game.add.sprite(this.game.width / 2, this.game.height + 100, 'stitle1');
+        this.stitle2 = this.game.add.sprite(this.game.width / 2, this.game.height + 100, 'stitle2');
 
-            this.placeStartElements();
-            this.crew.alive = true;
-            this.scoreText.visible = true;
+        _.scale(this.title, 0.75);
+        _.scale(this.stitle1, 0.75);
+        _.scale(this.stitle2, 0.75);
+
+        _.anchorC(this.title);
+        _.anchorC(this.stitle1);
+        _.anchorC(this.stitle2);
+
+        this.game.add.tween(this.title).to({
+            y: this.game.height * 3 / 4 - 70 - 100
+        }, 1200, Phaser.Easing.Bounce.Out, true, 100, false);
+        this.game.add.tween(this.stitle1).to({
+            y: this.game.height * 3 / 4 - 10 - 100
+        }, 1200, Phaser.Easing.Bounce.Out, true, 100, false);
+        this.game.add.tween(this.stitle2).to({
+            y: this.game.height * 3 / 4 + 25 - 100
+        }, 1200, Phaser.Easing.Bounce.Out, true, 100, false);
+
+        var buttonsY = this.game.height + 60;
+
+        this.bayButton = this.game.add.button(this.game.width / 2, buttonsY, 'homeBtn', this.bayTravel, this, 0, 0, 1, 0);
+        this.bayButton.anchor.setTo(0.5, 0.5);
+
+        this.startButton = this.game.add.button(this.bayButton.x - this.bayButton.width - 10, buttonsY, 'playBtn', this.startClick, this, 0, 0, 1, 0);
+        this.startButton.anchor.setTo(0.5, 0.5);
+
+        this.rankButton = this.game.add.button(this.bayButton.x + this.bayButton.width + 10, buttonsY, 'rankBtn', this.startClick, this, 0, 0, 1, 0);
+        this.rankButton.anchor.setTo(0.5, 0.5);
+
+        this.game.add.tween(this.bayButton).to({
+            y: buttonsY - 120
+        }, 500, Phaser.Easing.Bounce.Out, true, 100, false);
+        this.game.add.tween(this.startButton).to({
+            y: buttonsY - 120
+        }, 500, Phaser.Easing.Bounce.Out, true, 100, false);
+        this.game.add.tween(this.rankButton).to({
+            y: buttonsY - 120
+        }, 500, Phaser.Easing.Bounce.Out, true, 100, false);
+    },
+    startClick: function() {
+        this.game.state.start('play');
+    },
+    bayTravel: function() {
+        this.slideDownTitle();
+        this.startInput.detach();
+        this.game.add.tween(this.crew).to({
+            y: this.game.height * 2
+        }, 600, Phaser.Easing.Linear.None, true, 0, false).onComplete.add(function() {
+            this.crew.destroy();
+        }.bind(this));
+        this.game.bay = new Bay(this.game);
+        this.game.bay.baseState = this;
+        this.game.bay.travel();
+    },
+    slideDownTitle: function() {
+        var buttonsY = this.game.height + 60;
+
+        this.game.add.tween(this.title).to({
+            y: this.game.height + 100
+        }, 600, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+        this.game.add.tween(this.stitle1).to({
+            y: this.game.height + 100
+        }, 600, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+        this.game.add.tween(this.stitle2).to({
+            y: this.game.height + 100
+        }, 600, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+
+        this.game.add.tween(this.bayButton).to({
+            y: buttonsY + 120
+        }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+        this.game.add.tween(this.startButton).to({
+            y: buttonsY + 120
+        }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+        this.game.add.tween(this.rankButton).to({
+            y: buttonsY + 120
+        }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    },
+    startGame: function(pointer) {
+        this.startInput.detach();
+
+        if (pointer && pointer.positionDown.y > this.game.height * 3 / 4) {
+
+        } else {
+            if (!this.crew.alive && !this.gameover) {
+                this.slideDownTitle();
+                this.placeStartElements();
+                this.crew.alive = true;
+                this.scoreText.visible = true;
+            }
         }
+
     },
     checkScore: function() {
         this.score++;
@@ -392,7 +494,10 @@ Play.prototype = {
             }.bind(this));
 
             this.monsterSprite = this.game.add.sprite(this.game.width / 2, -CELL_SIZE * 2, this.randomMonster());
+            this.monsterSprite.scale.x = 0.8;
+            this.monsterSprite.scale.y = 0.8;
             this.monsterSprite.anchor.setTo(0.5, 0.5);
+
 
             var monsterAnim = this.monsterSprite.animations.add('monstering');
             this.monsterSprite.animations.play('monstering', 10, true);

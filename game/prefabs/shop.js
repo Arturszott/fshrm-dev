@@ -53,8 +53,6 @@ Shop.prototype.showItem = function() {
 	this.currentItem.data = this.sliderItems[this.currentItemIndex];
 	_.anchorC(this.currentItem);
 
-
-
 	var scale = this.itemBg.height / this.currentItem.height * 0.75;
 
 	// scale = scale > 0.8 * 0.75 ? 0.8 : scale;

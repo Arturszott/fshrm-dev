@@ -10,8 +10,8 @@ var itemsRegistry = require('../itemsRegistry');
 function preloadRegistry(c) {
     itemsRegistry.getItems().forEach(function(item) {
         c.load.spritesheet(item.name, 'assets/items/' + item.type + '/' + item.name + '.png', item.x, item.y, item.frame);
-        if(item.craftable){
-            c.load.spritesheet(item.name+'_craft', 'assets/items/crafts/' + item.type + '/' + item.name + '.png', item.cx, item.cy, item.parts);
+        if (item.craftable) {
+            c.load.spritesheet(item.name + '_craft', 'assets/items/crafts/' + item.type + '/' + item.name + '.png', item.cx, item.cy, item.parts + 1);
         }
     }, c);
 }
@@ -19,16 +19,19 @@ function preloadRegistry(c) {
 Preload.prototype = {
     preload: function() {
         this.game.time.advancedTiming = true;
-        this.asset = this.add.sprite(this.game.width / 2, this.game.height / 2, 'preloader');
+        console.log(this.game.stage)
+        window.game = this.game;
+        this.asset = this.add.sprite(this.game.width / 2, this.game.height / 2, 'splash');
+        this.asset.scale.x = this.game.width / this.asset.width;
+        this.asset.scale.y = this.game.height / this.asset.height;
         this.asset.anchor.setTo(0.5, 0.5);
         this.load.crossOrigin = "Anonymous";
 
-        this.load.setPreloadSprite(this.asset);
+        // this.load.setPreloadSprite(this.asset);
         this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
         preloadRegistry(this);
 
-        // this.load.image('bottom', 'assets/bottom.png');
         this.load.image('bottom', 'assets/tileBottom.png');
         this.load.image('water', 'assets/tileWater.png');
         this.load.image('introlayer', 'assets/play/introtile.png');
@@ -46,6 +49,8 @@ Preload.prototype = {
         this.load.spritesheet('playBtn', 'assets/icons/btn_play.png', 80, 68, 2);
         this.load.spritesheet('homeBtn', 'assets/icons/btn_home2.png', 80, 68, 2);
         this.load.spritesheet('rankBtn', 'assets/icons/btn_rank.png', 80, 68, 2);
+
+        this.load.spritesheet('soundBtn', 'assets/icons/btn_sound.png', 104, 96, 2);
 
         this.load.spritesheet('lassoFull', 'assets/items/tool/lassofull.png', 128, 120, 12);
 
@@ -69,7 +74,7 @@ Preload.prototype = {
         this.load.spritesheet('building_label_shop', 'assets/bay/l_shop.png', 92, 64, 1);
 
         this.load.spritesheet('buy-btn', 'assets/icons/buy.png', 76, 60, 2);
-        this.load.spritesheet('buy-btn-bought', 'assets/icons/bought.png', 76, 60, 1);
+        this.load.spritesheet('buy-btn-bought', 'assets/icons/bought.png', 80, 72, 1);
         this.load.spritesheet('buy-btn-nomoney', 'assets/icons/notenough.png', 76, 60, 1);
 
         this.load.spritesheet('btn_craft', 'assets/icons/craft.png', 108, 60, 3);
@@ -78,10 +83,11 @@ Preload.prototype = {
         this.load.spritesheet('ok-btn', 'assets/icons/ok.png', 80, 68, 2);
 
         this.load.spritesheet('shop-item-bg', 'assets/icons/checkedbg2.png', 120, 168, 8);
-        this.load.spritesheet('home-item-bg', 'assets/checkedhome.png', 120, 168, 1);
+        this.load.spritesheet('home-item-bg', 'assets/checkedhome.png', 128, 168, 1);
         this.load.spritesheet('garage-item-bg', 'assets/parchment.png', 144, 180, 1);
 
         this.load.spritesheet('shop-all-sold', 'assets/icons/items-sold.png', 128, 96, 1);
+        this.load.spritesheet('garage-all-sold', 'assets/icons/garageempty.png', 164, 104, 1);
 
         this.load.image('board', 'assets/menu-shorter.png');
         this.load.image('long-board', 'assets/menu.png');
@@ -89,8 +95,9 @@ Preload.prototype = {
         this.load.image('garage-board', 'assets/GARAGEboard.png');
 
         this.load.image('money-board', 'assets/icons/SHOPboard.png');
-        this.load.image('btn_select', 'assets/icons/select.png');
-        this.load.image('btn_using', 'assets/icons/using.png');
+        this.load.spritesheet('btn_select', 'assets/icons/select.png', 124, 60, 2);
+        this.load.spritesheet('btn_using', 'assets/icons/using.png', 104, 60, 2);
+        this.load.spritesheet('btn_rate', 'assets/icons/rate1.png', 80, 68, 2);
         this.load.image('part', 'assets/icons/part.png');
 
         this.load.image('category-label-hero', 'assets/icons/SHOPcharacter2.png');
@@ -133,17 +140,18 @@ Preload.prototype = {
         this.load.spritesheet('splash_1', 'assets/monsters/splash1.png', 352, 296, 5);
         this.load.spritesheet('splash_2', 'assets/monsters/ZIP.png', 352, 296, 5);
 
-        this.load.spritesheet('crafting', 'assets/play/crafting.png', 96, 90, 8);
+        this.load.spritesheet('crafting', 'assets/play/crafting.png', 136, 136, 7);
 
-        if (!!PGLowLatencyAudio) {
-            PGLowLatencyAudio.preloadFX('flap', 'assets/flap.wav');
-            PGLowLatencyAudio.preloadFX('score', 'assets/score.wav');
-            PGLowLatencyAudio.preloadFX('pipe-hit', 'assets/pipe-hit.wav');
-            PGLowLatencyAudio.preloadFX('ground-hit', 'assets/ground-hit.wav');
-        }
+        this.load.audio('main', 'assets/ost/FM7b.ogg');
+        this.load.audio('gameover', 'assets/ost/gameover.ogg');
+        this.load.audio('bay', 'assets/ost/zatoka.ogg');
+        this.load.audio('explosion', 'assets/sounds/explosion2.ogg');
+        this.load.audio('monster', 'assets/sounds/monsters3.ogg');
+        this.load.audio('start', 'assets/sounds/tap.ogg');
+        this.load.audio('tap', 'assets/sounds/tap.ogg');
+
     },
-    create: function() {
-    },
+    create: function() {},
     update: function() {
         var that = this;
         if (!!this.ready) {

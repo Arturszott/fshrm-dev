@@ -19,18 +19,17 @@ function createLabels(x, y) {
 	_.anchorC(this.toolLabel);
 	this.toolLabel.baseY = y - 40 - 300;
 
-	this.postcardLabel = this.game.add.button(x + 70, y - 0, 'category-label-postcard', this.categoryShow.bind(this, 'postcard'), this);
-	_.anchorC(this.postcardLabel);
-	this.postcardLabel.baseY = y - 0 - 300;
+	// this.postcardLabel = this.game.add.button(x + 70, y - 0, 'category-label-postcard', this.categoryShow.bind(this, 'postcard'), this);
+	// _.anchorC(this.postcardLabel);
+	// this.postcardLabel.baseY = y - 0 - 300;
 
 	this.categoryLabels.push(this.heroLabel);
 	this.categoryLabels.push(this.mountLabel);
 	this.categoryLabels.push(this.toolLabel);
-	this.categoryLabels.push(this.postcardLabel);
+	// this.categoryLabels.push(this.postcardLabel);
 
 	this.categoryLabels.forEach(function(label) {
 		var categoryItems = this.getAvailableItems(label.key.replace('category-label-', ''));
-		console.log(categoryItems);
 		if (categoryItems.length === 0) {
 			label.alpha = 0.4;
 		}
@@ -105,10 +104,8 @@ Building.prototype.showItem = function() {
 
 	var scale = this.itemBg.height / this.currentItem.height * 0.75;
 
-	// scale = scale > 0.8 * 0.75 ? 0.8 : scale;
 	this.currentItem.scale.x = scale;
 	this.currentItem.scale.y = scale;
-
 
 	this.priceLabel = this.create(-40, this.board.height / 2 - 20, 'money-board');
 	_.anchorC(this.priceLabel);
@@ -226,20 +223,25 @@ Building.prototype.show = function(score) {
 		this.game.add.tween(label).to({
 			y: label.y - 300
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(function() {
-			var categories = ['hero', 'tool', 'mount'];
-			categories.forEach(function(cat) {
-				if (!this.notEmpty && this.getAvailableItems(cat).length) {
-					var items = this.getAvailableItems(cat);
-					this.categoryShow(cat);
-					this.notEmpty = cat;
-				}
-			}, this);
-			// if (!this.notEmpty) {
-			// 	this.categoryShow('hero');
-			// }
+
 
 		}.bind(this));
 	}, this);
+	var categories = ['hero', 'tool', 'mount'];
+	categories.forEach(function(cat) {
+		if (!this.notEmpty && this.getAvailableItems(cat).length) {
+			var items = this.getAvailableItems(cat);
+			this.categoryShow(cat);
+			this.notEmpty = cat;
+		}
+	}, this);
+	if (!this.notEmpty) {
+		this.noItems = this.game.add.sprite(0, 0, this.noItemsKey, 0);
+		_.anchorC(this.noItems);
+		_.scale(this.noItems, 1);
+
+		this.board.addChild(this.noItems);
+	}
 
 };
 Building.prototype.buyItem = function() {

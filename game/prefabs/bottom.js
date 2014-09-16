@@ -23,7 +23,7 @@ Bottom.prototype.update = function() {
 		this.y = 0;
 	}
 	if (this.x > 0) {
-		this.x = -this.width / 2;
+		this.x = -this.width / 2/game.widthRatio;
 	}
 	if(this.game.isAccelerated){
 		this.y -= 6;

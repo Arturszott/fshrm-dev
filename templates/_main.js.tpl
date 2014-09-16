@@ -2,9 +2,6 @@
 
 //global variables
 window.appStarted = false;
-
-
-
 window.onDeviceReady = function() {
 	if(window.appStarted) return;
 	window.appStarted = true;

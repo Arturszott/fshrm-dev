@@ -47,9 +47,6 @@ Tool.prototype.update = function() {
 
 };
 Tool.prototype.catch = function(side, swimDistance) {
-	var that = this;
-	// var anim;
-
 	this.idleTimeout ? clearTimeout(this.idleTimeout) : true;
 	this.animations.stop();
 
@@ -57,19 +54,17 @@ Tool.prototype.catch = function(side, swimDistance) {
 		this.x = this.game.width / 2 + swimDistance - this.offset.x;
 
 		this.y = this.basePosition.y + 40;
-		// anim = this.swingRight;
-		this.animations.play('swingRight', 24, 1);
+		this.animations.play('swingRight', 20, 1);
 	}
 	if (side === 'left') {
 		this.x = this.game.width / 2 - swimDistance + this.offset.x;
 
 		this.y = this.basePosition.y + 40;
-		// anim = this.swingLeft;
-		this.animations.play('swingLeft', 24, 1);
+		this.animations.play('swingLeft', 20, 1);
 	}
 
 	this.idleTimeout = setTimeout(function() {
-		this.animations.play('idle-' + side);
+		this.animations.play('idle-' + side, 8, true);
 	}.bind(this), 200);
 
 

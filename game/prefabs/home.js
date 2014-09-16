@@ -41,8 +41,8 @@ Home.prototype.showItem = function() {
 	this.crew.wave.visible = false;
 	this.crew.rest();
 
-	this.crew[this.currentCategory].waveTween
-	this.crew[this.currentCategory].animations.stop();
+	// this.crew[this.currentCategory].waveTween
+	// this.crew[this.currentCategory].animations.stop();
 	this.crew[this.currentCategory].loadTexture(this.sliderItems[this.currentItemIndex].name);
 
 	this.itemTitle = this.game.add.bitmapText(0, -this.itemBg.height / 2 - 12, 'brown', this.sliderItems[this.currentItemIndex].title.toUpperCase() || '', 22);
@@ -50,9 +50,9 @@ Home.prototype.showItem = function() {
 	this.itemTitle.position.y = this.itemTitle.position.y - this.itemTitle.textHeight / 2;
 
 	if(storage.getEquipment()[this.currentCategory] === this.sliderItems[this.currentItemIndex].name){
-		this.selectButton = this.game.add.button(0, this.itemBg.height/2, 'btn_using', this.itemUsed, this, 0, 0, 0, 0);
+		this.selectButton = this.game.add.button(0, this.itemBg.height/2 + 40, 'btn_using', this.itemUsed, this, 0, 0, 0, 0);
 	} else {
-		this.selectButton = this.game.add.button(0, this.itemBg.height/2, 'btn_select', this.useItem.bind(this, this.sliderItems[this.currentItemIndex].name), this, 0, 0, 1, 0);
+		this.selectButton = this.game.add.button(0, this.itemBg.height/2 + 40, 'btn_select', this.useItem.bind(this, this.sliderItems[this.currentItemIndex].name), this, 0, 0, 1, 0);
 	}
 
 	_.anchorC(this.selectButton);
@@ -67,12 +67,13 @@ Home.prototype.showItem = function() {
 
 	this.board.addChild(this.itemGroup);
 }
-Home.prototype.itemUsed = function() {
-
-}
+Home.prototype.itemUsed = function() {}
 Home.prototype.useItem = function(name) {
+	if(storage.getEquipment()[this.currentCategory] === this.sliderItems[this.currentItemIndex].name){
+		return
+	}
 	storage.setEquipment(this.currentCategory, name);
-
+	this.outsideCrew.dress();
 	function tweenOut(el, onComplete) {
 		var onComplete = onComplete || function() {};
 
@@ -99,7 +100,13 @@ Home.prototype.getAvailableItems = function(category) {
 		return unlocked.indexOf(item.id) !== -1;
 	});
 
-	return availableItems;
+	var used = availableItems.filter(function(item){
+		return storage.getEquipment()[category] === item.name
+	});
+	var unused = availableItems.filter(function(item){
+		return storage.getEquipment()[category] !== item.name
+	})
+	return used.concat(unused);
 }
 
 module.exports = Home;

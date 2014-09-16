@@ -18,13 +18,13 @@ Water.prototype.update = function() {
 	this.y = this.y + this.scroll.y;
 	this.x = this.x + this.scroll.x;
 
-	if (this.y <= -144 || this.y >= 144) {
+	if (this.y <= -144|| this.y >= 144) {
 		this.y = 0;
 	}
 	if (this.x > 0) {
-		this.x = -144;
+		this.x = -144 / this.game.widthRatio;
 	}
-	if(this.game.isAccelerated){
+	if (this.game.isAccelerated) {
 		this.y -= 8;
 	}
 };

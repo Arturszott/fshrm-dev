@@ -80,7 +80,7 @@ var itemsRegistry = {
 			type: 'tool',
 			x: 96,
 			y: 120,
-			price: 3000,
+			price: 2000,
 			move: [128, 120]
 		},
 
@@ -91,7 +91,7 @@ var itemsRegistry = {
 			type: 'tool',
 			x: 60,
 			y: 124,
-			price: 5600,
+			price: 2400,
 			move: [160, 227]
 		}, {
 			name: 'thorshammer2',
@@ -113,7 +113,7 @@ var itemsRegistry = {
 			type: 'tool',
 			x: 102,
 			y: 124,
-			price: 14000,
+			price: 2800,
 			move: [120, 200]
 		}, {
 			name: 'laserpistol',
@@ -123,7 +123,7 @@ var itemsRegistry = {
 			type: 'tool',
 			x: 96,
 			y: 72,
-			price: 21000,
+			price: 3200,
 			move: [132, 100]
 		},
 
@@ -152,7 +152,7 @@ var itemsRegistry = {
 			title: 'Paddy',
 			x: 144,
 			y: 152,
-			price: 6666
+			price: 600
 		}, {
 			name: 'chinese',
 			id: 102,
@@ -160,7 +160,7 @@ var itemsRegistry = {
 			title: 'Yu Yu San',
 			x: 144,
 			y: 152,
-			price: 9860
+			price: 1200
 		}, {
 			name: 'sailor',
 			id: 103,
@@ -168,7 +168,7 @@ var itemsRegistry = {
 			title: 'Pink Beard',
 			x: 144,
 			y: 152,
-			price: 12000
+			price: 1800
 		}, {
 			name: 'bavarian',
 			id: 104,
@@ -176,7 +176,7 @@ var itemsRegistry = {
 			title: 'Helmut',
 			x: 144,
 			y: 152,
-			price: 14000
+			price: 2400
 		}, {
 			name: 'diver',
 			id: 105,
@@ -184,7 +184,7 @@ var itemsRegistry = {
 			title: 'Johny Deep',
 			x: 144,
 			y: 152,
-			price: 16000
+			price: 3000
 		}, {
 			name: 'swimmer',
 			id: 106,
@@ -192,7 +192,7 @@ var itemsRegistry = {
 			title: 'Thorpedo',
 			x: 144,
 			y: 152,
-			price: 18000
+			price: 3600
 		},
 		{
 			name: 'gangsta',
@@ -201,7 +201,7 @@ var itemsRegistry = {
 			title: 'El Gaucho',
 			x: 144,
 			y: 152,
-			price: 20000
+			price: 4200
 		},
 		{
 			name: 'style',
@@ -210,7 +210,7 @@ var itemsRegistry = {
 			title: 'Mr Dynamite',
 			x: 144,
 			y: 152,
-			price: 22000
+			price: 4800
 		},
 		{
 			name: 'princess',
@@ -219,7 +219,7 @@ var itemsRegistry = {
 			title: 'Princess',
 			x: 144,
 			y: 152,
-			price: 24000
+			price: 5400
 		},
 		// MOUNTS
 		{
@@ -276,7 +276,7 @@ var itemsRegistry = {
 			type: 'mount',
 			x: 144,
 			y: 184,
-			price: 12000
+			price: 6000
 		}, {
 			name: 'rafttt',
 			title: 'Sweet Ana',

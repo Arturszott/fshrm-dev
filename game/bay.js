@@ -41,21 +41,21 @@ var Bay = function(game) {
 
 	var x = -100;
 
-	this.garage = createBuilding.call(this, 'garage', x, this.game.CELL_SIZE * 1 + 30);
-	this.house = createBuilding.call(this, 'house', x, this.game.CELL_SIZE * 2 + 30);
-	this.shop = createBuilding.call(this, 'shop', x, this.game.CELL_SIZE * 5);
-
 	this.crew = new Crew(this.game, this.game.width / 6 * 4, -300, 1);
 	this.crew.hero.visible = false;
 	this.crew.tool.visible = false;
 
-	this.crew.btn = this.game.add.button(this.crew.hero.x, this.crew.hero.y + 10, 'playBtn', this.goFishing, this, 0, 0, 1, 0);
+	this.crew.btn = this.game.add.button(this.crew.hero.x, this.crew.hero.y + 30, 'playBtn', this.goFishing, this, 0, 0, 1, 0);
 	this.game.add.existing(this.crew);
-	this.crew.btn.scale.x = 0.8;
-	this.crew.btn.scale.y = 0.8;
+
+	this.garage = createBuilding.call(this, 'garage', x, this.game.CELL_SIZE * 1 + 30);
+	this.house = createBuilding.call(this, 'house', x, this.game.CELL_SIZE * 2 + 30);
+	this.shop = createBuilding.call(this, 'shop', x, this.game.CELL_SIZE * 5);
+
+	this.crew.btn.scale.x = 0.82;
+	this.crew.btn.scale.y = 0.82;
 	this.crew.btn.anchor.setTo(0.5, 0.5);
 	this.crew.add(this.crew.btn);
-
 }
 
 Bay.prototype = {
@@ -113,9 +113,12 @@ Bay.prototype = {
 			y: this.game.height * 1,
 		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false).onComplete.add(this.crew.rest.bind(this.crew));
 
-		// this.game.add.tween(this.game.water).to({
-		// 	x: -50,
-		// }, 2500, Phaser.Easing.Sinusoidal.None, true, 0, 1000, true);
+		setTimeout(function() {
+			this.game.add.tween(this.game.water).to({
+				x: -50,
+			}, 2500, Phaser.Easing.Sinusoidal.None, true, 0, 1000, true);
+		}.bind(this), 1200);
+
 
 	},
 	visitshop: function() {
@@ -138,6 +141,7 @@ Bay.prototype = {
 		console.log('visiting house')
 		if (!this.houseBoard) {
 			this.houseBoard = new House(this.game, this.shop.x, this.shop.y);
+			this.houseBoard.outsideCrew = this.crew;
 			this.game.add.existing(this.houseBoard);
 		}
 		this.showBuilding(this.house, this.houseBoard);
@@ -227,9 +231,9 @@ Bay.prototype = {
 		}
 	},
 	travelStart: function() {
-		console.log('scroll')
-		this.game.water.autoScroll(4, 0);
-		this.game.background.autoScroll(3, 0);
+		this.game.audio.bay.play();
+		this.game.water.autoScroll(5, 0);
+		this.game.background.autoScroll(4.5, 0);
 	},
 	travelStop: function() {
 		this.game.water.autoScroll(0, 0);
@@ -239,12 +243,11 @@ Bay.prototype = {
 		if (this.leaving || (this.currentBoard && this.currentBoard.isShown)) return;
 
 		this.leaving = true;
-		console.log('go Fishing!!')
 
 		var baseY = this.crew.hero.y;
 
 		this.crew.hero.visible = true;
-		this.game.world.bringToTop(this.crew.hero);
+		this.game.world.bringToTop(this.crew);
 		this.crew.hero.y = -this.game.height - this.crew.hero.height;
 
 		var duration = 500;

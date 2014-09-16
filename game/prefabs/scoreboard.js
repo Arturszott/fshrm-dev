@@ -16,7 +16,7 @@ var Scoreboard = function(game) {
 
 	this.gameoverWave = this.game.add.tween(gameover).to({
 		y: 0,
-	}, 900, Phaser.Easing.Linear.None, true, 0, 5, true);
+	}, 600, Phaser.Easing.Linear.None, true, 0, 3, true);
 
 	var scoreX = 25
 	var buttonsY = 380;
@@ -33,7 +33,7 @@ var Scoreboard = function(game) {
 	this.startButton = this.game.add.button(this.bayButton.x - this.bayButton.width - 10, buttonsY, 'playBtn', this.startClick, this, 0, 0, 1, 0);
 	this.startButton.anchor.setTo(0.5, 0.5);
 
-	this.rankButton = this.game.add.button(this.bayButton.x + this.bayButton.width + 10, buttonsY, 'rankBtn', this.startClick, this, 0, 0, 1, 0);
+	this.rankButton = this.game.add.button(this.bayButton.x + this.bayButton.width + 10, buttonsY, 'rankBtn', this.showRanks, this, 0, 0, 1, 0);
 	this.rankButton.anchor.setTo(0.5, 0.5);
 
 	this.add(this.rankButton);
@@ -91,12 +91,15 @@ Scoreboard.prototype.hide = function() {
 			setTimeout(this.destroy.bind(this));
 		}.bind(this));
 }
-
+Scoreboard.prototype.showRanks = function() {
+	this.showRanks();
+}
 Scoreboard.prototype.startClick = function() {
 	this.game.state.start('play');
 };
 Scoreboard.prototype.bayClick = function() {
 	this.hide();
+	this.game.muteButton.hide();
 	this.game.bay.travel();
 };
 

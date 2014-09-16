@@ -20,9 +20,8 @@ var Crew = function(game, x, y) {
 	this.hero = new Hero(game, x, y, this.eqp.hero);
 
 	this.tool = new Tool(game, x, y, this.eqp.tool, {
-		// offset
 		x: -46 * this.game.widthRatio,
-		y: 10
+		y: 18
 	});
 
 	this.add(this.wave);
@@ -53,6 +52,13 @@ Crew.prototype.applyDeath = function(side) {
 	// this.wave.applyDeath();
 	// this.mount.applyDeath();
 	// this.tool.destroy();
+}
+Crew.prototype.dress = function() {
+	this.eqp = storage.getEquipment();
+	this.tool.loadTexture(this.eqp.tool+'full', 0);
+	this.mount.loadTexture(this.eqp.mount, 0);
+	this.hero.loadTexture(this.eqp.hero, 0);
+	console.log(this.mount, this.eqp.mount);
 }
 Crew.prototype.rest = function() {
 	this.game.add.tween(this.wave).to({

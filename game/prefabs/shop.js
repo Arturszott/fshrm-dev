@@ -41,7 +41,6 @@ Shop.prototype.initialize = function() {
 	createFishAmount.call(this);
 }
 
-
 /////////////////// ITEM SLIDER ///////////////////////
 
 Shop.prototype.showItem = function() {
@@ -55,7 +54,7 @@ Shop.prototype.showItem = function() {
 
 	var scale = this.itemBg.height / this.currentItem.height * 0.75;
 
-	// scale = scale > 0.8 * 0.75 ? 0.8 : scale;
+	scale = scale > 0.8 * 0.75 ? 0.8 : scale;
 	this.currentItem.scale.x = scale;
 	this.currentItem.scale.y = scale;
 
@@ -123,6 +122,7 @@ Shop.prototype.buyItem = function() {
 		// handle buying animations
 		tweenOut.call(this, this.buyButton, function() {
 			this.buyButton.loadTexture('buy-btn-bought', 0);
+			_.scale(this.buyButton, 0.6);
 			this.game.add.tween(this.buyButton).to({
 				x: 0
 			}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);

@@ -4,12 +4,13 @@ var itemsRegistry = require('./itemsRegistry');
 
 var storageHandler = {
 
-	// fish fish fish
+	// fish // ---------------------------------------------------------
 	addFish: function(amount) {
 		var fishCount;
 
 		fishCount = Number(localStorage.getItem('fishCount'));
 		fishCount += amount;
+		this.addStat('total-fish', amount);
 		localStorage.setItem('fishCount', fishCount);
 	},
 	removeFish: function(amount) {
@@ -23,10 +24,27 @@ var storageHandler = {
 	getFishCount: function() {
 		return Number(localStorage.getItem('fishCount'));
 	},
-
-
-	// parts parts parts
-
+	mute: function(isMuted) {
+		if (isMuted) {
+			localStorage.setItem('isMuted', true);
+		} else {
+			localStorage.setItem('isMuted', false);
+		}
+	},
+	getMuted: function() {
+		return JSON.parse(localStorage.getItem('isMuted'));
+	},
+	// statistics // ---------------------------------------------------------
+	addStat: function(type, amount){
+		var stats = JSON.parse(localStorage.getItem('stats')) || {};
+		stats[type] = stats[type] ? stats[type]: 0;
+		stats[type] += amount || 1;
+		localStorage.setItem('stats', JSON.stringify(stats));
+	},
+	getStat: function(type){
+		return JSON.parse(localStorage.getItem('stats'))[type];
+	},
+	// parts // -------------------------------------------------------------
 	addPart: function(id) {
 		var parts = this.getOwnedParts() || [];
 
@@ -56,7 +74,7 @@ var storageHandler = {
 		return parts;
 	},
 
-	// eqp eqp eqp
+	// eqp // ---------------------------------------------------------
 	getEquipment: function() {
 		var eqp = JSON.parse(localStorage.getItem('equipment'));
 		if (!eqp) {
@@ -95,7 +113,7 @@ var storageHandler = {
 			return false;
 		}
 	},
-	checkOwned: function(id){
+	checkOwned: function(id) {
 		var items = this.getUnlockedItems();
 		if (items.indexOf(id) === -1) {
 			return false;

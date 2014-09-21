@@ -21,20 +21,6 @@ var itemsRegistry = {
 
 		items.forEach(function(item) {
 			if (item.type === 'tool') {
-				// toolMoveSprites.push({
-				// 	name: item.name + '-left',
-				// 	type: 'tool',
-				// 	x: item.move[0],
-				// 	y: item.move[1],
-				// 	frames: 4
-				// });
-				// toolMoveSprites.push({
-				// 	name: item.name + '-right',
-				// 	type: 'tool',
-				// 	x: item.move[0],
-				// 	y: item.move[1],
-				// 	frames: 4
-				// });
 				toolMoveSprites.push({
 					name: item.name + 'full',
 					type: 'tool',
@@ -102,7 +88,7 @@ var itemsRegistry = {
 			y: 136,
 			cx: 120,
 			cy: 144,
-			move: [190, 190],
+			move: [128, 161],
 			craftable: true,
 			tier: 3,
 			parts: 3,
@@ -115,17 +101,18 @@ var itemsRegistry = {
 			y: 124,
 			price: 2800,
 			move: [120, 200]
-		}, {
-			name: 'laserpistol',
-			title: "Laser Gun",
-			id: 5,
-			frames: 16,
-			type: 'tool',
-			x: 96,
-			y: 72,
-			price: 3200,
-			move: [132, 100]
-		},
+		}, 
+		// {
+		// 	name: 'laserpistol',
+		// 	title: "Laser Gun",
+		// 	id: 5,
+		// 	frames: 16,
+		// 	type: 'tool',
+		// 	x: 96,
+		// 	y: 72,
+		// 	price: 3200,
+		// 	move: [132, 100]
+		// },
 
 		// {name: 'harpoon', id: 1, type: 'tool'},
 
@@ -196,7 +183,7 @@ var itemsRegistry = {
 		},
 		{
 			name: 'gangsta',
-			id: 106,
+			id: 107,
 			type: 'hero',
 			title: 'El Gaucho',
 			x: 144,
@@ -205,7 +192,7 @@ var itemsRegistry = {
 		},
 		{
 			name: 'style',
-			id: 106,
+			id: 108,
 			type: 'hero',
 			title: 'Mr Dynamite',
 			x: 144,
@@ -214,7 +201,7 @@ var itemsRegistry = {
 		},
 		{
 			name: 'princess',
-			id: 106,
+			id: 109,
 			type: 'hero',
 			title: 'Princess',
 			x: 144,

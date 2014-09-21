@@ -39,10 +39,10 @@ var Scoreboard = function(game) {
 	this.add(this.rankButton);
 	this.add(this.startButton);
 	this.add(this.bayButton);
+	this.add(this.game.add.image(0, 0, ''))
 
 	this.y = -this.game.height;
 	this.x = 0;
-
 };
 
 Scoreboard.prototype = Object.create(Phaser.Group.prototype);

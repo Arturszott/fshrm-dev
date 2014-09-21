@@ -1,30 +1,30 @@
 var socialService, gp;
 
 if (/ios/i.test(navigator.userAgent)) {
+	console.log('ios')
     // TODO ADD GAMECENTER
-    // gp = CocoonJS.Social.GooglePlayGames;
+    gp = CocoonJS.Social.GameCenter;
 } else if (/android/i.test(navigator.userAgent)) {
     gp = CocoonJS.Social.GooglePlayGames;
 }
 
 
 //clientId is not required in android
-var iosClientId = "273377255436-omilg308s7ev1jf4t6bspcrhae3odu3m.apps.googleusercontent.com";
+var iosClientId = "919657677";
 // var webClientId = "273377255436-d8vme49kjo6bisprjp3lda82s2b6r097.apps.googleusercontent.com";
 
-gp.init({
-    clientId: navigator.isCocoonJS ? iosClientId : webClientId,
-    defaultLeaderboard: "CgkIrMD5suwHEAIQAA"
-});
+if (/android/i.test(navigator.userAgent)) {
+	gp.init({
+	    clientId: iosClientId,
+	    defaultLeaderboard: "CgkIrMD5suwHEAIQBw"
+	});
+}
 
 //you can use the GP extension with the official API or use it with CocoonJS SocialGaming API
 socialService = gp.getSocialInterface();
 socialService.onLoginStatusChanged.addEventListener(function(loggedIn, error) {
-    console.log('logged im bitchys')
+    // console.log('logged im bitchys')
 });
-
-// socialService.login();
-
 
 // rating module!!
 

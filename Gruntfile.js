@@ -33,6 +33,17 @@ module.exports = function(grunt) {
         tasks: ['build']
       }
     },
+    uglify: {
+      options: {
+        mangle: true,
+        drop_console: true
+      },
+      my_target: {
+        files: {
+          'dist/js/game.js': ['dist/js/game.js']
+        }
+      }
+    },
     connect: {
       options: {
         port: 5000,
@@ -96,7 +107,7 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['buildBootstrapper', 'browserify', 'copy']);
   grunt.registerTask('serve', ['build', 'connect:livereload', 'open', 'watch']);
   grunt.registerTask('default', ['serve']);
-  grunt.registerTask('prod', ['build', 'copy']);
+  grunt.registerTask('prod', ['build', 'copy', 'uglify']);
 
   grunt.registerTask('buildBootstrapper', 'builds the bootstrapper file correctly', function() {
     var stateFiles = grunt.file.expand('game/states/*.js');

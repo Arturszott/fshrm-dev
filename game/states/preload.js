@@ -19,15 +19,17 @@ function preloadRegistry(c) {
 Preload.prototype = {
     preload: function() {
         this.game.time.advancedTiming = true;
-        console.log(this.game.stage)
         window.game = this.game;
         this.asset = this.add.sprite(this.game.width / 2, this.game.height / 2, 'splash');
+        this.loader = this.add.sprite(this.game.width / 2, 40, 'preloader');
+        // this.loader.position.x = this.loader.position.x - this.asset.width / 2 + 10; 
         this.asset.scale.x = this.game.width / this.asset.width;
         this.asset.scale.y = this.game.height / this.asset.height;
         this.asset.anchor.setTo(0.5, 0.5);
+        this.loader.anchor.setTo(0.5, 0.5);
         this.load.crossOrigin = "Anonymous";
 
-        // this.load.setPreloadSprite(this.asset);
+        this.load.setPreloadSprite(this.loader);
         this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
         preloadRegistry(this);
@@ -119,6 +121,9 @@ Preload.prototype = {
         this.load.image('home-sign', 'assets/HOME.png');
         this.load.image('garage-sign', 'assets/garage.png');
 
+        // HACK HACK HACK
+        this.load.image('pixel', 'assets/hack.png');
+
         this.load.bitmapFont('fisherman', 'assets/fonts/fisherman2.png', 'assets/fonts/fisherman2.fnt');
         this.load.bitmapFont('brown', 'assets/fonts/brown/brown.png', 'assets/fonts/brown/brown.fnt');
         this.load.spritesheet('fish', 'assets/play/fish1.png', 100, 144, 4);
@@ -128,7 +133,7 @@ Preload.prototype = {
 
         this.load.spritesheet('mine', 'assets/play/BOMB.png', 112, 132, 5);
         this.load.spritesheet('mineRed', 'assets/play/BOMB2.png', 112, 132, 5);
-        this.load.spritesheet('barrel', 'assets/play/barrel.png', 104, 120, 5);
+        this.load.spritesheet('barrel', 'assets/play/barrel.png', 108, 120, 5);
         this.load.spritesheet('boom', 'assets/play/boom.png', 144, 278, 10);
 
         this.load.spritesheet('monster_0', 'assets/monsters/monsterI.png', 324, 312, 6);
@@ -151,7 +156,9 @@ Preload.prototype = {
         this.load.audio('tap', 'assets/sounds/tap.ogg');
 
     },
-    create: function() {},
+    create: function() {
+        this.game.add.image(0, 0, 'pixel');
+    },
     update: function() {
         var that = this;
         if (!!this.ready) {

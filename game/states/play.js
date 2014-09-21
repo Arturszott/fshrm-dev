@@ -3,7 +3,7 @@
 var config = require('../config');
 var storage = require('../storage');
 var ads = require('../ads');
-    ads.init();
+ads.init();
 
 
 var itemsRegistry = require('../itemsRegistry');
@@ -51,7 +51,6 @@ Play.prototype = {
         this.game.audio.music = this.game.add.audio('main', 1, true);
         this.game.audio.bay = this.game.add.audio('bay', 1, true);
         this.game.audio.over = this.game.add.audio('gameover', 1);
-        
 
         this.game.audio.explosion = this.game.add.audio('explosion', 1);
         this.game.audio.monster = this.game.add.audio('monster', 1);
@@ -87,12 +86,23 @@ Play.prototype = {
         // FUCKING IMPORTANT FUNCTION
         this.refreshGame();
 
-        // if (!storage.isIntroPlayed()) {
-        if (false) {
-            // setTimeout(function() {}.bind(this), 600);
+        if (!storage.isIntroPlayed()) {
+        // if (true) {
             this.playIntro()
-            // this.startGame();
+        } else {
+            if (this.game.startInstant) {
+                if (this.game.bay) {
+                    this.game.bay.destroy();
+                }
+                setTimeout(this.startGame.bind(this), 600);
+            } else {
+                this.game.startInstant = true;
+                this.slideUpTitle();
+
+                this.startInput = this.game.input.onDown.add(this.startGame, this);
+            }
         }
+        this.game.add.image(0, 0, 'pixel');
     },
     destroyLayers: function() {
         this.fishLayer && this.fishLayer.destroy(true);
@@ -122,19 +132,22 @@ Play.prototype = {
         this.muteButton.anchor.setTo(1, 0);
         _.scale(this.muteButton, 0.5);
 
-        this.muteButton.show = function(){
+        this.muteButton.show = function() {
             this.game.add.tween(this.muteButton).to({
                 y: 4
             }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
         }.bind(this);
 
-        this.muteButton.hide = function(){
+        this.muteButton.hide = function() {
             this.game.add.tween(this.muteButton).to({
                 y: -100
             }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
         }.bind(this);
 
         this.game.muteButton = this.muteButton;
+
+        this.checkSound();
+
 
         // muteButton END // --------------------------------------------------------
 
@@ -156,17 +169,7 @@ Play.prototype = {
 
         this.slideDownCrew();
 
-        if (this.game.startInstant) {
-            if (this.game.bay) {
-                this.game.bay.destroy();
-            }
-            setTimeout(this.startGame.bind(this), 600);
-        } else {
-            this.game.startInstant = true;
-            this.slideUpTitle();
-            this.checkSound();
-            this.startInput = this.game.input.onDown.add(this.startGame, this);
-        }
+
 
         ads.show();
     },
@@ -185,6 +188,7 @@ Play.prototype = {
         this.score = 0;
         this.scoreText = this.game.add.bitmapText(this.game.width / 2, this.game.height + 100, 'fisherman', this.score.toString(), 24);
         this.game.stage.addChild(this.scoreText);
+        this.game.stage.addChild(this.game.add.image(0, 0, ''));
         this.scoreText.updateTransform();
         this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
         this.scoreText.visible = false;
@@ -266,7 +270,8 @@ Play.prototype = {
 
         setTimeout(function() {
             this.timer.start();
-            this.game.audio.music.play('', 0, 1, true);
+            this.game.audio.over.stop();
+            this.game.audio.music.play();
 
         }.bind(this), 600);
     },
@@ -369,9 +374,9 @@ Play.prototype = {
         elements = null;
     },
     update: function() {
-        if (this.game.audio.music._sound) {
-            this.game.audio.music._sound.playbackRate.value = 1 + 0.05 * (this.game.level / 2);
-        };
+        // if (this.game.audio.music._sound) {
+        //     this.game.audio.music._sound.playbackRate.value = 1 + 0.05 * (this.game.level / 2);
+        // };
         var now = new Date().getTime();
 
         if (this.then && !this.game.wasPaused) {
@@ -388,12 +393,11 @@ Play.prototype = {
     },
     shutdown: function() {
         this.elemArrays = {};
-
         this.game.audio.music.stop();
-        this.crew.destroy();
+        this.crew && this.crew.destroy();
         this.scoreboard && this.scoreboard.destroy();
         this.game.bay && this.game.bay.destroy();
-        this.game.audio.bay.stop();
+        this.game.audio.bay && this.game.audio.bay.stop();
         this.game.bay = null;
     },
     slideDownCrew: function() {
@@ -417,7 +421,7 @@ Play.prototype = {
         _.anchorC(this.stitle2);
 
         this.tapLeft = this.game.add.sprite(-this.game.width / 2 - 10, 100, 'tap-right');
-        this.tapRight = this.game.add.sprite(this.game.width *2 + 10, 100, 'tap-left');
+        this.tapRight = this.game.add.sprite(this.game.width * 2 + 10, 100, 'tap-left');
 
         _.anchorC(this.tapRight);
         _.anchorC(this.tapLeft);
@@ -486,11 +490,9 @@ Play.prototype = {
             socialService.login(function(loggedIn, error) {
                 if (error) {
                     console.error("login error: " + error.message + " " + error.code);
-                }
-                else if (loggedIn) {
+                } else if (loggedIn) {
                     console.log("login suceeded");
-                }
-                else {
+                } else {
                     console.log("login cancelled");
                 }
             });
@@ -500,10 +502,10 @@ Play.prototype = {
                 console.error("showLeaderbord error: " + error.message);
         });
     },
-    checkSound: function(){
+    checkSound: function() {
         var isMuted = storage.getMuted();
 
-        if(isMuted){
+        if (isMuted) {
             this.game.sound.mute = true;
             this.muteButton.setFrames(1, 1, 1);
         } else {
@@ -538,11 +540,13 @@ Play.prototype = {
         this.game.bay.baseState = this;
         this.game.bay.travel();
         storage.addStat('bay-visits', 1);
-        
+
     },
     slideDownTitle: function() {
         var buttonsY = this.game.height + 60;
 
+        // another hack...
+        if(!this.title || !this.stitle1 || !this.stitle2 || !this.bayButton ) return false;
 
         this.game.add.tween(this.tapRight).to({
             x: 600
@@ -591,7 +595,8 @@ Play.prototype = {
         if (pointer && (pointer.positionDown.y > this.game.height * 3 / 4) || (pointer && pointer.positionDown.y < this.muteButton.height)) {
 
         } else {
-            this.startInput.detach();
+            this.startInput && this.startInput.detach();
+
             if (!this.crew.alive && !this.gameover) {
                 this.game.audio.start.play();
                 this.slideDownTitle();
@@ -605,7 +610,7 @@ Play.prototype = {
     checkScore: function() {
         this.score++;
 
-        if (Math.floor(this.score / 15) == this.game.level) {
+        if (Math.floor(this.score / 10) == this.game.level) {
             this.game.level++;
         }
         this.scoreText.setText(this.score.toString());
@@ -690,7 +695,7 @@ Play.prototype = {
             this.slowDownAll();
             this.game.audio.music.stop();
             this.game.audio.over.play();
-            this.game.audio.over._sound.playbackRate.value = 1.2;
+            // this.game.audio.over._sound.playbackRate.value = 1.2;
 
             this.timer.stop();
             this.timer.destroyAll();

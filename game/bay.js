@@ -151,6 +151,8 @@ Bay.prototype = {
 
 		this.bayButton = this.game.add.button(this.game.width - 10, this.game.height + 100, 'homeBtn', this.hideBuilding, this);
 		this.game.stage.addChild(this.bayButton);
+		this.game.stage.addChild(this.game.add.image(0, 0, ''));
+		
 		this.bayButton.anchor.setTo(1, 1);
 
 		this.bayButton.scale.y = 0.8;
@@ -248,6 +250,8 @@ Bay.prototype = {
 
 		this.crew.hero.visible = true;
 		this.game.world.bringToTop(this.crew);
+		var hack = this.game.add.image(0, 0, '');
+		this.game.world.bringToTop(hack);
 		this.crew.hero.y = -this.game.height - this.crew.hero.height;
 
 		var duration = 500;

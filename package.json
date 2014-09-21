@@ -15,7 +15,8 @@
     "underscore": "*",
     "underscore.string": "*",
     "browserify": "~3.38.0",
-    "grunt-browserify": "~1.3.0"
+    "grunt-browserify": "~1.3.0",
+    "grunt-contrib-uglify": "~0.5.1"
   },
   "engines": {
     "node": ">=0.8.0"

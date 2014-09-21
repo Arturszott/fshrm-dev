@@ -7,7 +7,7 @@ function Boot() {
 Boot.prototype = {
   preload: function() {
   	this.stage.backgroundColor = '#e6e6e6';
-    // this.load.image('preloader', 'assets/preloader.gif');
+    this.load.image('preloader', 'assets/preloader.gif');
     this.load.image('splash', 'assets/splashScreen.png');
     this.stage.smoothed = false;
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -18,6 +18,7 @@ Boot.prototype = {
   create: function() {
     this.game.input.maxPointers = 1;
     this.game.state.start('preload');
+    this.game.add.image(0, 0, 'pixel');
   }
 };
 

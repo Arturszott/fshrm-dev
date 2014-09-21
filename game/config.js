@@ -16,7 +16,7 @@ var config = {
 	baseElementSpeed: -20,
 	fishRotationAngle: 270,
 
-	itemChance: 0.2,
+	itemChance: 0.08,
 
 	tiers: {
 		1: [30, 100],

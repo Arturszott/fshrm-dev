@@ -48,9 +48,33 @@ Play.prototype = {
         }, this);
 
         this.game.audio = {};
+
         this.game.audio.music = this.game.add.audio('main', 1, true);
+        var oldPlay = this.game.audio.music.play;
+        this.game.audio.music.play = function() {
+            if (storage.getMuted()) {
+                return false;
+            }
+            oldPlay.call(this);
+        }
+
         this.game.audio.bay = this.game.add.audio('bay', 1, true);
+        var oldPlay2 = this.game.audio.bay.play;
+        this.game.audio.bay.play = function() {
+            if (storage.getMuted()) {
+                return false;
+            }
+            oldPlay2.call(this);
+        }
+
         this.game.audio.over = this.game.add.audio('gameover', 1);
+        var oldPlay3 = this.game.audio.over.play;
+        this.game.audio.over.play = function() {
+            if (storage.getMuted()) {
+                return false;
+            }
+            oldPlay3.call(this);
+        }
 
         this.game.audio.explosion = this.game.add.audio('explosion', 1);
         this.game.audio.monster = this.game.add.audio('monster', 1);
@@ -87,7 +111,7 @@ Play.prototype = {
         this.refreshGame();
 
         if (!storage.isIntroPlayed()) {
-        // if (true) {
+            // if (true) {
             this.playIntro()
         } else {
             if (this.game.startInstant) {
@@ -546,7 +570,7 @@ Play.prototype = {
         var buttonsY = this.game.height + 60;
 
         // another hack...
-        if(!this.title || !this.stitle1 || !this.stitle2 || !this.bayButton ) return false;
+        if (!this.title || !this.stitle1 || !this.stitle2 || !this.bayButton) return false;
 
         this.game.add.tween(this.tapRight).to({
             x: 600
@@ -612,10 +636,13 @@ Play.prototype = {
 
         if (Math.floor(this.score / 10) == this.game.level) {
             this.game.level++;
+            
+            _.anims.scale(this.scoreText, 1.3, 200);
+            this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
         }
         this.scoreText.setText(this.score.toString());
-        this.scoreText.position.x = (this.game.width - this.scoreText.textWidth) / 2;
-        PGLowLatencyAudio && PGLowLatencyAudio.play('score');
+
+
     },
     showScoreboard: function() {
         this.game.bay = new Bay(this.game);

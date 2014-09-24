@@ -21,15 +21,15 @@ Preload.prototype = {
         this.game.time.advancedTiming = true;
         window.game = this.game;
         this.asset = this.add.sprite(this.game.width / 2, this.game.height / 2, 'splash');
-        this.loader = this.add.sprite(this.game.width / 2, 40, 'preloader');
+        // this.loader = this.add.sprite(this.game.width / 2, 40, 'preloader');
         // this.loader.position.x = this.loader.position.x - this.asset.width / 2 + 10; 
         this.asset.scale.x = this.game.width / this.asset.width;
         this.asset.scale.y = this.game.height / this.asset.height;
         this.asset.anchor.setTo(0.5, 0.5);
-        this.loader.anchor.setTo(0.5, 0.5);
+        // this.loader.anchor.setTo(0.5, 0.5);
         this.load.crossOrigin = "Anonymous";
 
-        this.load.setPreloadSprite(this.loader);
+        // this.load.setPreloadSprite(this.loader);
         this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
 
         preloadRegistry(this);

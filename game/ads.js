@@ -36,7 +36,7 @@ var adsManager = {
 		this.fullscreen.refreshFullScreen();
 	},
 	show: function(){
-		// if(!this.ready) return false;
+		if(!this.ready) return false;
 		var games = storage.getStat('games');
 
 		if(games > 10 && games % 5 === 0){

@@ -42,6 +42,10 @@ var storageHandler = {
 		localStorage.setItem('stats', JSON.stringify(stats));
 	},
 	getStat: function(type){
+		var stats = localStorage.getItem('stats');
+		if(!stats){
+			localStorage.setItem('stats', JSON.stringify({}));
+		}
 		return JSON.parse(localStorage.getItem('stats'))[type];
 	},
 	// parts // -------------------------------------------------------------

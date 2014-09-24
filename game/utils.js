@@ -19,11 +19,11 @@ var utils = {
 		obj.scale.y = scale;
 	},
 	anims: {
-		scale: function(obj, scale) {
+		scale: function(obj, scale, time) {
 			game.add.tween(obj.scale).to({
 				x: obj.scale.x * scale,
 				y: obj.scale.y * scale
-			}, 400, Phaser.Easing.Linear.None, true, 0, 1, true);
+			}, time || 400, Phaser.Easing.Linear.None, true, 0, 1, true);
 		}.bind(this)
 	}
 }

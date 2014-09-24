@@ -21,10 +21,15 @@ if (/android/i.test(navigator.userAgent)) {
 }
 
 //you can use the GP extension with the official API or use it with CocoonJS SocialGaming API
-socialService = gp.getSocialInterface();
-socialService.onLoginStatusChanged.addEventListener(function(loggedIn, error) {
-    // console.log('logged im bitchys')
-});
+try {
+    socialService = gp.getSocialInterface();
+    socialService.onLoginStatusChanged.addEventListener(function(loggedIn, error) {
+        // console.log('logged im bitchys')
+    });
+} catch(e){
+    console.log('We are not on mobile!! error:', e)
+}
+
 
 // rating module!!
 

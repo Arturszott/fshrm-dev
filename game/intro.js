@@ -218,7 +218,7 @@ var Intro = function(game, parent) {
 		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
 			this.okButton.y = fullheight + 100;
 			this.okButton.x = half;
-			// this.okButton.loadTexture('playBtn');
+			
 
 			this.game.add.tween(this.okButton).to({
 				y: fullheight / 2 + 100
@@ -252,7 +252,7 @@ var Intro = function(game, parent) {
 		this.game.add.tween(this.okButton).to({
 			y: fullheight + 100
 		}, 800, Phaser.Easing.Linear.Out, true, 200, false).onComplete.add(function() {
-
+			this.okButton.loadTexture('playBtn');
 			// this.isPlaying = false;
 			// currentStep++;
 		}.bind(this));
@@ -323,7 +323,7 @@ var Intro = function(game, parent) {
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(function() {
 			// this.garageBoard.destroy();
 		}.bind(this));
-
+		
 		this.game.add.tween(this.okButton).to({
 			y: fullheight + 200
 		}, 700, Phaser.Easing.Bounce.Out, true, 0, false).onComplete.add(function() {

@@ -39,8 +39,12 @@ Preload.prototype = {
         this.load.image('introlayer', 'assets/play/introtile.png');
         this.load.image('waterlayer', 'assets/play/sea.png');
         this.load.image('white', 'assets/play/white.png');
+
         this.load.image('timer', 'assets/play/timer.png');
+        this.load.image('timer-pumpkin', 'assets/play/timerpumpkin.png');
+
         this.load.image('timebar', 'assets/play/time.png');
+        this.load.image('timebar-yellow', 'assets/play/time2.png');
 
         this.load.image('title', 'assets/title/title.png');
         this.load.image('stitle1', 'assets/title/stitle1.png');
@@ -101,6 +105,8 @@ Preload.prototype = {
         this.load.spritesheet('btn_using', 'assets/icons/using.png', 104, 60, 2);
         this.load.spritesheet('btn_rate', 'assets/icons/rate1.png', 80, 68, 2);
         this.load.image('part', 'assets/icons/part.png');
+        this.load.image('sadmarker', 'assets/icons/sadmarker1.png');
+        this.load.image('happymarker', 'assets/icons/happymarker1.png');
 
         this.load.image('category-label-hero', 'assets/icons/SHOPcharacter2.png');
         this.load.image('category-label-tool', 'assets/icons/SHOPtool.png');
@@ -132,7 +138,9 @@ Preload.prototype = {
         this.load.spritesheet('water-splash', 'assets/play/water-splash.png', 72, 100, 6);
 
         this.load.spritesheet('mine', 'assets/play/BOMB.png', 112, 132, 5);
-        this.load.spritesheet('mineRed', 'assets/play/BOMB2.png', 112, 132, 5);
+        this.load.spritesheet('mine', 'assets/play/BOMB.png', 112, 132, 5);
+        this.load.spritesheet('pumpkin0', 'assets/play/pumpkinsprite.png', 120, 108, 4);
+        this.load.spritesheet('pumpkin1', 'assets/play/pumpkinsprite2.png', 128, 112, 4);
         this.load.spritesheet('barrel', 'assets/play/barrel.png', 108, 120, 5);
         this.load.spritesheet('boom', 'assets/play/boom.png', 144, 278, 10);
 
@@ -154,6 +162,8 @@ Preload.prototype = {
         this.load.audio('monster', 'assets/sounds/monsters3.ogg');
         this.load.audio('start', 'assets/sounds/tap.ogg');
         this.load.audio('tap', 'assets/sounds/tap.ogg');
+        this.load.audio('pumpkin', 'assets/sounds/pumpkin.ogg');
+        this.load.audio('pumpkingood', 'assets/sounds/pumpkinhappy5.ogg');
 
     },
     create: function() {

@@ -1,6 +1,7 @@
 'use strict';
 
 var storage = require('../storage');
+var ads = require('../ads');
 
 var Scoreboard = function(game) {
 
@@ -16,16 +17,16 @@ var Scoreboard = function(game) {
 
 	this.gameoverWave = this.game.add.tween(gameover).to({
 		y: 0,
-	}, 600, Phaser.Easing.Linear.None, true, 0, 3, true);
+	}, 500, Phaser.Easing.Ease, true, 0, 2, true);
 
 	var scoreX = 25
 	var buttonsY = 380;
 
-	this.scoreText = this.game.add.bitmapText(scoreX, -62, 'fisherman', '', 18);
-	this.scoreLabel = this.game.add.bitmapText(-this.scoreboard.width / 2 + 30, -62, 'fisherman', 'score:', 18);
+	this.scoreLabel = this.game.add.bitmapText(-this.scoreboard.width / 2 + 20, -62, 'fisherman', 'score', 18);
+	this.bestScoreLabel = this.game.add.bitmapText(25, -62, 'fisherman', 'best', 18);
 
-	this.bestScoreText = this.game.add.bitmapText(scoreX, -30, 'fisherman', '', 18);
-	this.bestScoreLabel = this.game.add.bitmapText(-this.scoreboard.width / 2 + 30, -30, 'fisherman', 'best:', 18);
+	this.scoreText = this.game.add.bitmapText(-this.scoreboard.width / 2 + 20, -30, 'fisherman', '', 24);
+	this.bestScoreText = this.game.add.bitmapText(scoreX, -30, 'fisherman', '', 24);
 
 	this.bayButton = this.game.add.button(this.game.width / 2, buttonsY, 'homeBtn', this.bayClick, this, 0, 0, 1, 0);
 	this.bayButton.anchor.setTo(0.5, 0.5);
@@ -52,12 +53,16 @@ Scoreboard.prototype.show = function(score) {
 
 	storage.addFish(score);
 
+	ads.show();
+
 	this.isShown = true;
 	this.scoreboard.addChild(this.scoreText);
 	this.scoreboard.addChild(this.bestScoreText);
 	this.scoreboard.addChild(this.scoreLabel);
 	this.scoreboard.addChild(this.bestScoreLabel);
 	this.scoreText.setText(score.toString());
+	this.scoreText.updateText();
+	this.scoreText.x = this.scoreText.x + this.scoreLabel.textWidth - this.scoreText.textWidth;
 
 	if (!!localStorage) {
 		bestScore = localStorage.getItem('bestScore');
@@ -75,7 +80,7 @@ Scoreboard.prototype.show = function(score) {
 	this.game.add.tween(this).to({
 		y: 40
 	}, 300, Phaser.Easing.Sinusoidal.Out, true, 400).to({
-		y: 0
+		y: 30
 	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0);;
 };
 

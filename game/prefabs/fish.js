@@ -10,6 +10,7 @@ var Fish = function(game, x, y, frame) {
 
 	this.scale.x = 0.5;
 	this.scale.y = 0.5;
+	this.underwater = true;
 };
 Fish.prototype = Object.create(WaterObject.prototype);
 Fish.prototype.constructor = Fish;

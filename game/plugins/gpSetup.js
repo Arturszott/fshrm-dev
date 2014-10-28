@@ -1,7 +1,7 @@
 var socialService, gp;
 
 if (/ios/i.test(navigator.userAgent)) {
-	console.log('ios')
+    console.log('ios')
     // TODO ADD GAMECENTER
     gp = CocoonJS.Social.GameCenter;
 } else if (/android/i.test(navigator.userAgent)) {
@@ -14,10 +14,10 @@ var iosClientId = "919657677";
 // var webClientId = "273377255436-d8vme49kjo6bisprjp3lda82s2b6r097.apps.googleusercontent.com";
 
 if (/android/i.test(navigator.userAgent)) {
-	gp.init({
-	    clientId: iosClientId,
-	    defaultLeaderboard: "CgkIrMD5suwHEAIQBw"
-	});
+    gp.init({
+        clientId: iosClientId,
+        defaultLeaderboard: "CgkIrMD5suwHEAIQBw"
+    });
 }
 
 //you can use the GP extension with the official API or use it with CocoonJS SocialGaming API
@@ -26,14 +26,14 @@ try {
     socialService.onLoginStatusChanged.addEventListener(function(loggedIn, error) {
         // console.log('logged im bitchys')
     });
-} catch(e){
+} catch (e) {
     console.log('We are not on mobile!! error:', e)
 }
 
 
 // rating module!!
 
-var IOS_RATING_URL = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=519623307&onlyLatestVersion=false&type=Purple+Software";
+var IOS_RATING_URL = "http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=" + iosClientId + "&onlyLatestVersion=false&type=Purple+Software";
 var ANDROID_RATING_URL = "market://details?id=com.fishermangame";
 
 var ratingURL = null;

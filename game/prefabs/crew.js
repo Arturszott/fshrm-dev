@@ -38,8 +38,9 @@ Crew.prototype = Object.create(Phaser.Group.prototype);
 Crew.prototype.constructor = Crew;
 Crew.prototype.catch = function(side, element) {
 	// this.parent.bringToTop(this);
+	if (!this.game) return false;
 
-	var swimDistance = 30 * this.game.widthRatio;
+	var swimDistance = 30 * (this.game.widthRatio ? this.game.widthRatio : 1);
 
 	this.hero.catch(side, swimDistance);
 	this.tool.catch(side, swimDistance);
@@ -55,7 +56,7 @@ Crew.prototype.applyDeath = function(side) {
 }
 Crew.prototype.dress = function() {
 	this.eqp = storage.getEquipment();
-	this.tool.loadTexture(this.eqp.tool+'full', 0);
+	this.tool.loadTexture(this.eqp.tool + 'full', 0);
 	this.mount.loadTexture(this.eqp.mount, 0);
 	this.hero.loadTexture(this.eqp.hero, 0);
 	console.log(this.mount, this.eqp.mount);
@@ -78,7 +79,15 @@ Crew.prototype.awake = function() {
 	this.tool.waveTween._duration = 300;
 }
 Crew.prototype.update = function() {
-
+	// if(this.isEnemy && this.alive && !this.game.starting){
+	// 	if (this.game.isAccelerated) {
+	// 		this.y -= 12 * this.game.multiplier;
+	// 	} 
+	// 	if (this.game.enemyAccelerated) {
+	// 		this.y += 12 * this.game.multiplier;
+	// 	} 
+	// }
+	
 	// write your prefab's specific update code here
 
 };

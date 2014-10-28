@@ -1,9 +1,7 @@
 'use strict';
 
 var config = {
-	// 20% of the screen height
-	verticalCellSize: 1/6,
-	// negative value mean background is scrolling top
+	verticalCellSize: 1 / 6,
 	baseWaterSpeed: -200,
 	baseBottomSpeed: -120,
 	// miliseconds
@@ -17,6 +15,8 @@ var config = {
 	fishRotationAngle: 270,
 
 	itemChance: 0.08,
+	pumpkinChance: 0.1,
+	pumpkinScore: 40,
 
 	tiers: {
 		1: [30, 100],

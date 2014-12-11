@@ -68,7 +68,7 @@ var setupGameplay = function() {
 
             this.game.add.tween(elem).to({
                 y: elem.y - this.game.height
-            }, 1000, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
+            }, 1000, Phaser.Easing.Sinusoidal.Out).start().onComplete.add(function() {
                 this.game.starting = false;
             }.bind(this));
         }, this);
@@ -80,8 +80,8 @@ var setupGameplay = function() {
             y: this.game.height * 2 / 3
         }
         this.game.add.tween(this.scoreText)
-            .to(t1, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false)
-            .to(t2, 200, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+            .to(t1, 300, Phaser.Easing.Sinusoidal.Out)
+            .to(t2, 200, Phaser.Easing.Sinusoidal.Out).start();
 
         setTimeout(function() {
             this.timer.start();
@@ -103,7 +103,7 @@ var setupGameplay = function() {
             that.game.add.tween(elem)
                 .to({
                     x: that.game.width + 100,
-                }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300, false)
+                }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300).start()
                 .onComplete.add(function() {
                     var t = setTimeout(function() {
                         elem.destroy();
@@ -115,7 +115,7 @@ var setupGameplay = function() {
             that.game.add.tween(elem)
                 .to({
                     x: -100,
-                }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300, false)
+                }, 1000, Phaser.Easing.Sinusoidal.Out, true, 300).start()
                 .onComplete.add(function() {
                     var t = setTimeout(function() {
                         elem.destroy();

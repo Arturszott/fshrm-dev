@@ -9,14 +9,9 @@ window.onDeviceReady = function() {
 	var w = window.innerWidth,
 		h = window.innerHeight;
 
-	if (window.plugins) {
-		window.PGLowLatencyAudio = window.plugins.LowLatencyAudio;
-	} else {
-		window.PGLowLatencyAudio = null;
-	}
-	var screenRatio = w / h;
+	var screenRatio = (w / h);
 
-	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.CANVAS, 'game');
+	var game = new Phaser.Game(505 * screenRatio, 505, Phaser.CANVAS, '');
 
 	game.widthRatio = 505 * screenRatio / 288;
 

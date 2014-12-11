@@ -15,18 +15,24 @@ Water.prototype.autoScroll = function(x, y) {
 	this.scroll.y = y;
 }
 Water.prototype.update = function() {
-	this.y = this.y + this.scroll.y;
-	this.x = this.x + this.scroll.x;
+	if (this.skipped) {
+		this.skipped = false;
+		return;
+	}
 
-	if (this.y <= -144|| this.y >= 144) {
+	this.y = this.y + this.scroll.y * 2;
+	this.x = this.x + this.scroll.x * 2;
+
+	if (this.y <= -144 || this.y >= 144) {
 		this.y = 0;
 	}
 	if (this.x > 0) {
 		this.x = -144 / this.game.widthRatio;
 	}
 	if (this.game.isAccelerated) {
-		this.y -= 8;
+		this.y -= 16;
 	}
+	this.skipped = true
 };
 
 module.exports = Water;

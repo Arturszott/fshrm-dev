@@ -90,28 +90,28 @@ Bay.prototype = {
 
 		this.game.add.tween(this.garage).to({
 			x: this.game.width / 1.75,
-		}, 800, Phaser.Easing.Sinusoidal.Out, true, 600, false);
+		}, 800, Phaser.Easing.Sinusoidal.Out, true, 600).start();
 		this.game.add.tween(this.garage.label).to({
 			x: this.game.width / 1.75 + 20,
-		}, 800, Phaser.Easing.Sinusoidal.Out, true, 600, false);
+		}, 800, Phaser.Easing.Sinusoidal.Out, true, 600).start();
 
 		this.game.add.tween(this.shop).to({
 			x: this.game.width / 4,
-		}, 700, Phaser.Easing.Sinusoidal.Out, true, 600, false);
+		}, 700, Phaser.Easing.Sinusoidal.Out, true, 600).start();
 		this.game.add.tween(this.shop.label).to({
 			x: this.game.width / 4 + 20,
-		}, 700, Phaser.Easing.Sinusoidal.Out, true, 600, false);
+		}, 700, Phaser.Easing.Sinusoidal.Out, true, 600).start();
 
 		this.game.add.tween(this.house).to({
 			x: this.game.width / 4,
-		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false);
+		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600).start();
 		this.game.add.tween(this.house.label).to({
 			x: this.game.width / 4,
-		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false);
+		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600).start();
 
 		this.game.add.tween(this.crew).to({
 			y: this.game.height * 1,
-		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600, false).onComplete.add(this.crew.rest.bind(this.crew));
+		}, 900, Phaser.Easing.Sinusoidal.Out, true, 600).start().onComplete.add(this.crew.rest.bind(this.crew));
 
 		setTimeout(function() {
 			this.game.add.tween(this.game.water).to({
@@ -122,11 +122,11 @@ Bay.prototype = {
 
 	},
 	visitshop: function() {
-		console.log('visiting shop')
 		if (!this.shopBoard) {
 			this.shopBoard = new Shop(this.game, this.shop.x, this.shop.y);
 			this.game.add.existing(this.shopBoard);
 		}
+
 		this.showBuilding(this.shop, this.shopBoard);
 
 	},
@@ -138,7 +138,6 @@ Bay.prototype = {
 		this.showBuilding(this.garage, this.garageBoard);
 	},
 	visithouse: function() {
-		console.log('visiting house')
 		if (!this.houseBoard) {
 			this.houseBoard = new House(this.game, this.shop.x, this.shop.y);
 			this.houseBoard.outsideCrew = this.crew;
@@ -160,7 +159,7 @@ Bay.prototype = {
 
 		this.game.add.tween(this.bayButton).to({
 			y: this.game.height - 10,
-		}, 400, Phaser.Easing.Sinusoidal.None, true, 0, false);
+		}, 400, Phaser.Easing.Sinusoidal.None, true, 0).start();
 	},
 	showBuilding: function(building, board) {
 		if (this.leaving || (this.currentBoard && this.currentBoard.isShown)) return;
@@ -169,7 +168,7 @@ Bay.prototype = {
 		this.labels.forEach(function(label) {
 			this.game.add.tween(label).to({
 				alpha: 0
-			}, 500, Phaser.Easing.Linear.None, true, 0, false);
+			}, 500, Phaser.Easing.Linear.None, true, 0).start();
 		}, this);
 
 		this.addBayButton();
@@ -188,15 +187,16 @@ Bay.prototype = {
 			this.game.add.tween(b).to({
 				y: b.y + this.buildingOffset.y,
 				x: b.x + this.buildingOffset.x,
-			}, 300, Phaser.Easing.Linear.None, true, 0, false);
+			}, 300, Phaser.Easing.Linear.None, true, 0).start();
 		}.bind(this));
 
 		this.game.add.tween(this.crew).to({
 			y: this.crew.y + this.buildingOffset.y + this.boatOffset,
 			x: this.crew.x + this.buildingOffset.x
-		}, 300, Phaser.Easing.Linear.None, true, 0, false);
+		}, 300, Phaser.Easing.Linear.None, true, 0).start();
 
 		this.currentBoard = board;
+
 		board.show();
 
 	},
@@ -205,21 +205,21 @@ Bay.prototype = {
 
 			this.game.add.tween(this.bayButton).to({
 				y: this.game.height + 100,
-			}, 400, Phaser.Easing.Sinusoidal.None, true, 0, false).onComplete.add(function() {
+			}, 400, Phaser.Easing.Sinusoidal.None, true, 0).start().onComplete.add(function() {
 				this.bayButton.destroy();
 			}.bind(this));
 
 			this.game.add.tween(this.crew).to({
 				y: this.crew.y - this.buildingOffset.y - this.boatOffset,
 				x: this.crew.x - this.buildingOffset.x
-			}, 300, Phaser.Easing.Linear.None, true, 0, false);
+			}, 300, Phaser.Easing.Linear.None, true, 0).start();
 
 			this.currentBoard.hide();
 
 			this.labels.forEach(function(label) {
 				this.game.add.tween(label).to({
 					alpha: 1
-				}, 500, Phaser.Easing.Linear.None, true, 0, false);
+				}, 500, Phaser.Easing.Linear.None, true, 0).start();
 			}, this);
 
 			this.buildings.forEach(function(b) {
@@ -258,24 +258,24 @@ Bay.prototype = {
 
 		this.game.add.tween(this.crew.hero).to({
 			y: baseY
-		}, duration * 3, Phaser.Easing.Bounce.Out, true, duration, false).onComplete.add(function() {
+		}, duration * 3, Phaser.Easing.Bounce.Out, true, duration).start().onComplete.add(function() {
 			this.crew.awake.call(this.crew);
 		}.bind(this));
 
 		this.game.add.tween(this.crew.btn).to({
 			alpha: 0
-		}, duration * 1, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+		}, duration * 1, Phaser.Easing.Sinusoidal.Out, true, 0).start();
 
 		this.game.add.tween(this.crew).to({
 			y: this.game.height * 2
-		}, duration * 3, Phaser.Easing.Linear.None, true, duration * 4, false).onComplete.add(function() {
+		}, duration * 3, Phaser.Easing.Linear.None, true, duration * 4).start().onComplete.add(function() {
 			this.game.bayReturn.call(this.baseState);
 		}.bind(this));
 
 		this.buildings.forEach(function(building) {
 			this.game.add.tween(building).to({
 				y: building.y - this.game.height
-			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
+			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000).start();
 
 			setTimeout(function() {
 				building.label.waveTween.stop();
@@ -283,7 +283,7 @@ Bay.prototype = {
 
 			this.game.add.tween(building.label).to({
 				y: building.label.y - this.game.height
-			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000, false);
+			}, 1200 * 1, Phaser.Easing.Linear.None, true, 2000).start();
 		}.bind(this));
 
 		setTimeout(function() {

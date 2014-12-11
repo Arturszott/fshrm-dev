@@ -113,14 +113,14 @@ Preload.prototype = {
         this.load.image('category-label-mount', 'assets/icons/SHOPboat.png');
         this.load.image('category-label-postcard', 'assets/icons/SHOPpostcard.png');
 
-        this.load.image('arr-left', 'assets/icons/L.png');
-        this.load.image('arr-right', 'assets/icons/R.png');
+        this.load.spritesheet('arr-left', 'assets/icons/L.png', 48, 68, 1);
+        this.load.spritesheet('arr-right', 'assets/icons/R.png', 48, 68, 1);
 
-        this.load.image('arr-left-home', 'assets/icons/Ly.png');
-        this.load.image('arr-right-home', 'assets/icons/Ry.png');
+        this.load.spritesheet('arr-left-home', 'assets/icons/Ly.png', 32, 52, 1);
+        this.load.spritesheet('arr-right-home', 'assets/icons/Ry.png', 32, 52, 1);
 
-        this.load.image('arr-left-garage', 'assets/icons/Lg.png');
-        this.load.image('arr-right-garage', 'assets/icons/Rg.png');
+        this.load.spritesheet('arr-left-garage', 'assets/icons/Lg.png', 32, 52, 1);
+        this.load.spritesheet('arr-right-garage', 'assets/icons/Rg.png', 32, 52, 1);
 
         this.load.image('gameover', 'assets/gm.png');
         this.load.image('shop-sign', 'assets/shop.png');
@@ -138,7 +138,6 @@ Preload.prototype = {
         this.load.spritesheet('water-splash', 'assets/play/water-splash.png', 72, 100, 6);
 
         this.load.spritesheet('mine', 'assets/play/BOMB.png', 112, 132, 5);
-        this.load.spritesheet('mine', 'assets/play/BOMB.png', 112, 132, 5);
         this.load.spritesheet('pumpkin0', 'assets/play/pumpkinsprite.png', 120, 108, 4);
         this.load.spritesheet('pumpkin1', 'assets/play/pumpkinsprite2.png', 128, 112, 4);
         this.load.spritesheet('barrel', 'assets/play/barrel.png', 108, 120, 5);
@@ -154,6 +153,7 @@ Preload.prototype = {
         this.load.spritesheet('splash_2', 'assets/monsters/ZIP.png', 352, 296, 5);
 
         this.load.spritesheet('crafting', 'assets/play/crafting.png', 136, 136, 7);
+        this.load.spritesheet('pumpkinify', 'assets/play/timerpumpkin2.png', 152, 124, 4);
 
         this.load.audio('main', 'assets/ost/FM7b.ogg');
         this.load.audio('gameover', 'assets/ost/gameover.ogg');

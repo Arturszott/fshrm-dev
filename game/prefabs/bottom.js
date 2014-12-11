@@ -16,18 +16,24 @@ Bottom.prototype.autoScroll = function(x, y) {
 	this.scroll.y = y;
 }
 Bottom.prototype.update = function() {
-	this.y += this.scroll.y;
-	this.x += this.scroll.x;
+	if (this.skipped) {
+		this.skipped = false;
+		return;
+	}
+
+	this.y += this.scroll.y * 2;
+	this.x += this.scroll.x * 2;
 
 	if (this.y <= -this.height / 2 || this.y >= this.height / 2) {
 		this.y = 0;
 	}
 	if (this.x > 0) {
-		this.x = -this.width / 2/game.widthRatio;
+		this.x = -this.width / 2 / game.widthRatio;
 	}
-	if(this.game.isAccelerated){
-		this.y -= 6;
+	if (this.game.isAccelerated) {
+		this.y -= 12;
 	}
+	this.skipped = true
 
 };
 

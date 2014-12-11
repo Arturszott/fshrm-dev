@@ -25,33 +25,36 @@ var showTitle = function() {
     _.anchorC(this.tapRight);
     _.anchorC(this.tapLeft);
 
+    this.muteButton.show();
+
     var finalLeft = 50;
     var finalRight = this.game.width - 50;
 
-    this.muteButton.show();
 
-    this.tapRight.tween = this.game.add.tween(this.tapRight).to({
-        x: finalRight
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100).to({
-        x: finalRight - 10
-    }, 200, Phaser.Easing.Sinusoidal.Out, true, 0, 4, true);
+    this.tapRight.tween = this.game.add.tween(this.tapRight)
+        .to({
+            x: finalRight
+        }, 500, Phaser.Easing.Sinusoidal.Out)
+        .to({
+            x: finalRight - 10
+        }, 200, Phaser.Easing.Sinusoidal.Out).start();
 
     this.tapLeft.tween = this.game.add.tween(this.tapLeft).to({
         x: finalLeft
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100).to({
+    }, 500, Phaser.Easing.Sinusoidal.Out).to({
         x: finalLeft + 10
-    }, 200, Phaser.Easing.Sinusoidal.Out, true, 0, 4, true);
+    }, 200, Phaser.Easing.Sinusoidal.Out).start();
 
 
     this.game.add.tween(this.title).to({
         y: this.game.height * 3 / 4 - 70 - 100
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
     this.game.add.tween(this.stitle1).to({
         y: this.game.height * 3 / 4 - 10 - 100
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
     this.game.add.tween(this.stitle2).to({
         y: this.game.height * 3 / 4 + 25 - 100
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
 
     var buttonsY = this.game.height + 60;
 
@@ -70,14 +73,14 @@ var showTitle = function() {
 
     this.game.add.tween(this.bayButton).to({
         y: buttonsY - 120
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
 
     this.game.add.tween(this.rateButton).to({
         y: buttonsY - 120
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
     this.game.add.tween(this.rankButton).to({
         y: buttonsY - 120
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
 }
 
 module.exports = showTitle

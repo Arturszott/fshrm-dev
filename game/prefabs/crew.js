@@ -64,7 +64,7 @@ Crew.prototype.dress = function() {
 Crew.prototype.rest = function() {
 	this.game.add.tween(this.wave).to({
 		alpha: 0
-	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).start();
 	// this.wave.visible = false;
 	this.hero.swimAnim.stop();
 	this.mount.swimAnim.stop();
@@ -73,7 +73,7 @@ Crew.prototype.rest = function() {
 Crew.prototype.awake = function() {
 	this.game.add.tween(this.wave).to({
 		alpha: 1
-	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).start();
 	this.hero.swimAnim.play();
 	this.mount.swimAnim.play();
 	this.tool.waveTween._duration = 300;

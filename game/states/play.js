@@ -77,9 +77,7 @@ Play.prototype = {
     slideDownCrew: function() {
         this.game.add.tween(this.crew).to({
             y: this.game.height / 2 - this.CELL_SIZE / 3 * 2
-        }, 500, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
-
-        }.bind(this));
+        }, 500, Phaser.Easing.Linear.None).start();
     },
     rateClick: function() {
         window.rateApp && window.rateApp();
@@ -146,8 +144,6 @@ Play.prototype = {
 
         if (Math.floor(this.score / 10) == this.game.level) {
             this.game.level++;
-
-            console.log(this.game.audio.music._sound.playbackRate);
 
             _.anims.scale(this.scoreText, 1.3, 200);
             this.scoreText.updateText();

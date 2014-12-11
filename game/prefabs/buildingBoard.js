@@ -55,6 +55,7 @@ var Building = function(game, x, y) {
 
 	this.y = -this.game.height;
 	this.x = 0;
+
 };
 
 Building.prototype = Object.create(Phaser.Group.prototype);
@@ -65,11 +66,11 @@ Building.prototype.initialize = function() {
 }
 Building.prototype.createBoard = function() {
 	this.board = this.create(this.game.width / 2, 180, this.boardKey);
-
 	_.anchorC(this.board);
 }
 Building.prototype.createSign = function() {
-	this.sign = this.create(10, 10, this.signKey);
+
+	this.sign = this.create(2, 10, this.signKey);
 	this.sign.anchor.setTo(0.0, 0);
 	_.scale(this.sign, 0.7)
 }
@@ -161,6 +162,7 @@ Building.prototype.nextItem = function() {
 }
 
 Building.prototype.createItemSlider = function(category) {
+
 
 	this.leftArrow && this.leftArrow.destroy();
 	this.rightArrow && this.rightArrow.destroy();

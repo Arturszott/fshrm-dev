@@ -34,9 +34,9 @@ Timer.prototype.start = function() {
 	this.visible = true;
 	this.game.add.tween(this).to({
 		y: this.game.height - 120
-	}, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false).to({
+	}, 300, Phaser.Easing.Sinusoidal.Out).to({
 		y: this.game.height - 80
-	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
+	}, 200, Phaser.Easing.Sinusoidal.Out).start().onComplete.add(function() {
 		this.started = true;
 	}.bind(this));
 
@@ -92,10 +92,10 @@ Timer.prototype.pumpkinify = function(){
 	if(this.pumpkinified) return false;
 
 	this.pumpkinified = true;
-	this.cloud = this.game.add.sprite(0, 0, 'crafting');
+	this.cloud = this.game.add.sprite(0, 0, 'pumpkinify');
 	this.cloud.smokin = this.cloud.animations.add('smokin');
 	this.cloud.smokin.killOnComplete = true;
-	this.cloud.animations.play('smokin', 14, 1);
+	this.cloud.animations.play('smokin', 8, 1);
 	_.anchorC(this.cloud);
 	_.scale(this.cloud, 1);
 

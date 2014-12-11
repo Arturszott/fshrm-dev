@@ -24,7 +24,7 @@ var summonMonster = function() {
     this.game.audio.music.stop();
     this.game.add.tween(this.scoreText).to({
         y: this.game.height + 100
-    }, 300, Phaser.Easing.Sinusoidal.Out, true, 0, false).onComplete.add(function() {
+    }, 300, Phaser.Easing.Sinusoidal.Out, true, 0).start().onComplete.add(function() {
         this.scoreText.destroy();
     }.bind(this));
 
@@ -56,7 +56,7 @@ var summonMonster = function() {
 
     this.game.add.tween(this.monsterSprite).to({
         y: this.CELL_SIZE
-    }, 150, Phaser.Easing.Linear.None, true, 100, false).onComplete.add(function() {
+    }, 150, Phaser.Easing.Linear.None, true, 100).start().onComplete.add(function() {
 
     }.bind(this));
 

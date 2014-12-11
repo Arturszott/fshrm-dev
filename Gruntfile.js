@@ -40,7 +40,23 @@ module.exports = function(grunt) {
       },
       my_target: {
         files: {
-          'dist/js/game.js': ['dist/js/game.js']
+          'dist/js/game.js': ['dist/js/game.js'],
+
+        }
+      },
+      plugins: {
+        files: {
+          'dist/js/plugins.js': [
+            'dist/js/plugins/xml-for-cocoonjs.js',
+            'dist/js/plugins/CocoonJS.js',
+            'dist/js/plugins/CocoonJS_Ad.js',
+            'dist/js/plugins/CocoonJS_App.js',
+            'dist/js/plugins/CocoonJS_App_ForCocoonJS.js',
+            'dist/js/plugins/CocoonJS_Social.js',
+            'dist/js/plugins/CocoonJS_Social_GameCenter.js',
+            'dist/js/plugins/CocoonJS_Social_GooglePlayGames.js',
+            'dist/js/plugins/gpSetup.js'
+          ]
         }
       }
     },
@@ -104,7 +120,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('build', ['buildBootstrapper', 'browserify', 'copy']);
+  grunt.registerTask('build', ['buildBootstrapper', 'browserify', 'copy', 'uglify:plugins']);
   grunt.registerTask('serve', ['build', 'connect:livereload', 'open', 'watch']);
   grunt.registerTask('default', ['serve']);
   grunt.registerTask('prod', ['build', 'copy', 'uglify']);

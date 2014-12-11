@@ -104,10 +104,10 @@ var Intro = function(game, parent) {
 
 		this.game.add.tween(leftSide).to({
 			x: -2
-		}, 500, Phaser.Easing.Sinusoidal.Out, true, delay, false);
+		}, 500, Phaser.Easing.Sinusoidal.Out, true, delay).start();
 		this.game.add.tween(rightSide).to({
 			x: half + 2
-		}, 500, Phaser.Easing.Sinusoidal.Out, true, delay, false);
+		}, 500, Phaser.Easing.Sinusoidal.Out, true, delay).start();
 
 		this.game.world.bringToTop(this.parent.crew);
 
@@ -115,7 +115,7 @@ var Intro = function(game, parent) {
 
 		this.game.add.tween(howTo).to({
 			y: 50
-		}, 500, Phaser.Easing.Linear.Out, true, 1100, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 1100).start().onComplete.add(function() {
 			howTo.waveTween = this.game.add.tween(howTo).to({
 				y: howTo.y + 10
 			}, 300, Phaser.Easing.Linear.None, true, 0, 1000, true);
@@ -123,7 +123,7 @@ var Intro = function(game, parent) {
 
 		this.game.add.tween(this.okButton).to({
 			x: RIGHT_POSITION
-		}, 500, Phaser.Easing.Linear.Out, true, 1100, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 1100).start().onComplete.add(function() {
 			this.isPlaying = false;
 			currentStep++;
 		}.bind(this));
@@ -131,19 +131,19 @@ var Intro = function(game, parent) {
 	this.step1 = function() {
 		this.game.add.tween(howTo).to({
 			y: -100
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			howTo.destroy();
 		}.bind(this));
 
 		this.game.add.tween(this.okButton).to({
 			x: RIGHT_POSITION + half
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			this.okButton.x = -half;
 			this.okButton.y = this.okButton.y + 150;
 
 			this.game.add.tween(this.okButton).to({
 				x: LEFT_POSITION
-			}, 500, Phaser.Easing.Linear.Out, true, 400, false).onComplete.add(function() {
+			}, 500, Phaser.Easing.Linear.Out, true, 400).start().onComplete.add(function() {
 				this.isPlaying = false;
 				currentStep++;
 			}.bind(this));
@@ -152,37 +152,35 @@ var Intro = function(game, parent) {
 
 		this.game.add.tween(mine).to({
 			x: LEFT_POSITION
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false);
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start();
 
 		this.game.add.tween(dead).to({
 			y: 50
-		}, 500, Phaser.Easing.Linear.Out, true, 400, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 400).start().onComplete.add(function() {
 			dead.waveTween = this.game.add.tween(dead).to({
 				y: dead.y + 10
-			}, 300, Phaser.Easing.Linear.None, true, 0, 1000, true);
+			}, 300, Phaser.Easing.Linear.None, true, 0, 100, true);
 		}.bind(this));
-
-
 	};
 
 	this.step2 = function() {
 		this.game.add.tween(dead).to({
 			y: -100
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			dead.destroy();
 		}.bind(this));
 
 		this.game.add.tween(mine).to({
 			x: LEFT_POSITION - half
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false);
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start();
 
 		this.game.add.tween(fish).to({
 			x: RIGHT_POSITION
-		}, 500, Phaser.Easing.Linear.Out, true, 400, false);
+		}, 500, Phaser.Easing.Linear.Out, true, 400).start();
 
 		this.game.add.tween(heart).to({
 			y: 50
-		}, 500, Phaser.Easing.Linear.Out, true, 400, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 400).start().onComplete.add(function() {
 			heart.waveTween = this.game.add.tween(heart).to({
 				y: heart.y + 10
 			}, 300, Phaser.Easing.Linear.None, true, 0, 1000, true);
@@ -190,12 +188,12 @@ var Intro = function(game, parent) {
 
 		this.game.add.tween(this.okButton).to({
 			x: LEFT_POSITION - half
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			this.okButton.x = half * 3;
 
 			this.game.add.tween(this.okButton).to({
 				x: RIGHT_POSITION
-			}, 500, Phaser.Easing.Linear.Out, true, 400, false).onComplete.add(function() {
+			}, 500, Phaser.Easing.Linear.Out, true, 400).start().onComplete.add(function() {
 				this.isPlaying = false;
 				currentStep++;
 			}.bind(this));
@@ -205,24 +203,24 @@ var Intro = function(game, parent) {
 	this.step3 = function() {
 		this.game.add.tween(heart).to({
 			y: -100
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			heart.destroy();
 		}.bind(this));
 
 		this.game.add.tween(fish).to({
 			x: RIGHT_POSITION + half
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false);
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start();
 
 		this.game.add.tween(this.okButton).to({
 			x: RIGHT_POSITION + half
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			this.okButton.y = fullheight + 100;
 			this.okButton.x = half;
 			
 
 			this.game.add.tween(this.okButton).to({
 				y: fullheight / 2 + 100
-			}, 200, Phaser.Easing.Linear.Out, true, 200, false).onComplete.add(function() {
+			}, 200, Phaser.Easing.Linear.Out, true, 200).start().onComplete.add(function() {
 
 				this.isPlaying = false;
 				currentStep++;
@@ -232,14 +230,14 @@ var Intro = function(game, parent) {
 
 		this.game.add.tween(tapLeft).to({
 			x: LEFT_POSITION + 25
-		}, 400, Phaser.Easing.Linear.Out, true, 0, false);
+		}, 400, Phaser.Easing.Linear.Out, true, 0).start();
 		this.game.add.tween(leftSide).to({
 			alpha: 0.3
 		}, 100, Phaser.Easing.Linear.Out, true, 0, 5, true);
 
 		this.game.add.tween(tapRight).to({
 			x: RIGHT_POSITION - 25
-		}, 400, Phaser.Easing.Linear.Out, true, 600, false);
+		}, 400, Phaser.Easing.Linear.Out, true, 600).start();
 
 		setTimeout(function() {
 			this.game.add.tween(rightSide).to({
@@ -251,7 +249,7 @@ var Intro = function(game, parent) {
 	this.step4 = function() {
 		this.game.add.tween(this.okButton).to({
 			y: fullheight + 100
-		}, 800, Phaser.Easing.Linear.Out, true, 200, false).onComplete.add(function() {
+		}, 800, Phaser.Easing.Linear.Out, true, 200).start().onComplete.add(function() {
 			this.okButton.loadTexture('playBtn');
 			// this.isPlaying = false;
 			// currentStep++;
@@ -259,20 +257,20 @@ var Intro = function(game, parent) {
 
 		this.game.add.tween(barrel).to({
 			x: LEFT_POSITION
-		}, 500, Phaser.Easing.Linear.Out, true, 0, false);
+		}, 500, Phaser.Easing.Linear.Out, true, 0).start();
 
 		this.game.add.tween(tapRight).to({
 			x: RIGHT_POSITION + half
-		}, 400, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 400, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			tapRight.destroy();
 		});
 		this.game.add.tween(tapLeft).to({
 			x: -half
-		}, 400, Phaser.Easing.Linear.Out, true, 0, false).onComplete.add(function() {
+		}, 400, Phaser.Easing.Linear.Out, true, 0).start().onComplete.add(function() {
 			tapLeft.position.x = half * 3;
 			this.game.add.tween(tapLeft).to({
 				x: half
-			}, 400, Phaser.Easing.Linear.Out, true, 0, false).to({
+			}, 400, Phaser.Easing.Linear.Out, true, 0).start().to({
 				x: half + 10
 			}, 200, Phaser.Easing.Sinusoidal.Out, true, 0, 7, true);
 		}.bind(this));
@@ -283,7 +281,7 @@ var Intro = function(game, parent) {
 
 			this.game.add.tween(tapLeft).to({
 				x: -half
-			}, 700, Phaser.Easing.Linear.Out, true, 100, false).onComplete.add(function() {
+			}, 700, Phaser.Easing.Linear.Out, true, 100).start().onComplete.add(function() {
 				tapLeft.destroy();
 			});
 
@@ -297,14 +295,16 @@ var Intro = function(game, parent) {
 			}, 300, Phaser.Easing.Sinusoidal.Out, true, 0);
 
 			setTimeout(function() {
-				this.garageBoard.partsText.setText('1/3');
-				_.anims.scale(this.garageBoard.partsText, 1.6);
+				if(this.garageBoard.partsText){
+					this.garageBoard.partsText.setText('1/3');
+					_.anims.scale(this.garageBoard.partsText, 1.6);
+				}
 
 				this.okButton.position.x = RIGHT_POSITION;
 
 				this.game.add.tween(this.okButton).to({
 					y: fullheight / 2 + 150,
-				}, 200, Phaser.Easing.Linear.Out, true, 200, false).onComplete.add(function() {
+				}, 200, Phaser.Easing.Linear.Out, true, 200).start().onComplete.add(function() {
 					this.isPlaying = false;
 					currentStep++;
 					barrel.destroy();
@@ -326,7 +326,7 @@ var Intro = function(game, parent) {
 		
 		this.game.add.tween(this.okButton).to({
 			y: fullheight + 200
-		}, 700, Phaser.Easing.Bounce.Out, true, 0, false).onComplete.add(function() {
+		}, 700, Phaser.Easing.Bounce.Out, true, 0).start().onComplete.add(function() {
 			this.okButton.destroy();
 			this.parent.startGame();
 			storage.isIntroPlayed(true);
@@ -334,10 +334,10 @@ var Intro = function(game, parent) {
 
 			this.game.add.tween(leftSide).to({
 				x: -half
-			}, 500, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+			}, 500, Phaser.Easing.Sinusoidal.Out, true, 0).start();
 			this.game.add.tween(rightSide).to({
 				x: half * 2
-			}, 500, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+			}, 500, Phaser.Easing.Sinusoidal.Out, true, 0).start();
 
 		}.bind(this));
 

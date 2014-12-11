@@ -12,7 +12,10 @@ Waterobject.prototype.dispose = function() {
 	this.alive = false;
 }
 Waterobject.prototype.update = function() {
-	if (this.alive && !this.disposed) {
+	if (this.y < 0) {
+		this.animations.destroy()
+		this.destroy();
+	} else if (this.alive && !this.disposed) {
 		if (this.game.isAccelerated) {
 			this.y -= 12 * this.game.multiplier;
 		} else {
@@ -21,12 +24,10 @@ Waterobject.prototype.update = function() {
 		if (this.y < 170) {
 			this.game.slowTriggered = true;
 		}
-	}
-	if (this.disposed) {
-		this.y -= 12
-	}
-	if (this.y < 0) {
-		this.destroy();
+	} else {
+		if (this.disposed) {
+			this.y -= 12
+		}
 	}
 };
 

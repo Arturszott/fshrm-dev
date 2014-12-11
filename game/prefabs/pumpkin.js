@@ -21,7 +21,9 @@ Pumpkin.prototype.throwAway = function(side) {
 
 	var possibilities = [this.game.timer.lucky.bind(this.game.timer), this.game.timer.unlucky.bind(this.game.timer)];
 	var n = Math.floor(Math.random() * 2);
+
 	possibilities[n]();
+	
 	if(n){
 		this.game.audio.pumpkin.play();
 	} else {

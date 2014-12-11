@@ -24,8 +24,6 @@ Hero.prototype.constructor = Hero;
 Hero.prototype.catch = function(side, swimDistance) {
 	var that = this;
 
-	PGLowLatencyAudio && PGLowLatencyAudio.play('catch');
-
 	if (side === 'right') {
 		this.game.add.tween(this).to({
 			x: this.game.width / 2 + swimDistance,
@@ -40,14 +38,6 @@ Hero.prototype.catch = function(side, swimDistance) {
 Hero.prototype.update = function() {};
 Hero.prototype.applyDeath = function() {
 	var hero = this;
-
-	this.loadTexture('explosion', 0);
-
-	this.animations.add('explosion').onComplete.add(function(){
-		hero.loadTexture('skull', 0);
-	});
-
-	this.animations.play('explosion', 32, 1);
 	this.alive = false;
 };
 Hero.prototype.onKilled = function() {

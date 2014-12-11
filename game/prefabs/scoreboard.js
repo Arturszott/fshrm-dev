@@ -1,12 +1,14 @@
 'use strict';
 
 var storage = require('../storage');
+var _ = require('../utils');
 var ads = require('../ads');
 
 var Scoreboard = function(game) {
 
 	var gameover;
 
+	ads.game = this.game;
 	Phaser.Group.call(this, game);
 
 	this.scoreboard = this.create(this.game.width / 2, 235, 'board');
@@ -53,21 +55,50 @@ Scoreboard.prototype.show = function(score) {
 
 	storage.addFish(score);
 
-	ads.show();
+	
 
 	this.isShown = true;
 	this.scoreboard.addChild(this.scoreText);
 	this.scoreboard.addChild(this.bestScoreText);
 	this.scoreboard.addChild(this.scoreLabel);
 	this.scoreboard.addChild(this.bestScoreLabel);
+
 	this.scoreText.setText(score.toString());
 	this.scoreText.updateText();
 	this.scoreText.x = this.scoreText.x + this.scoreLabel.textWidth - this.scoreText.textWidth;
+
+	setTimeout(function() {
+		_.countUp(this.scoreText, 700, 0, score);
+
+	}.bind(this), 200);
 
 	if (!!localStorage) {
 		bestScore = localStorage.getItem('bestScore');
 
 		if (!bestScore || bestScore < score) {
+
+			setTimeout(function() {
+				_.countUp(this.bestScoreText, 700, 0, bestScore);
+			}.bind(this), 200);
+
+			setTimeout(function() {
+				this.cloud = this.game.add.sprite(this.bestScoreText.x + 10, this.bestScoreText.y, 'pumpkinify');
+				this.scoreboard.addChild(this.cloud);
+				this.cloud.smokin = this.cloud.animations.add('smokin');
+				this.cloud.smokin.killOnComplete = true;
+				this.cloud.animations.play('smokin', 8, 1);
+				_.anchorC(this.cloud);
+				_.scale(this.cloud, 1);
+			}.bind(this), 550);
+
+			this.cloud = this.game.add.sprite(this.bestScoreText.x, this.bestScoreText.y, 'pumpkinify');
+			this.scoreboard.addChild(this.cloud);
+			this.cloud.smokin = this.cloud.animations.add('smokin');
+			this.cloud.smokin.killOnComplete = true;
+			this.cloud.animations.play('smokin', 8, 1);
+			_.anchorC(this.cloud);
+			_.scale(this.cloud, 1);
+
 			bestScore = score;
 			localStorage.setItem('bestScore', bestScore);
 		}
@@ -81,7 +112,11 @@ Scoreboard.prototype.show = function(score) {
 		y: 40
 	}, 300, Phaser.Easing.Sinusoidal.Out, true, 400).to({
 		y: 30
-	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0);;
+	}, 200, Phaser.Easing.Sinusoidal.Out, true, 0);
+
+	setTimeout(function() {
+		ads.show();
+	}, 600);
 };
 
 Scoreboard.prototype.hide = function() {

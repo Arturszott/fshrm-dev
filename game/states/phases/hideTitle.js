@@ -24,32 +24,32 @@ var hideTitle = function() {
 
     this.game.add.tween(this.title).to({
         y: this.game.height + 100
-    }, 600, Phaser.Easing.Sinusoidal.Out, true, 100, false).onComplete.add(function() {
+    }, 600, Phaser.Easing.Sinusoidal.Out).start().onComplete.add(function() {
         this.title.destroy();
     }.bind(this));
     this.game.add.tween(this.stitle1).to({
         y: this.game.height + 100
-    }, 600, Phaser.Easing.Sinusoidal.Out, true, 100, false).onComplete.add(function() {
+    }, 600, Phaser.Easing.Sinusoidal.Out).start().onComplete.add(function() {
         this.stitle1.destroy();
     }.bind(this));;
     this.game.add.tween(this.stitle2).to({
         y: this.game.height + 100
-    }, 600, Phaser.Easing.Sinusoidal.Out, true, 100, false).onComplete.add(function() {
+    }, 600, Phaser.Easing.Sinusoidal.Out).start().onComplete.add(function() {
         this.stitle2.destroy();
     }.bind(this));;
 
     this.game.add.tween(this.bayButton).to({
         y: buttonsY + 120
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
     this.game.add.tween(this.rateButton).to({
         y: buttonsY + 120
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
     this.game.add.tween(this.rankButton).to({
         y: buttonsY + 120
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
     this.game.add.tween(this.muteButton).to({
         y: -100
-    }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+    }, 500, Phaser.Easing.Sinusoidal.Out).start();
 }
 
 module.exports = hideTitle

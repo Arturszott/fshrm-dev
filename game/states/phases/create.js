@@ -64,7 +64,7 @@ var refreshGame = function() {
 
     this.game.add.tween(this.white).to({
         alpha: 0
-    }, 1000, Phaser.Easing.Sinusoidal.Out, true, 0, false);
+    }, 1000, Phaser.Easing.Sinusoidal.Out).start();
 
     this.slideDownCrew();
 

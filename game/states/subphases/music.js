@@ -50,13 +50,13 @@ var handleMusic = function() {
         this.game.world.bringToTop(this.muteButton);
         this.game.add.tween(this.muteButton).to({
             y: 4
-        }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+        }, 500, Phaser.Easing.Sinusoidal.Out).start();
     }.bind(this);
 
     this.muteButton.hide = function() {
         this.game.add.tween(this.muteButton).to({
             y: -100
-        }, 500, Phaser.Easing.Sinusoidal.Out, true, 100, false);
+        }, 500, Phaser.Easing.Sinusoidal.Out).start();
     }.bind(this);
 
     this.game.muteButton = this.muteButton;

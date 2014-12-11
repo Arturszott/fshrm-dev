@@ -101,7 +101,7 @@ var itemsRegistry = {
 			y: 124,
 			price: 2800,
 			move: [120, 200]
-		}, 
+		},
 		// {
 		// 	name: 'laserpistol',
 		// 	title: "Laser Gun",
@@ -124,8 +124,7 @@ var itemsRegistry = {
 			title: 'Al Fish',
 			x: 144,
 			y: 152
-		},
-		{
+		}, {
 			name: 'default',
 			id: 100,
 			type: 'hero',
@@ -180,8 +179,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 3600
-		},
-		{
+		}, {
 			name: 'gangsta',
 			id: 107,
 			type: 'hero',
@@ -189,8 +187,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 4200
-		},
-		{
+		}, {
 			name: 'style',
 			id: 108,
 			type: 'hero',
@@ -198,8 +195,7 @@ var itemsRegistry = {
 			x: 144,
 			y: 152,
 			price: 4800
-		},
-		{
+		}, {
 			name: 'princess',
 			id: 109,
 			type: 'hero',
@@ -276,7 +272,17 @@ var itemsRegistry = {
 			craftable: true,
 			tier: 2,
 			parts: 5,
-		},
+		}, {
+			name: 'tree',
+			title: 'Christmas Tree',
+			id: 1007,
+			type: 'mount',
+			price: 9000,
+			cx: 144,
+			cy: 180,
+			x: 144,
+			y: 184,
+		}
 	]
 }
 

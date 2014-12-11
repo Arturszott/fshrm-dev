@@ -25,6 +25,25 @@ var utils = {
 				y: obj.scale.y * scale
 			}, time || 400, Phaser.Easing.Linear.None, true, 0, 1, true);
 		}.bind(this)
+	},
+	countUp: function(obj, time, current, target, cb) {
+		var tick = time / 100;
+
+		if(target < 10){
+			current = target;
+		}
+
+		if (current < target) {
+			current = Math.round(current + target / tick);
+			obj.setText(current + '');
+			setTimeout(this.countUp.bind(this, obj, time, current, target, cb), 100);
+		} else {
+			obj.setText(target + '');
+		}
+
+		cb ? cb() : false;
+		obj.updateText();
+
 	}
 }
 

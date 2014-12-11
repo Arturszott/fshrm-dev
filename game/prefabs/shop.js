@@ -39,13 +39,13 @@ Shop.prototype.constructor = Shop;
 
 Shop.prototype.initialize = function() {
 	createFishAmount.call(this);
+
 }
 
 /////////////////// ITEM SLIDER ///////////////////////
 
 Shop.prototype.showItem = function() {
 	this.bought = false;
-
 	this.itemGroup && this.itemGroup.destroy();
 
 	this.currentItem = this.create(0, 0, this.sliderItems[this.currentItemIndex].name);
@@ -57,6 +57,7 @@ Shop.prototype.showItem = function() {
 	scale = scale > 0.8 * 0.75 ? 0.8 : scale;
 	this.currentItem.scale.x = scale;
 	this.currentItem.scale.y = scale;
+
 
 	if(storage.checkOwned(this.currentItem.data.id)){
 		this.bought = true;
@@ -83,6 +84,7 @@ Shop.prototype.showItem = function() {
 		}
 	}
 
+
 	_.anchorC(this.buyButton);
 	_.scale(this.buyButton, 0.85);
 
@@ -93,11 +95,14 @@ Shop.prototype.showItem = function() {
 
 	this.itemGroup = this.game.add.group();
 
+
+
 	if(!this.bought){
 		this.itemGroup.add(this.priceLabel);
 		this.itemGroup.add(this.priceText);
 		this.itemGroup.add(this.fishcoinPrice);
 	}
+
 
 	this.itemGroup.add(this.buyButton);
 	this.itemGroup.add(this.currentItem);
@@ -118,8 +123,14 @@ Shop.prototype.buyItem = function() {
 		}, 300, Phaser.Easing.Sinusoidal.Out, true, 0).onComplete.add(onComplete.bind(this));
 	}
 
+
 	if (this.totalFish > this.currentItem.data.price) {
 		// handle buying animations
+
+		this.currentItem.animations.add('wind');
+		this.currentItem.animations.play('wind', 8, true);
+
+		
 		tweenOut.call(this, this.buyButton, function() {
 			this.buyButton.loadTexture('buy-btn-bought', 0);
 			_.scale(this.buyButton, 0.6);
